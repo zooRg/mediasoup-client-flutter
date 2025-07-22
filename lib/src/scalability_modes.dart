@@ -4,14 +4,10 @@ class ScalabilityMode {
   final int spatialLayers;
   final int temporalLayers;
 
-  const ScalabilityMode({
-    required this.spatialLayers,
-    required this.temporalLayers,
-  });
+  const ScalabilityMode({required this.spatialLayers, required this.temporalLayers});
 
   static ScalabilityMode parse(String? scalabilityMode) {
-    List<RegExpMatch> match =
-        scalabilityModeRegex.allMatches(scalabilityMode ?? '').toList();
+    List<RegExpMatch> match = scalabilityModeRegex.allMatches(scalabilityMode ?? '').toList();
 
     if (match.isNotEmpty) {
       return ScalabilityMode(
@@ -19,10 +15,7 @@ class ScalabilityMode {
         temporalLayers: int.parse(match[0].group(2)!),
       );
     } else {
-      return ScalabilityMode(
-        spatialLayers: 1,
-        temporalLayers: 1,
-      );
+      return ScalabilityMode(spatialLayers: 1, temporalLayers: 1);
     }
   }
 }

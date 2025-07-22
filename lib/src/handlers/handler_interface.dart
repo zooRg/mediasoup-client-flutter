@@ -1,10 +1,10 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
+import 'package:mediasoup_client_flutter/src/handlers/unified_plan.dart';
 import 'package:mediasoup_client_flutter/src/producer.dart';
+import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
-import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
-import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
-import 'package:mediasoup_client_flutter/src/handlers/unified_plan.dart';
 
 class SCTP_NUM_STREAMS {
   static const int OS = 1024;
@@ -15,16 +15,10 @@ class RTCOAuthCredential {
   final String accessToken;
   final String macKey;
 
-  const RTCOAuthCredential({
-    required this.accessToken,
-    required this.macKey,
-  });
+  const RTCOAuthCredential({required this.accessToken, required this.macKey});
 }
 
-enum RTCIceCredentialType {
-  oauth,
-  password,
-}
+enum RTCIceCredentialType { oauth, password }
 
 extension RTCIceCredentialTypeToString on RTCIceCredentialType {
   static const Map<String, RTCIceCredentialType> types = {
@@ -37,14 +31,12 @@ extension RTCIceCredentialTypeToString on RTCIceCredentialType {
     RTCIceCredentialType.password: 'password',
   };
 
-  operator [](String i) => types[i];
+  RTCIceCredentialType? operator [](String i) => types[i];
+
   String get value => values[this]!;
 }
 
-enum RTCIceTransportPolicy {
-  all,
-  relay,
-}
+enum RTCIceTransportPolicy { all, relay }
 
 extension RTCIceTransportPolicyToString on RTCIceTransportPolicy {
   static const Map<String, RTCIceTransportPolicy> types = {
@@ -57,7 +49,8 @@ extension RTCIceTransportPolicyToString on RTCIceTransportPolicy {
     RTCIceTransportPolicy.relay: 'relay',
   };
 
-  operator [](String i) => types[i];
+  RTCIceTransportPolicy? operator [](String i) => types[i];
+
   String get value => values[this]!;
 }
 
@@ -153,13 +146,13 @@ class HandlerReceiveResult {
   final String localId;
   final MediaStreamTrack track;
   final RTCRtpReceiver? rtpReceiver;
-  final MediaStream stream;
+  final MediaStream? stream;
 
   const HandlerReceiveResult({
     required this.localId,
     required this.track,
     this.rtpReceiver,
-    required this.stream,
+    this.stream,
   });
 }
 
@@ -191,10 +184,7 @@ class ReplaceTrackOptions {
   final String localId;
   final MediaStreamTrack track;
 
-  const ReplaceTrackOptions({
-    required this.localId,
-    required this.track,
-  });
+  const ReplaceTrackOptions({required this.localId, required this.track});
 }
 
 class HandlerReceiveDataChannelResult {
@@ -235,29 +225,47 @@ abstract class HandlerInterface extends EnhancedEventEmitter {
   ///  )
   ///@emits @connectionstatechange - (connectionState: ConnectionState)
   String get name;
+
   Future<void> close();
+
   Future<RtpCapabilities> getNativeRtpCapabilities();
+
   // Future<SctpCapabilities> getNativeSctpCapabilities();
   SctpCapabilities getNativeSctpCapabilities();
+
   void run({required HandlerRunOptions options});
+
   Future<void> updateIceServers(List<RTCIceServer> iceServers);
+
   Future<void> restartIce(IceParameters iceParameters);
+
   // TODO: RTCStatsReport
   Future<List<StatsReport>> getTransportStats();
+
   Future<HandlerSendResult> send(HandlerSendOptions options);
+
   Future<void> stopSending(String localId);
+
   Future<void> replaceTrack(ReplaceTrackOptions options);
+
   Future<void> setMaxSpatialLayer(SetMaxSpatialLayerOptions options);
+
   Future<void> setRtpEncodingParameters(
-      SetRtpEncodingParametersOptions options);
-  Future<List<StatsReport>> getSenderStats(String localId);
-  Future<HandlerSendDataChannelResult> sendDataChannel(
-      SendDataChannelArguments options);
-  Future<HandlerReceiveResult> receive(HandlerReceiveOptions options);
-  Future<void> stopReceiving(
-    String localId,
+    SetRtpEncodingParametersOptions options,
   );
+
+  Future<List<StatsReport>> getSenderStats(String localId);
+
+  Future<HandlerSendDataChannelResult> sendDataChannel(
+    SendDataChannelArguments options,
+  );
+
+  Future<HandlerReceiveResult> receive(HandlerReceiveOptions options);
+
+  Future<void> stopReceiving(String localId);
+
   Future<List<StatsReport>> getReceiverStats(String localId);
+
   Future<HandlerReceiveDataChannelResult> receiveDataChannel(
     HandlerReceiveDataChannelOptions options,
   );

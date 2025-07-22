@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart' show mapEquals;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-
 import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
 import 'package:mediasoup_client_flutter/src/common/logger.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
@@ -52,7 +51,7 @@ class Consumer extends EnhancedEventEmitter {
   final Map<String, dynamic> appData;
 
   /// Stream.
-  final MediaStream stream;
+  final MediaStream? stream;
 
   /// Observer instance.
   ///
@@ -79,11 +78,11 @@ class Consumer extends EnhancedEventEmitter {
     required this.track,
     required this.rtpParameters,
     required this.appData,
-    required this.stream,
+    this.stream,
     this.peerId,
     this.closed = false,
-  })  : observer = EnhancedEventEmitter(),
-        super() {
+  }) : observer = EnhancedEventEmitter(),
+       super() {
     _logger.debug('constructor()');
 
     paused = !track.enabled;

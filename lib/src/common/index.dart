@@ -1,9 +1,4 @@
-enum Priority {
-  VeryLow,
-  Low,
-  Medium,
-  High,
-}
+enum Priority { VeryLow, Low, Medium, High }
 
 extension PriorityExtension on Priority {
   static const Map<String, Priority> types = {

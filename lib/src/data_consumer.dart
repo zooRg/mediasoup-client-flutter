@@ -30,18 +30,25 @@ Logger _logger = Logger('DataConsumer');
 class DataConsumer extends EnhancedEventEmitter {
   /// Id.
   final String id;
+
   /// Associated DataProducer id.
   final String dataProducerId;
+
   /// The underlying RCTDataChannel instance.
   final RTCDataChannel dataChannel;
+
   /// Clsoed flag.
   bool closed;
+
   /// SCTP stream parameters.
   final SctpStreamParameters sctpStreamParameters;
+
   /// App custom data.
   final Map<String, dynamic> appData;
+
   /// Observer instance.
   final EnhancedEventEmitter observer;
+
   /// Peer id.
   final String? peerId;
 
@@ -58,13 +65,14 @@ class DataConsumer extends EnhancedEventEmitter {
     required this.sctpStreamParameters,
     this.appData = const <String, dynamic>{},
     this.closed = false,
-    this.peerId
+    this.peerId,
   }) : observer = EnhancedEventEmitter(),
-        super() {
+       super() {
     _logger.debug('constructor()');
 
     _handleDataChannel();
   }
+
   /// DataChannel readyState.
   RTCDataChannelState? get readyState => dataChannel.state;
 
@@ -129,9 +137,7 @@ class DataConsumer extends EnhancedEventEmitter {
     dataChannel.onMessage = (RTCDataChannelMessage data) {
       if (closed) return;
 
-      safeEmit('message', {
-        'data': data,
-      });
+      safeEmit('message', {'data': data});
     };
   }
 

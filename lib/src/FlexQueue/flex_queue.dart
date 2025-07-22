@@ -1,3 +1,5 @@
+import 'package:mediasoup_client_flutter/src/handlers/sdp/remote_sdp.dart';
+
 abstract class FlexTask {
   final String? id;
   final Function execFun;
@@ -18,38 +20,24 @@ abstract class FlexTask {
 
 class FlexTaskAdd extends FlexTask {
   FlexTaskAdd({
-    String? id,
-    required Function execFun,
-    Object? argument,
-    Function? callbackFun,
-    Function? errorCallbackFun,
-    String? message,
-  }) : super(
-          id: id,
-          execFun: execFun,
-          argument: argument,
-          callbackFun: callbackFun,
-          errorCallbackFun: errorCallbackFun,
-          message: message,
-        );
+    super.id,
+    required super.execFun,
+    super.argument,
+    super.callbackFun,
+    super.errorCallbackFun,
+    super.message,
+  });
 }
 
 class FlexTaskRemove extends FlexTask {
   FlexTaskRemove({
-    String? id,
-    required Function execFun,
-    Object? argument,
-    Function? callbackFun,
-    Function? errorCallbackFun,
-    String? message,
-  }) : super(
-          id: id,
-          execFun: execFun,
-          argument: argument,
-          callbackFun: callbackFun,
-          errorCallbackFun: errorCallbackFun,
-          message: message,
-        );
+    super.id,
+    required super.execFun,
+    super.argument,
+    super.callbackFun,
+    super.errorCallbackFun,
+    super.message,
+  });
 }
 
 class FlexQueue {
@@ -58,7 +46,9 @@ class FlexQueue {
 
   void addTask(FlexTask task) async {
     if (task is FlexTaskRemove) {
-      final int index = taskQueue.indexWhere((FlexTask qTask) => qTask.id == task.id);
+      final index = taskQueue.indexWhere(
+        (FlexTask qTask) => qTask.id == task.id,
+      );
       if (index != -1) {
         taskQueue.removeAt(index);
         return;
@@ -76,7 +66,7 @@ class FlexQueue {
     if (!isBusy) {
       if (taskQueue.isNotEmpty) {
         isBusy = true;
-        final FlexTask task = taskQueue.removeAt(0);
+        final task = taskQueue.removeAt(0);
         try {
           if (task.argument == null) {
             final result = await task.execFun();
@@ -86,8 +76,8 @@ class FlexQueue {
             task.callbackFun?.call(result);
           }
         } catch (error, st) {
-          print(error);
-          print(st);
+          logger.error(error);
+          logger.error(st);
           task.errorCallbackFun?.call(error);
         } finally {
           isBusy = false;

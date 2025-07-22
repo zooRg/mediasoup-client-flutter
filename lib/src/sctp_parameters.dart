@@ -1,5 +1,3 @@
-
-
 import 'package:mediasoup_client_flutter/src/common/index.dart';
 
 class NumSctpStreams {
@@ -12,16 +10,10 @@ class NumSctpStreams {
 	 */
   final int mis;
 
-  NumSctpStreams({
-    required this.os,
-    required this.mis,
-  });
+  NumSctpStreams({required this.os, required this.mis});
 
   Map<String, int> toMap() {
-    return {
-      'OS': os,
-      'MIS': mis,
-    };
+    return {'OS': os, 'MIS': mis};
   }
 }
 
@@ -30,9 +22,7 @@ class SctpCapabilities {
   SctpCapabilities({required this.numStreams});
 
   Map<String, dynamic> toMap() {
-    return {
-      'numStreams': numStreams.toMap(),
-    };
+    return {'numStreams': numStreams.toMap()};
   }
 }
 
@@ -62,12 +52,7 @@ class SctpParameters {
   });
 
   Map<String, int> toMap() {
-    return {
-      'port': port,
-      'OS': os,
-      'MIS': mis,
-      'maxMessageSize': maxMessageSize,
-    };
+    return {'port': port, 'OS': os, 'MIS': mis, 'maxMessageSize': maxMessageSize};
   }
 
   static SctpParameters fromMap(Map data) {
@@ -154,4 +139,3 @@ class SctpStreamParameters {
     };
   }
 }
-
