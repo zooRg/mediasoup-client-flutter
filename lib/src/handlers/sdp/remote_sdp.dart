@@ -17,9 +17,7 @@ class MediaSectionIdx {
 
   MediaSectionIdx({required this.idx, this.reuseMid});
 
-  MediaSectionIdx.fromMap(Map data)
-    : idx = data['idx'],
-      reuseMid = data['reuseMid'];
+  MediaSectionIdx.fromMap(Map data) : idx = data['idx'], reuseMid = data['reuseMid'];
 
   Map<String, dynamic> toMap() {
     return {'idx': idx, 'reuseMid': reuseMid};
@@ -248,9 +246,7 @@ class RemoteSdp {
 
       // Let's try to recycle a closed media section (if any).
       // NOTE: Yes, we can recycle a closed m=audio section with a new m=video.
-      var oldMediaSection = _mediaSections.firstWhereOrNull(
-        (MediaSection m) => m.closed,
-      );
+      var oldMediaSection = _mediaSections.firstWhereOrNull((MediaSection m) => m.closed);
 
       if (oldMediaSection != null) {
         _replaceMediaSection(mediaSection, oldMediaSection.mid);
@@ -366,9 +362,7 @@ class RemoteSdp {
       var idx = _midToIndex[newMediaSection.mid];
 
       if (idx == null) {
-        throw Exception(
-          'no media section found with mid "${newMediaSection.mid}"',
-        );
+        throw Exception('no media section found with mid "${newMediaSection.mid}"');
       }
 
       // Replace the index in the vector with the new media section.

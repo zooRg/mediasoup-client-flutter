@@ -29,9 +29,7 @@ class PlanBUtils {
     }
 
     if (ssrcs.isEmpty) {
-      throw Exception(
-        'a=ssrc line with msid information not found [track.id:${track.id}]',
-      );
+      throw Exception('a=ssrc line with msid information not found [track.id:${track.id}]');
     }
 
     var ssrcToRtxSsrc = <dynamic, dynamic>{};
@@ -102,9 +100,7 @@ class PlanBUtils {
     String? streamId;
 
     // Get the SSRC.
-    var ssrcMsidLine = (offerMediaObject?.ssrcs ?? []).firstWhereOrNull((
-      Ssrc line,
-    ) {
+    var ssrcMsidLine = (offerMediaObject?.ssrcs ?? []).firstWhereOrNull((Ssrc line) {
       if (line.attribute != 'msid') {
         return false;
       }
@@ -122,9 +118,7 @@ class PlanBUtils {
     });
 
     if (ssrcMsidLine == null) {
-      throw Exception(
-        'a=ssrc line with msid information not found [track.id:${track.id}]',
-      );
+      throw Exception('a=ssrc line with msid information not found [track.id:${track.id}]');
     }
 
     // Get the SSRC for RTX.
@@ -149,9 +143,7 @@ class PlanBUtils {
     );
 
     if (ssrcCnameLine == null) {
-      throw Exception(
-        'a=ssrc line with cname information not found [track.id:${track.id}]',
-      );
+      throw Exception('a=ssrc line with cname information not found [track.id:${track.id}]');
     }
 
     var cname = ssrcCnameLine.value;
@@ -169,16 +161,12 @@ class PlanBUtils {
     offerMediaObject?.ssrcGroups = offerMediaObject.ssrcGroups ?? [];
     offerMediaObject?.ssrcs = offerMediaObject.ssrcs ?? [];
 
-    offerMediaObject?.ssrcGroups!.add(
-      SsrcGroup(semantics: 'SIM', ssrcs: ssrcs.join(' ')),
-    );
+    offerMediaObject?.ssrcGroups!.add(SsrcGroup(semantics: 'SIM', ssrcs: ssrcs.join(' ')));
 
     for (var i = 0; i < ssrcs.length; ++i) {
       var ssrc = ssrcs[i];
 
-      offerMediaObject?.ssrcs?.add(
-        Ssrc(id: ssrc, attribute: 'cname', value: cname),
-      );
+      offerMediaObject?.ssrcs?.add(Ssrc(id: ssrc, attribute: 'cname', value: cname));
 
       offerMediaObject?.ssrcs?.add(
         Ssrc(id: ssrc, attribute: 'msid', value: '$streamId ${track.id}'),
@@ -189,17 +177,13 @@ class PlanBUtils {
       var ssrc = ssrcs[i];
       var rtxSsrc = rtxSsrcs[i];
 
-      offerMediaObject?.ssrcs?.add(
-        Ssrc(id: rtxSsrc, attribute: 'cname', value: cname),
-      );
+      offerMediaObject?.ssrcs?.add(Ssrc(id: rtxSsrc, attribute: 'cname', value: cname));
 
       offerMediaObject?.ssrcs?.add(
         Ssrc(id: rtxSsrc, attribute: 'msid', value: '$streamId ${track.id}'),
       );
 
-      offerMediaObject?.ssrcGroups?.add(
-        SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'),
-      );
+      offerMediaObject?.ssrcGroups?.add(SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'));
     }
   }
 }

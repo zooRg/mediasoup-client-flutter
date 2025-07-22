@@ -6,22 +6,16 @@ import 'package:mediasoup_client_flutter/src/sdp_object.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
 
 class PlainRtpUtils {
-  static PlainRtpParameters extractPlainRtpParameters(
-    SdpObject sdpObject,
-    RTCRtpMediaType kind,
-  ) {
+  static PlainRtpParameters extractPlainRtpParameters(SdpObject sdpObject, RTCRtpMediaType kind) {
     MediaObject? mediaObject = sdpObject.media.firstWhereOrNull(
       (MediaObject m) => m.type == RTCRtpMediaTypeExtension.value(kind),
     );
 
     if (mediaObject == null) {
-      throw Exception(
-        'm=${RTCRtpMediaTypeExtension.value(kind)} section not found',
-      );
+      throw Exception('m=${RTCRtpMediaTypeExtension.value(kind)} section not found');
     }
 
-    Connection connectionObject =
-        (mediaObject.connection ?? sdpObject.connection)!;
+    Connection connectionObject = (mediaObject.connection ?? sdpObject.connection)!;
 
     PlainRtpParameters result = PlainRtpParameters(
       ip: connectionObject.ip,
@@ -32,18 +26,13 @@ class PlainRtpUtils {
     return result;
   }
 
-  static List<RtpEncodingParameters> getRtpEncodings(
-    SdpObject sdpObject,
-    RTCRtpMediaType kind,
-  ) {
+  static List<RtpEncodingParameters> getRtpEncodings(SdpObject sdpObject, RTCRtpMediaType kind) {
     MediaObject? mediaObject = sdpObject.media.firstWhereOrNull(
       (MediaObject m) => m.type == RTCRtpMediaTypeExtension.value(kind),
     );
 
     if (mediaObject == null) {
-      throw Exception(
-        'm=${RTCRtpMediaTypeExtension.value(kind)} section not found',
-      );
+      throw Exception('m=${RTCRtpMediaTypeExtension.value(kind)} section not found');
     }
 
     if (mediaObject.ssrcs != null || mediaObject.ssrcs!.isNotEmpty) {

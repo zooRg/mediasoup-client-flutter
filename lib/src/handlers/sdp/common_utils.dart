@@ -117,11 +117,7 @@ class CommonUtils {
 
   static DtlsParameters extractDtlsParameters(SdpObject sdpObject) {
     var mediaObject = sdpObject.media.firstWhereOrNull(
-      (m) =>
-          m.iceUfrag != null &&
-          m.iceUfrag!.isNotEmpty &&
-          m.port != null &&
-          m.port != 0,
+      (m) => m.iceUfrag != null && m.iceUfrag!.isNotEmpty && m.port != null && m.port != 0,
     );
 
     if (mediaObject == null) {
@@ -146,9 +142,7 @@ class CommonUtils {
 
     var dtlsParameters = DtlsParameters(
       role: role,
-      fingerprints: [
-        DtlsFingerprint(algorithm: fingerprint.type, value: fingerprint.hash),
-      ],
+      fingerprints: [DtlsFingerprint(algorithm: fingerprint.type, value: fingerprint.hash)],
     );
 
     return dtlsParameters;

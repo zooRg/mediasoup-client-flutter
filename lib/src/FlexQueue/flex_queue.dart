@@ -46,9 +46,7 @@ class FlexQueue {
 
   void addTask(FlexTask task) async {
     if (task is FlexTaskRemove) {
-      final index = taskQueue.indexWhere(
-        (FlexTask qTask) => qTask.id == task.id,
-      );
+      final index = taskQueue.indexWhere((FlexTask qTask) => qTask.id == task.id);
       if (index != -1) {
         taskQueue.removeAt(index);
         return;

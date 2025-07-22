@@ -11,16 +11,11 @@ class EnhancedEventEmitter extends EventEmitter {
     try {
       emit(event, args);
     } catch (error) {
-      _logger.error(
-        'safeEmit() event listener threw an error [event:$event]:$error',
-      );
+      _logger.error('safeEmit() event listener threw an error [event:$event]:$error');
     }
   }
 
-  Future<dynamic> safeEmitAsFuture(
-    String event, [
-    Map<String, dynamic>? args,
-  ]) async {
+  Future<dynamic> safeEmitAsFuture(String event, [Map<String, dynamic>? args]) async {
     try {
       final completer = Completer<dynamic>();
       var args0 = <String, dynamic>{
@@ -31,9 +26,7 @@ class EnhancedEventEmitter extends EventEmitter {
       emitAsFuture(event, args0);
       return completer.future;
     } catch (error) {
-      _logger.error(
-        'safeEmitAsFuture() event listener threw an error [event:$event]:$error',
-      );
+      _logger.error('safeEmitAsFuture() event listener threw an error [event:$event]:$error');
     }
   }
 }

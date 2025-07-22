@@ -140,9 +140,7 @@ class DataProducer extends EnhancedEventEmitter {
     dataChannel.onMessage = (RTCDataChannelMessage message) {
       if (closed) return;
 
-      _logger.warn(
-        'DataChannel "message" event is a DataProducer, message discarded',
-      );
+      _logger.warn('DataChannel "message" event is a DataProducer, message discarded');
     };
   }
 
