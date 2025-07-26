@@ -1,4 +1,4 @@
-import 'package:mediasoup_client_flutter/src/handlers/sdp/remote_sdp.dart';
+import 'package:flutter/foundation.dart';
 
 abstract class FlexTask {
   final String? id;
@@ -46,7 +46,7 @@ class FlexQueue {
 
   void addTask(FlexTask task) async {
     if (task is FlexTaskRemove) {
-      final index = taskQueue.indexWhere((FlexTask qTask) => qTask.id == task.id);
+      final int index = taskQueue.indexWhere((FlexTask qTask) => qTask.id == task.id);
       if (index != -1) {
         taskQueue.removeAt(index);
         return;
@@ -64,7 +64,7 @@ class FlexQueue {
     if (!isBusy) {
       if (taskQueue.isNotEmpty) {
         isBusy = true;
-        final task = taskQueue.removeAt(0);
+        final FlexTask task = taskQueue.removeAt(0);
         try {
           if (task.argument == null) {
             final result = await task.execFun();
@@ -74,8 +74,12 @@ class FlexQueue {
             task.callbackFun?.call(result);
           }
         } catch (error, st) {
-          logger.error(error);
-          logger.error(st);
+          if (kDebugMode) {
+            print(error);
+          }
+          if (kDebugMode) {
+            print(st);
+          }
           task.errorCallbackFun?.call(error);
         } finally {
           isBusy = false;

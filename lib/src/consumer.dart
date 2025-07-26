@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'package:flutter/foundation.dart' show mapEquals;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
@@ -20,7 +22,7 @@ class ConsumerOptions {
   });
 }
 
-typedef void ConsumerOnTrackEnded();
+typedef ConsumerOnTrackEnded = void Function();
 
 class Consumer extends EnhancedEventEmitter {
   /// Id.
@@ -51,7 +53,7 @@ class Consumer extends EnhancedEventEmitter {
   final Map<String, dynamic> appData;
 
   /// Stream.
-  final MediaStream? stream;
+  final MediaStream stream;
 
   /// Observer instance.
   ///
@@ -78,7 +80,7 @@ class Consumer extends EnhancedEventEmitter {
     required this.track,
     required this.rtpParameters,
     required this.appData,
-    this.stream,
+    required this.stream,
     this.peerId,
     this.closed = false,
   }) : observer = EnhancedEventEmitter(),

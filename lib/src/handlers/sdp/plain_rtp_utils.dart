@@ -1,4 +1,5 @@
-import 'package:collection/collection.dart';
+// ignore_for_file: cast_from_null_always_fails
+
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
@@ -6,16 +7,17 @@ import 'package:mediasoup_client_flutter/src/sdp_object.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
 
 class PlainRtpUtils {
-  static PlainRtpParameters extractPlainRtpParameters(SdpObject sdpObject, RTCRtpMediaType kind) {
-    MediaObject? mediaObject = sdpObject.media.firstWhereOrNull(
+  static PlainRtpParameters extractPlainRtpParameters(
+    SdpObject sdpObject,
+    RTCRtpMediaType kind,
+  ) {
+    MediaObject? mediaObject = sdpObject.media.firstWhere(
       (MediaObject m) => m.type == RTCRtpMediaTypeExtension.value(kind),
+      orElse: () => null as MediaObject,
     );
 
-    if (mediaObject == null) {
-      throw Exception('m=${RTCRtpMediaTypeExtension.value(kind)} section not found');
-    }
-
-    Connection connectionObject = (mediaObject.connection ?? sdpObject.connection)!;
+    Connection connectionObject =
+        (mediaObject.connection ?? sdpObject.connection)!;
 
     PlainRtpParameters result = PlainRtpParameters(
       ip: connectionObject.ip,
@@ -26,14 +28,14 @@ class PlainRtpUtils {
     return result;
   }
 
-  static List<RtpEncodingParameters> getRtpEncodings(SdpObject sdpObject, RTCRtpMediaType kind) {
-    MediaObject? mediaObject = sdpObject.media.firstWhereOrNull(
+  static List<RtpEncodingParameters> getRtpEncodings(
+    SdpObject sdpObject,
+    RTCRtpMediaType kind,
+  ) {
+    MediaObject? mediaObject = sdpObject.media.firstWhere(
       (MediaObject m) => m.type == RTCRtpMediaTypeExtension.value(kind),
+      orElse: () => null as MediaObject,
     );
-
-    if (mediaObject == null) {
-      throw Exception('m=${RTCRtpMediaTypeExtension.value(kind)} section not found');
-    }
 
     if (mediaObject.ssrcs != null || mediaObject.ssrcs!.isNotEmpty) {
       Ssrc ssrc = mediaObject.ssrcs!.first;

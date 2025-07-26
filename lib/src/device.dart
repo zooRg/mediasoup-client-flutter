@@ -12,20 +12,15 @@ Logger _logger = Logger('Device');
 class Device {
   // Loaded flag.
   bool _loaded = false;
-
   // Extended RTP capabilities.
   ExtendedRtpCapabilities? _extendedRtpCapabilities;
-
   // Local RTP capabilities for receiving media.
   RtpCapabilities? _recvRtpCapabilities;
-
   // Whether we can produce audio/video based on computed extended RTP
   // capabilities.
   CanProduceByKind? _canProduceByKind;
-
   // Local SCTP capabilities.
   SctpCapabilities? _sctpCapabilities;
-
   // Observer instance.
   final EnhancedEventEmitter _observer = EnhancedEventEmitter();
 
@@ -37,7 +32,7 @@ class Device {
   /// @throws {InvalidStateError} if not loaded.
   RtpCapabilities get rtpCapabilities {
     if (!_loaded) {
-      throw Exception('not loaded');
+      throw ('not loaded');
     }
 
     return _recvRtpCapabilities!;
@@ -47,7 +42,7 @@ class Device {
   /// @throws {InvalidStateError} if not loaded.
   SctpCapabilities get sctpCapabilities {
     if (!_loaded) {
-      throw Exception('not loaded');
+      throw ('not loaded');
     }
 
     return _sctpCapabilities!;
@@ -58,7 +53,9 @@ class Device {
 
   /// Initialize the Device.
   Future<void> load({required RtpCapabilities routerRtpCapabilities}) async {
-    _logger.debug('load() [routerRtpCapabilities:${routerRtpCapabilities.toString()}]');
+    _logger.debug(
+      'load() [routerRtpCapabilities:${routerRtpCapabilities.toString()}]',
+    );
 
     routerRtpCapabilities = RtpCapabilities.copy(routerRtpCapabilities);
 
@@ -67,7 +64,7 @@ class Device {
 
     try {
       if (_loaded) {
-        throw Exception('already loaded');
+        throw ('already loaded');
       }
 
       // This may throw.
@@ -75,9 +72,12 @@ class Device {
 
       handler = HandlerInterface.handlerFactory();
 
-      var nativeRtpCapabilities = await handler.getNativeRtpCapabilities();
+      RtpCapabilities nativeRtpCapabilities = await handler
+          .getNativeRtpCapabilities();
 
-      _logger.debug('load() | got native RTP capabilities:$nativeRtpCapabilities');
+      _logger.debug(
+        'load() | got native RTP capabilities:$nativeRtpCapabilities',
+      );
 
       // This may throw.
       Ortc.validateRtpCapabilities(nativeRtpCapabilities);
@@ -88,21 +88,33 @@ class Device {
         routerRtpCapabilities,
       );
 
-      _logger.debug('load() | got extended RTP capabilities:$_extendedRtpCapabilities');
+      _logger.debug(
+        'load() | got extended RTP capabilities:$_extendedRtpCapabilities',
+      );
 
       // Check wether we can produce audio/video.
       _canProduceByKind = CanProduceByKind(
-        audio: Ortc.canSend(RTCRtpMediaType.RTCRtpMediaTypeAudio, _extendedRtpCapabilities!),
-        video: Ortc.canSend(RTCRtpMediaType.RTCRtpMediaTypeVideo, _extendedRtpCapabilities!),
+        audio: Ortc.canSend(
+          RTCRtpMediaType.RTCRtpMediaTypeAudio,
+          _extendedRtpCapabilities!,
+        ),
+        video: Ortc.canSend(
+          RTCRtpMediaType.RTCRtpMediaTypeVideo,
+          _extendedRtpCapabilities!,
+        ),
       );
 
       // Generate our receiving RTP capabilities for receiving media.
-      _recvRtpCapabilities = Ortc.getRecvRtpCapabilities(_extendedRtpCapabilities!);
+      _recvRtpCapabilities = Ortc.getRecvRtpCapabilities(
+        _extendedRtpCapabilities!,
+      );
 
       // This may throw.
       Ortc.validateRtpCapabilities(_recvRtpCapabilities);
 
-      _logger.debug('load() | got receiving RTP capabilities:$_recvRtpCapabilities');
+      _logger.debug(
+        'load() | got receiving RTP capabilities:$_recvRtpCapabilities',
+      );
 
       // Generate our SCTP capabilities.
       _sctpCapabilities = handler.getNativeSctpCapabilities();
@@ -122,7 +134,7 @@ class Device {
         await handler.close();
       }
 
-      throw Exception(error);
+      rethrow;
     }
   }
 
@@ -141,10 +153,10 @@ class Device {
   /// @throws {TypeError} if wrong arguments.
   bool canProduce(RTCRtpMediaType kind) {
     if (!_loaded) {
-      throw Exception('not loaded');
+      throw ('not loaded');
     } else if (kind != RTCRtpMediaType.RTCRtpMediaTypeAudio &&
         kind != RTCRtpMediaType.RTCRtpMediaTypeVideo) {
-      throw Exception('invalid kind ${RTCRtpMediaTypeExtension.value(kind)}');
+      throw ('invalid kind ${RTCRtpMediaTypeExtension.value(kind)}');
     }
 
     return _canProduceByKind!.canIt(kind);
@@ -168,20 +180,20 @@ class Device {
     Function? dataConsumerCallback,
   }) {
     if (!_loaded) {
-      throw Exception('not loaded');
+      throw ('not loaded');
     }
     // else if (id == null) {
-    //   throw Exception('missing id');
+    //   throw ('missing id');
     // } else if (iceParameters == null) {
-    //   throw Exception('missing iceParameters');
+    //   throw ('missing iceParameters');
     // } else if (iceCandidates == null) {
-    //   throw Exception('missing iceCandidates');
+    //   throw ('missing iceCandidates');
     // } else if (dtlsParameters == null) {
-    //   throw Exception('missing dtlsParameters');
+    //   throw ('missing dtlsParameters');
     // }
 
     // Create a new Transport.
-    var transport = Transport(
+    Transport transport = Transport(
       direction: direction,
       id: id,
       iceParameters: iceParameters,
@@ -253,7 +265,9 @@ class Device {
       id: data['id'],
       iceParameters: IceParameters.fromMap(data['iceParameters']),
       iceCandidates: List<IceCandidate>.from(
-        data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList(),
+        data['iceCandidates']
+            .map((iceCandidate) => IceCandidate.fromMap(iceCandidate))
+            .toList(),
       ),
       dtlsParameters: DtlsParameters.fromMap(data['dtlsParameters']),
       sctpParameters: data['sctpParameters'] != null
@@ -318,7 +332,9 @@ class Device {
       id: data['id'],
       iceParameters: IceParameters.fromMap(data['iceParameters']),
       iceCandidates: List<IceCandidate>.from(
-        data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList(),
+        data['iceCandidates']
+            .map((iceCandidate) => IceCandidate.fromMap(iceCandidate))
+            .toList(),
       ),
       dtlsParameters: DtlsParameters.fromMap(data['dtlsParameters']),
       sctpParameters: data['sctpParameters'] != null

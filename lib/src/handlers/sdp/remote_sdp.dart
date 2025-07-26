@@ -17,7 +17,9 @@ class MediaSectionIdx {
 
   MediaSectionIdx({required this.idx, this.reuseMid});
 
-  MediaSectionIdx.fromMap(Map data) : idx = data['idx'], reuseMid = data['reuseMid'];
+  MediaSectionIdx.fromMap(Map data)
+    : idx = data['idx'],
+      reuseMid = data['reuseMid'];
 
   Map<String, dynamic> toMap() {
     return {'idx': idx, 'reuseMid': reuseMid};
@@ -38,9 +40,9 @@ class RemoteSdp {
   // Whether this is Plan-B SDP.
   late bool _planB;
   // MediaSection instances with same order as in the SDP.
-  List<MediaSection> _mediaSections = <MediaSection>[];
+  final List<MediaSection> _mediaSections = <MediaSection>[];
   // MediaSection indices indexed by MID.
-  Map<String, int> _midToIndex = <String, int>{};
+  final Map<String, int> _midToIndex = <String, int>{};
   // First MID.
   String? _firstMid;
   // SDP object.
@@ -85,7 +87,7 @@ class RemoteSdp {
     _sdpObject.msidSemantic = MsidSemantic(semantic: 'WMS', token: '*');
 
     // NOTE: We take the latest fingerprint.
-    var numFingerprints = _dtlsParameters.fingerprints.length;
+    int numFingerprints = _dtlsParameters.fingerprints.length;
 
     _sdpObject.fingerprint = Fingerprint(
       type: dtlsParameters.fingerprints[numFingerprints - 1].algorithm,
@@ -115,7 +117,7 @@ class RemoteSdp {
     _iceParameters = iceParameters;
     _sdpObject.icelite = iceParameters.iceLite ? 'ice-lite' : null;
 
-    for (var mediaSection in _mediaSections) {
+    for (MediaSection mediaSection in _mediaSections) {
       mediaSection.setIceParameters(iceParameters);
     }
   }
@@ -125,31 +127,31 @@ class RemoteSdp {
 
     _dtlsParameters.role = role;
 
-    for (var mediaSection in _mediaSections) {
+    for (MediaSection mediaSection in _mediaSections) {
       mediaSection.setDtlsRole(role);
     }
   }
 
   void disableMediaSection(String mid) {
-    var idx = _midToIndex[mid];
+    int? idx = _midToIndex[mid];
 
     if (idx == null) {
-      throw Exception('no media section found with mid "$mid"');
+      throw ('no media section found with mid "$mid"');
     }
 
-    var mediaSection = _mediaSections[idx];
+    MediaSection mediaSection = _mediaSections[idx];
 
     mediaSection.disable();
   }
 
   void closeMediaSection(String mid) {
-    var idx = _midToIndex[mid];
+    int? idx = _midToIndex[mid];
 
     if (idx == null) {
-      throw Exception('no media section found with mid "$mid"');
+      throw ('no media section found with mid "$mid"');
     }
 
-    var mediaSection = _mediaSections[idx];
+    MediaSection mediaSection = _mediaSections[idx];
 
     // NOTE: Closing the first m section is a pain since it invalidates the
     // bundled transport, so let's avoid it.
@@ -169,28 +171,28 @@ class RemoteSdp {
     _regenerateBundleMids();
   }
 
-  void planBStopReceiving(String? mid, RtpParameters? offerRtpParameters) {
-    var idx = _midToIndex[mid];
+  void planBStopReceiving(String mid, RtpParameters offerRtpParameters) {
+    int? idx = _midToIndex[mid];
 
     if (idx == null) {
-      throw Exception('no media section found with mid "$mid"');
+      throw ('no media section found with mid "$mid"');
     }
 
-    var mediaSection = _mediaSections[idx] as OfferMediaSection;
+    OfferMediaSection mediaSection = _mediaSections[idx] as OfferMediaSection;
 
     mediaSection.planBStopReceiving(offerRtpParameters: offerRtpParameters);
     _replaceMediaSection(mediaSection, null);
   }
 
   void send({
-    MediaObject? offerMediaObject,
+    required MediaObject offerMediaObject,
     String? reuseMid,
     required RtpParameters offerRtpParameters,
     required RtpParameters answerRtpParameters,
     ProducerCodecOptions? codecOptions,
     bool extmapAllowMixed = false,
   }) {
-    var mediaSection = AnswerMediaSection(
+    AnswerMediaSection mediaSection = AnswerMediaSection(
       iceParameters: _iceParameters,
       iceCandidates: _iceCandidates,
       dtlsParameters: _dtlsParameters,
@@ -222,7 +224,7 @@ class RemoteSdp {
     required String streamId,
     required String trackId,
   }) {
-    var idx = _midToIndex[mid];
+    int? idx = _midToIndex[mid];
     OfferMediaSection? mediaSection;
 
     if (idx != null) {
@@ -246,7 +248,9 @@ class RemoteSdp {
 
       // Let's try to recycle a closed media section (if any).
       // NOTE: Yes, we can recycle a closed m=audio section with a new m=video.
-      var oldMediaSection = _mediaSections.firstWhereOrNull((MediaSection m) => m.closed);
+      MediaSection? oldMediaSection = _mediaSections.firstWhereOrNull(
+        (MediaSection m) => m.closed,
+      );
 
       if (oldMediaSection != null) {
         _replaceMediaSection(mediaSection, oldMediaSection.mid);
@@ -265,8 +269,8 @@ class RemoteSdp {
     }
   }
 
-  void sendSctpAssociation(MediaObject? offerMediaObject) {
-    var mediaSection = AnswerMediaSection(
+  void sendSctpAssociation(MediaObject offerMediaObject) {
+    AnswerMediaSection mediaSection = AnswerMediaSection(
       iceParameters: _iceParameters,
       iceCandidates: _iceCandidates,
       dtlsParameters: _dtlsParameters,
@@ -278,7 +282,7 @@ class RemoteSdp {
   }
 
   void receiveSctpAssociation({bool oldDataChannelSpec = false}) {
-    var mediaSection = OfferMediaSection(
+    OfferMediaSection mediaSection = OfferMediaSection(
       iceParameters: _iceParameters,
       iceCandidates: _iceCandidates,
       dtlsParameters: _dtlsParameters,
@@ -294,8 +298,8 @@ class RemoteSdp {
 
   MediaSectionIdx getNextMediaSectionIdx() {
     // If a closed media section is found, return its index.
-    for (var idx = 0; idx < _mediaSections.length; ++idx) {
-      var mediaSection = _mediaSections[idx];
+    for (int idx = 0; idx < _mediaSections.length; ++idx) {
+      MediaSection mediaSection = _mediaSections[idx];
 
       if (mediaSection.closed) {
         return MediaSectionIdx(idx: idx, reuseMid: mediaSection.mid!);
@@ -318,9 +322,7 @@ class RemoteSdp {
   }
 
   void _addMediaSection(MediaSection newMediaSection) {
-    if (_firstMid == null) {
-      _firstMid = newMediaSection.mid!;
-    }
+    _firstMid ??= newMediaSection.mid!;
 
     // Add to the vector.
     _mediaSections.add(newMediaSection);
@@ -338,13 +340,13 @@ class RemoteSdp {
   void _replaceMediaSection(MediaSection newMediaSection, dynamic reuseMid) {
     // Store it in the map.
     if (reuseMid is String) {
-      var idx = _midToIndex[reuseMid];
+      int? idx = _midToIndex[reuseMid];
 
       if (idx == null) {
-        throw Exception('no media section found for reuseMid "$reuseMid"');
+        throw ('no media section found for reuseMid "$reuseMid"');
       }
 
-      var oldMediaSection = _mediaSections[idx];
+      MediaSection oldMediaSection = _mediaSections[idx];
 
       // Replace the index in the vector with the new media section.
       _mediaSections[idx] = newMediaSection;
@@ -359,10 +361,10 @@ class RemoteSdp {
       // Regenerate BUNDLE mids.
       _regenerateBundleMids();
     } else {
-      var idx = _midToIndex[newMediaSection.mid];
+      int? idx = _midToIndex[newMediaSection.mid];
 
       if (idx == null) {
-        throw Exception('no media section found with mid "${newMediaSection.mid}"');
+        throw ('no media section found with mid "${newMediaSection.mid}"');
       }
 
       // Replace the index in the vector with the new media section.

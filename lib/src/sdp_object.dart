@@ -81,7 +81,9 @@ class MsidSemantic {
 
   MsidSemantic({required this.semantic, required this.token});
 
-  MsidSemantic.fromMap(Map data) : semantic = data['semantic'], token = data['token'];
+  MsidSemantic.fromMap(Map data)
+    : semantic = data['semantic'],
+      token = data['token'];
 
   Map<String, String> toMap() {
     return {'semantic': semantic, 'token': token};
@@ -129,17 +131,23 @@ class SdpObject {
         (data['invalid'] ?? []).map((inval) => Invalid.fromMap(inval)).toList(),
       ),
       timing = data['timing'] != null ? Timing.fromMap(data['timing']) : null,
-      connection = data['connection'] != null ? Connection.fromMap(data['connection']) : null,
+      connection = data['connection'] != null
+          ? Connection.fromMap(data['connection'])
+          : null,
       iceUfrag = data['iceUfrag'],
       icePwd = data['icePwd'],
-      fingerprint = data['fingerprint'] != null ? Fingerprint.fromMap(data['fingerprint']) : null,
+      fingerprint = data['fingerprint'] != null
+          ? Fingerprint.fromMap(data['fingerprint'])
+          : null,
       msidSemantic = data['msidSemantic'] != null
           ? MsidSemantic.fromMap(data['msidSemantic'])
           : null,
       media = List<MediaObject>.from(
         (data['media'] ?? []).map((m) => MediaObject.fromMap(m)).toList(),
       ),
-      groups = List<Group>.from((data['groups'] ?? []).map((g) => Group.fromMap(g)).toList()),
+      groups = List<Group>.from(
+        (data['groups'] ?? []).map((g) => Group.fromMap(g)).toList(),
+      ),
       icelite = data['icelite'],
       description = data['description'];
 

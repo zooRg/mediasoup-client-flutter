@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
@@ -105,16 +104,13 @@ class DataProducer extends EnhancedEventEmitter {
   void send(dynamic data) {
     _logger.debug('send()');
 
-    if (closed) {
-      throw Exception('closed');
-    }
+    if (closed) throw 'closed';
 
-    if (data is String) {
-      dataChannel.send(RTCDataChannelMessage(data));
-    }
-    if (data is Uint8List) {
-      dataChannel.send(RTCDataChannelMessage.fromBinary(data));
-    }
+    dataChannel.send(
+      data is String
+          ? RTCDataChannelMessage(data)
+          : RTCDataChannelMessage.fromBinary(data),
+    );
   }
 
   void _handleDataChannel() {
@@ -140,7 +136,9 @@ class DataProducer extends EnhancedEventEmitter {
     dataChannel.onMessage = (RTCDataChannelMessage message) {
       if (closed) return;
 
-      _logger.warn('DataChannel "message" event is a DataProducer, message discarded');
+      _logger.warn(
+        'DataChannel "message" event is a DataProducer, message discarded',
+      );
     };
   }
 
