@@ -159,16 +159,12 @@ class PlanBUtils {
     offerMediaObject.ssrcGroups = offerMediaObject.ssrcGroups ?? [];
     offerMediaObject.ssrcs = offerMediaObject.ssrcs ?? [];
 
-    offerMediaObject.ssrcGroups!.add(
-      SsrcGroup(semantics: 'SIM', ssrcs: ssrcs.join(' ')),
-    );
+    offerMediaObject.ssrcGroups!.add(SsrcGroup(semantics: 'SIM', ssrcs: ssrcs.join(' ')));
 
     for (int i = 0; i < ssrcs.length; ++i) {
       int ssrc = ssrcs[i];
 
-      offerMediaObject.ssrcs!.add(
-        Ssrc(id: ssrc, attribute: 'cname', value: cname),
-      );
+      offerMediaObject.ssrcs!.add(Ssrc(id: ssrc, attribute: 'cname', value: cname));
 
       offerMediaObject.ssrcs!.add(
         Ssrc(id: ssrc, attribute: 'msid', value: '$streamId ${track.id}'),
@@ -179,17 +175,13 @@ class PlanBUtils {
       int ssrc = ssrcs[i];
       int rtxSsrc = rtxSsrcs[i];
 
-      offerMediaObject.ssrcs!.add(
-        Ssrc(id: rtxSsrc, attribute: 'cname', value: cname),
-      );
+      offerMediaObject.ssrcs!.add(Ssrc(id: rtxSsrc, attribute: 'cname', value: cname));
 
       offerMediaObject.ssrcs!.add(
         Ssrc(id: rtxSsrc, attribute: 'msid', value: '$streamId ${track.id}'),
       );
 
-      offerMediaObject.ssrcGroups!.add(
-        SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'),
-      );
+      offerMediaObject.ssrcGroups!.add(SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'));
     }
   }
 }

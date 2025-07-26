@@ -107,9 +107,7 @@ class DataProducer extends EnhancedEventEmitter {
     if (closed) throw 'closed';
 
     dataChannel.send(
-      data is String
-          ? RTCDataChannelMessage(data)
-          : RTCDataChannelMessage.fromBinary(data),
+      data is String ? RTCDataChannelMessage(data) : RTCDataChannelMessage.fromBinary(data),
     );
   }
 
@@ -136,9 +134,7 @@ class DataProducer extends EnhancedEventEmitter {
     dataChannel.onMessage = (RTCDataChannelMessage message) {
       if (closed) return;
 
-      _logger.warn(
-        'DataChannel "message" event is a DataProducer, message discarded',
-      );
+      _logger.warn('DataChannel "message" event is a DataProducer, message discarded');
     };
   }
 

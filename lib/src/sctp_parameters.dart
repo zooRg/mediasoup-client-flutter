@@ -52,12 +52,7 @@ class SctpParameters {
   });
 
   Map<String, int> toMap() {
-    return {
-      'port': port,
-      'OS': os,
-      'MIS': mis,
-      'maxMessageSize': maxMessageSize,
-    };
+    return {'port': port, 'OS': os, 'MIS': mis, 'maxMessageSize': maxMessageSize};
   }
 
   static SctpParameters fromMap(Map data) {

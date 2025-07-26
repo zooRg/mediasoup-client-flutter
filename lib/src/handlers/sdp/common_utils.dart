@@ -82,10 +82,7 @@ class CommonUtils {
           continue;
         }
 
-        RtcpFeedback feedback = RtcpFeedback(
-          type: fb.type,
-          parameter: fb.subtype,
-        );
+        RtcpFeedback feedback = RtcpFeedback(type: fb.type, parameter: fb.subtype);
 
         // if (feedback.parameter == null || feedback.parameter.isEmpty) {
         //   feedback.parameter = null;
@@ -121,16 +118,11 @@ class CommonUtils {
 
   static DtlsParameters extractDtlsParameters(SdpObject sdpObject) {
     MediaObject? mediaObject = sdpObject.media.firstWhere(
-      (m) =>
-          m.iceUfrag != null &&
-          m.iceUfrag!.isNotEmpty &&
-          m.port != null &&
-          m.port != 0,
+      (m) => m.iceUfrag != null && m.iceUfrag!.isNotEmpty && m.port != null && m.port != 0,
       orElse: () => null as MediaObject,
     );
 
-    Fingerprint fingerprint =
-        (mediaObject.fingerprint ?? sdpObject.fingerprint)!;
+    Fingerprint fingerprint = (mediaObject.fingerprint ?? sdpObject.fingerprint)!;
 
     DtlsRole role = DtlsRole.auto;
 
@@ -148,9 +140,7 @@ class CommonUtils {
 
     DtlsParameters dtlsParameters = DtlsParameters(
       role: role,
-      fingerprints: [
-        DtlsFingerprint(algorithm: fingerprint.type, value: fingerprint.hash),
-      ],
+      fingerprints: [DtlsFingerprint(algorithm: fingerprint.type, value: fingerprint.hash)],
     );
 
     return dtlsParameters;

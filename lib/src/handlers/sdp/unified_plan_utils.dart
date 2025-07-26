@@ -4,9 +4,7 @@ import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 
 class UnifiedPlanUtils {
-  static List<RtpEncodingParameters> getRtpEncodings(
-    MediaObject offerMediaObject,
-  ) {
+  static List<RtpEncodingParameters> getRtpEncodings(MediaObject offerMediaObject) {
     Set<int> ssrcs = <int>{};
 
     for (Ssrc line in offerMediaObject.ssrcs ?? []) {
@@ -139,37 +137,27 @@ class UnifiedPlanUtils {
     offerMediaObject.ssrcGroups = <SsrcGroup>[];
     offerMediaObject.ssrcs = <Ssrc>[];
 
-    offerMediaObject.ssrcGroups!.add(
-      SsrcGroup(semantics: 'SIM', ssrcs: ssrcs.join(' ')),
-    );
+    offerMediaObject.ssrcGroups!.add(SsrcGroup(semantics: 'SIM', ssrcs: ssrcs.join(' ')));
 
     for (int i = 0; i < ssrcs.length; ++i) {
       int ssrc = ssrcs[i];
 
-      offerMediaObject.ssrcs!.add(
-        Ssrc(id: ssrc, attribute: 'cname', value: cname),
-      );
+      offerMediaObject.ssrcs!.add(Ssrc(id: ssrc, attribute: 'cname', value: cname));
 
-      offerMediaObject.ssrcs!.add(
-        Ssrc(id: ssrc, attribute: 'msid', value: '$streamId $trackId'),
-      );
+      offerMediaObject.ssrcs!.add(Ssrc(id: ssrc, attribute: 'msid', value: '$streamId $trackId'));
     }
 
     for (int i = 0; i < rtxSsrcs.length; ++i) {
       int ssrc = ssrcs[i];
       int rtxSsrc = rtxSsrcs[i];
 
-      offerMediaObject.ssrcs!.add(
-        Ssrc(id: rtxSsrc, attribute: 'cname', value: cname),
-      );
+      offerMediaObject.ssrcs!.add(Ssrc(id: rtxSsrc, attribute: 'cname', value: cname));
 
       offerMediaObject.ssrcs!.add(
         Ssrc(id: rtxSsrc, attribute: 'msid', value: '$streamId $trackId'),
       );
 
-      offerMediaObject.ssrcGroups!.add(
-        SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'),
-      );
+      offerMediaObject.ssrcGroups!.add(SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'));
     }
   }
 }

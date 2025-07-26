@@ -7,17 +7,13 @@ import 'package:mediasoup_client_flutter/src/sdp_object.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
 
 class PlainRtpUtils {
-  static PlainRtpParameters extractPlainRtpParameters(
-    SdpObject sdpObject,
-    RTCRtpMediaType kind,
-  ) {
+  static PlainRtpParameters extractPlainRtpParameters(SdpObject sdpObject, RTCRtpMediaType kind) {
     MediaObject? mediaObject = sdpObject.media.firstWhere(
       (MediaObject m) => m.type == RTCRtpMediaTypeExtension.value(kind),
       orElse: () => null as MediaObject,
     );
 
-    Connection connectionObject =
-        (mediaObject.connection ?? sdpObject.connection)!;
+    Connection connectionObject = (mediaObject.connection ?? sdpObject.connection)!;
 
     PlainRtpParameters result = PlainRtpParameters(
       ip: connectionObject.ip,
@@ -28,10 +24,7 @@ class PlainRtpUtils {
     return result;
   }
 
-  static List<RtpEncodingParameters> getRtpEncodings(
-    SdpObject sdpObject,
-    RTCRtpMediaType kind,
-  ) {
+  static List<RtpEncodingParameters> getRtpEncodings(SdpObject sdpObject, RTCRtpMediaType kind) {
     MediaObject? mediaObject = sdpObject.media.firstWhere(
       (MediaObject m) => m.type == RTCRtpMediaTypeExtension.value(kind),
       orElse: () => null as MediaObject,
