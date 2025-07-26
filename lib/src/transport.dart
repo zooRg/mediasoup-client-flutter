@@ -15,9 +15,15 @@ import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 enum Protocol { upd, tcp }
 
 extension ProtocolExtension on Protocol {
-  static const Map<String, Protocol> types = {'tcp': Protocol.tcp, 'udp': Protocol.upd};
+  static const Map<String, Protocol> types = {
+    'tcp': Protocol.tcp,
+    'udp': Protocol.upd,
+  };
 
-  static const Map<Protocol, String> values = {Protocol.tcp: 'tcp', Protocol.upd: 'udp'};
+  static const Map<Protocol, String> values = {
+    Protocol.tcp: 'tcp',
+    Protocol.upd: 'udp',
+  };
 
   static Protocol fromString(String type) => types[type]!;
 
@@ -102,7 +108,11 @@ class IceParameters {
   /// ICE Lite.
   bool iceLite;
 
-  IceParameters({required this.usernameFragment, required this.password, required this.iceLite});
+  IceParameters({
+    required this.usernameFragment,
+    required this.password,
+    required this.iceLite,
+  });
 
   IceParameters.fromMap(Map data)
     : usernameFragment = data['usernameFragment'],
@@ -195,8 +205,12 @@ class IceCandidate {
       port = data['port'],
       priority = data['priority'],
       type = IceCandidateTypeExtension.fromString(data['type']),
-      protocol = data['protocol'] != null ? ProtocolExtension.fromString(data['protocol']) : null,
-      tcpType = data['tcpType'] != null ? TcpTypeExtension.fromString(data['tcpType']) : null,
+      protocol = data['protocol'] != null
+          ? ProtocolExtension.fromString(data['protocol'])
+          : null,
+      tcpType = data['tcpType'] != null
+          ? TcpTypeExtension.fromString(data['tcpType'])
+          : null,
       transport = data['transport'] ?? 'udp',
       raddr = data['raddr'],
       rport = data['rport'],
@@ -289,7 +303,9 @@ class DtlsFingerprint {
 
   DtlsFingerprint({required this.algorithm, required this.value});
 
-  DtlsFingerprint.fromMap(Map data) : algorithm = data['algorithm'], value = data['value'];
+  DtlsFingerprint.fromMap(Map data)
+    : algorithm = data['algorithm'],
+      value = data['value'];
 
   Map<String, String> toMap() {
     return {'algorithm': algorithm, 'value': value};
@@ -305,13 +321,17 @@ class DtlsParameters {
   DtlsParameters.fromMap(Map data)
     : role = DtlsRoleExtension.fromString(data['role']),
       fingerprints = List<DtlsFingerprint>.from(
-        (data['fingerprints'] ?? []).map((fingerP) => DtlsFingerprint.fromMap(fingerP)).toList(),
+        (data['fingerprints'] ?? [])
+            .map((fingerP) => DtlsFingerprint.fromMap(fingerP))
+            .toList(),
       );
 
   Map<String, dynamic> toMap() {
     return {
       'role': role.value,
-      'fingerprints': fingerprints.map((DtlsFingerprint fp) => fp.toMap()).toList(),
+      'fingerprints': fingerprints
+          .map((DtlsFingerprint fp) => fp.toMap())
+          .toList(),
     };
   }
 }
@@ -330,9 +350,12 @@ class PlainRtpParameters {
     _ipVersion = ip;
   }
 
-  PlainRtpParameters({required this.ip, required this.port, required int ipVersion})
-    : _ipVersion = ipVersion,
-      assert(ipVersion != 4 || ipVersion != 6, 'Only 4 or 6');
+  PlainRtpParameters({
+    required this.ip,
+    required this.port,
+    required int ipVersion,
+  }) : _ipVersion = ipVersion,
+       assert(ipVersion != 4 || ipVersion != 6, 'Only 4 or 6');
 }
 
 Logger _logger = Logger('Transport');
@@ -340,9 +363,15 @@ Logger _logger = Logger('Transport');
 enum Direction { send, recv }
 
 extension DirectionExtension on Direction {
-  static const Map<String, Direction> types = {'recv': Direction.recv, 'send': Direction.send};
+  static const Map<String, Direction> types = {
+    'recv': Direction.recv,
+    'send': Direction.send,
+  };
 
-  static const Map<Direction, String> values = {Direction.recv: 'recv', Direction.send: 'send'};
+  static const Map<Direction, String> values = {
+    Direction.recv: 'recv',
+    Direction.send: 'send',
+  };
 
   static Direction fromString(String type) => types[type]!;
 
@@ -356,7 +385,11 @@ class CanProduceByKind {
   // TODO(123): what is that?
   Map<String, bool> tmp;
 
-  CanProduceByKind({required this.audio, required this.video, this.tmp = const <String, bool>{}});
+  CanProduceByKind({
+    required this.audio,
+    required this.video,
+    this.tmp = const <String, bool>{},
+  });
 
   bool canIt(RTCRtpMediaType kind) {
     if (kind == RTCRtpMediaType.RTCRtpMediaTypeAudio) {
@@ -658,7 +691,8 @@ class Transport extends EnhancedEventEmitter {
           argument: producer.localId,
           execFun: _handler.stopSending,
           message: 'producer @close event',
-          errorCallbackFun: (error) => _logger.warn('producer.close() failed:${error.toString()}'),
+          errorCallbackFun: (error) =>
+              _logger.warn('producer.close() failed:${error.toString()}'),
         ),
       );
     });
@@ -670,7 +704,10 @@ class Transport extends EnhancedEventEmitter {
       _flexQueue.addTask(
         FlexTaskAdd(
           id: '',
-          argument: ReplaceTrackOptions(localId: producer.localId, track: track),
+          argument: ReplaceTrackOptions(
+            localId: producer.localId,
+            track: track,
+          ),
           callbackFun: callback,
           errorCallbackFun: errback,
           execFun: _handler.replaceTrack,
@@ -705,7 +742,10 @@ class Transport extends EnhancedEventEmitter {
       _flexQueue.addTask(
         FlexTaskAdd(
           id: '',
-          argument: SetRtpEncodingParametersOptions(localId: producer.localId, params: params),
+          argument: SetRtpEncodingParametersOptions(
+            localId: producer.localId,
+            params: params,
+          ),
           execFun: _handler.setRtpEncodingParameters,
           callbackFun: callback,
           errorCallbackFun: errback,
@@ -721,7 +761,10 @@ class Transport extends EnhancedEventEmitter {
         return errback(Error.safeToString('close'));
       }
 
-      _handler.getSenderStats(producer.localId).then(callback).catchError(errback);
+      _handler
+          .getSenderStats(producer.localId)
+          .then(callback)
+          .catchError(errback);
     });
   }
 
@@ -750,7 +793,10 @@ class Transport extends EnhancedEventEmitter {
         return errback(Error.safeToString('closed'));
       }
 
-      _handler.getReceiverStats(consumer.localId).then(callback).catchError(errback);
+      _handler
+          .getReceiverStats(consumer.localId)
+          .then(callback)
+          .catchError(errback);
     });
   }
 
@@ -773,7 +819,9 @@ class Transport extends EnhancedEventEmitter {
       if (arguments.encodings.isEmpty) {
         normalizedEncodings = [];
       } else if (arguments.encodings.isNotEmpty) {
-        normalizedEncodings = arguments.encodings.map((RtpEncodingParameters encoding) {
+        normalizedEncodings = arguments.encodings.map((
+          RtpEncodingParameters encoding,
+        ) {
           var normalizedEncoding = RtpEncodingParameters(active: true);
 
           if (encoding.active == false) {
@@ -786,7 +834,8 @@ class Transport extends EnhancedEventEmitter {
             normalizedEncoding.scalabilityMode = encoding.scalabilityMode;
           }
           if (encoding.scaleResolutionDownBy != null) {
-            normalizedEncoding.scaleResolutionDownBy = encoding.scaleResolutionDownBy;
+            normalizedEncoding.scaleResolutionDownBy =
+                encoding.scaleResolutionDownBy;
           }
           if (encoding.maxBitrate != null) {
             normalizedEncoding.maxBitrate = encoding.maxBitrate;
@@ -849,12 +898,14 @@ class Transport extends EnhancedEventEmitter {
         _observer.safeEmit('newProducer', {'producer': producer});
 
         producerCallback?.call(producer);
-      } catch (error) {
+      } catch (error, s) {
+        _logger.error(error);
+        _logger.error(s);
         _handler.stopSending(sendResult.localId);
 
         rethrow;
       }
-    } catch (error) {
+    } catch (error, s) {
       // This catch is needed to stop the given track if the command above
       // failed due to closed Transport.
       if (arguments.stopTracks) {
@@ -864,6 +915,7 @@ class Transport extends EnhancedEventEmitter {
           //
         }
       }
+      _logger.error(s);
       throw Exception(error);
     }
   }
@@ -887,7 +939,9 @@ class Transport extends EnhancedEventEmitter {
     if (_direction != Direction.send) {
       throw Exception('not a sending Transport');
     } else if (track.kind == null ||
-        !_canProduceByKind.canIt(RTCRtpMediaTypeExtension.fromString(track.kind!))) {
+        !_canProduceByKind.canIt(
+          RTCRtpMediaTypeExtension.fromString(track.kind!),
+        )) {
       throw Exception('cannot produce ${track.kind}');
     } else if (listeners('connect').isEmpty && _connectionState == 'new') {
       throw Exception('no "connect" listener set into this transport');
@@ -918,7 +972,10 @@ class Transport extends EnhancedEventEmitter {
 
   Future<void> _consume(ConsumeArguments arguments) async {
     // Unsure the device can consume it.
-    var canConsume = Ortc.canReceive(arguments.rtpParameters, _extendedRtpCapabilities);
+    var canConsume = Ortc.canReceive(
+      arguments.rtpParameters,
+      _extendedRtpCapabilities,
+    );
 
     if (!canConsume) {
       throw Exception('cannot consume this Producer');
@@ -950,9 +1007,12 @@ class Transport extends EnhancedEventEmitter {
 
     // If this is the first video Consumer and the Consumer for RTP probation
     // has not yet been created, create it now.
-    if (!_probatorConsumerCreated && arguments.kind == RTCRtpMediaType.RTCRtpMediaTypeVideo) {
+    if (!_probatorConsumerCreated &&
+        arguments.kind == RTCRtpMediaType.RTCRtpMediaTypeVideo) {
       try {
-        var probatorRtpParameters = Ortc.generateProbatorRtpparameters(consumer.rtpParameters);
+        var probatorRtpParameters = Ortc.generateProbatorRtpparameters(
+          consumer.rtpParameters,
+        );
 
         await _handler.receive(
           HandlerReceiveOptions(
@@ -1069,7 +1129,9 @@ class Transport extends EnhancedEventEmitter {
 
           // This will fill sctpStreamParameters's missing fields
           // with default values.
-          Ortc.validateSctpStreamParameters(sendDataResult.sctpStreamParameters);
+          Ortc.validateSctpStreamParameters(
+            sendDataResult.sctpStreamParameters,
+          );
 
           String? id = await safeEmitAsFuture('producedata', {
             'sctpStreamParameters': sendDataResult.sctpStreamParameters,
