@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:mediasoup_client_flutter/src/common/logger.dart';
-import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
+import 'package:sdp_transform/sdp_transform.dart';
 import 'package:mediasoup_client_flutter/src/producer.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sdp_object.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
-import 'package:sdp_transform/sdp_transform.dart';
+import 'package:mediasoup_client_flutter/src/common/logger.dart';
+import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 
 Logger logger = Logger('RemoteSdp');
 
@@ -38,9 +38,9 @@ class RemoteSdp {
   // Whether this is Plan-B SDP.
   late bool _planB;
   // MediaSection instances with same order as in the SDP.
-  final List<MediaSection> _mediaSections = <MediaSection>[];
+  List<MediaSection> _mediaSections = <MediaSection>[];
   // MediaSection indices indexed by MID.
-  final Map<String, int> _midToIndex = <String, int>{};
+  Map<String, int> _midToIndex = <String, int>{};
   // First MID.
   String? _firstMid;
   // SDP object.
@@ -318,7 +318,9 @@ class RemoteSdp {
   }
 
   void _addMediaSection(MediaSection newMediaSection) {
-    _firstMid ??= newMediaSection.mid!;
+    if (_firstMid == null) {
+      _firstMid = newMediaSection.mid!;
+    }
 
     // Add to the vector.
     _mediaSections.add(newMediaSection);

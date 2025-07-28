@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 abstract class FlexTask {
   final String? id;
   final Function execFun;
@@ -20,24 +18,38 @@ abstract class FlexTask {
 
 class FlexTaskAdd extends FlexTask {
   FlexTaskAdd({
-    super.id,
-    required super.execFun,
-    super.argument,
-    super.callbackFun,
-    super.errorCallbackFun,
-    super.message,
-  });
+    String? id,
+    required Function execFun,
+    Object? argument,
+    Function? callbackFun,
+    Function? errorCallbackFun,
+    String? message,
+  }) : super(
+         id: id,
+         execFun: execFun,
+         argument: argument,
+         callbackFun: callbackFun,
+         errorCallbackFun: errorCallbackFun,
+         message: message,
+       );
 }
 
 class FlexTaskRemove extends FlexTask {
   FlexTaskRemove({
-    super.id,
-    required super.execFun,
-    super.argument,
-    super.callbackFun,
-    super.errorCallbackFun,
-    super.message,
-  });
+    String? id,
+    required Function execFun,
+    Object? argument,
+    Function? callbackFun,
+    Function? errorCallbackFun,
+    String? message,
+  }) : super(
+         id: id,
+         execFun: execFun,
+         argument: argument,
+         callbackFun: callbackFun,
+         errorCallbackFun: errorCallbackFun,
+         message: message,
+       );
 }
 
 class FlexQueue {
@@ -74,12 +86,8 @@ class FlexQueue {
             task.callbackFun?.call(result);
           }
         } catch (error, st) {
-          if (kDebugMode) {
-            print(error);
-          }
-          if (kDebugMode) {
-            print(st);
-          }
+          print(error);
+          print(st);
           task.errorCallbackFun?.call(error);
         } finally {
           isBusy = false;

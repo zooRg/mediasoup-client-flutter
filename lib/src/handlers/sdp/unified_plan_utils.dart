@@ -1,11 +1,9 @@
-// ignore_for_file: cast_from_null_always_fails
-
-import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
+import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 
 class UnifiedPlanUtils {
   static List<RtpEncodingParameters> getRtpEncodings(MediaObject offerMediaObject) {
-    Set<int> ssrcs = <int>{};
+    Set<int> ssrcs = Set<int>();
 
     for (Ssrc line in offerMediaObject.ssrcs ?? []) {
       int ssrc = line.id!;
@@ -30,7 +28,7 @@ class UnifiedPlanUtils {
       int? ssrc;
       int? rtxSsrc;
 
-      if (tokens.isNotEmpty) {
+      if (tokens.length > 0) {
         ssrc = int.parse(tokens[0]);
       }
       if (tokens.length > 1) {
@@ -81,12 +79,16 @@ class UnifiedPlanUtils {
       orElse: () => null as Ssrc,
     );
 
+    if (ssrcMsidLine == null) {
+      throw ('a=ssrc line with msid information not found');
+    }
+
     List<String> tmp = ssrcMsidLine.value.split(' ');
 
     String streamId = '';
     String trackId = '';
 
-    if (tmp.isNotEmpty) {
+    if (tmp.length > 0) {
       streamId = tmp[0];
     }
     if (tmp.length > 1) {

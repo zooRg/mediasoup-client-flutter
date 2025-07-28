@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 enum Priority { VeryLow, Low, Medium, High }
 
 extension PriorityExtension on Priority {

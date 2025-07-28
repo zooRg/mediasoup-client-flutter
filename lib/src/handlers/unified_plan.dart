@@ -1,20 +1,18 @@
-// ignore_for_file: cast_from_null_always_fails, empty_catches
-
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:sdp_transform/sdp_transform.dart';
+import 'package:mediasoup_client_flutter/src/ortc.dart';
+import 'package:mediasoup_client_flutter/src/scalability_modes.dart';
+import 'package:mediasoup_client_flutter/src/sdp_object.dart';
+import 'package:mediasoup_client_flutter/src/transport.dart';
+import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
+import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/common/logger.dart';
 import 'package:mediasoup_client_flutter/src/handlers/handler_interface.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/common_utils.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/remote_sdp.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/unified_plan_utils.dart';
-import 'package:mediasoup_client_flutter/src/ortc.dart';
-import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
-import 'package:mediasoup_client_flutter/src/scalability_modes.dart';
-import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
-import 'package:mediasoup_client_flutter/src/sdp_object.dart';
-import 'package:mediasoup_client_flutter/src/transport.dart';
-import 'package:sdp_transform/sdp_transform.dart';
 
 Logger _logger = Logger('Unified plan handler');
 
@@ -34,7 +32,7 @@ class UnifiedPlan extends HandlerInterface {
   // RTCPeerConnection instance.
   RTCPeerConnection? _pc;
   // Map of RTCTransceivers indexed by MID.
-  final Map<String, RTCRtpTransceiver> _mapMidTransceiver = {};
+  Map<String, RTCRtpTransceiver> _mapMidTransceiver = {};
   // Whether a DataChannel m=application section has been created.
   bool _hasDataChannelMediaSection = false;
   // Sending DataChannel id value counter. Incremented for each new DataChannel.
@@ -45,7 +43,9 @@ class UnifiedPlan extends HandlerInterface {
   UnifiedPlan() : super();
 
   Future<void> _setupTransport({required DtlsRole localDtlsRole, SdpObject? localSdpObject}) async {
-    localSdpObject ??= SdpObject.fromMap(parse((await _pc!.getLocalDescription())!.sdp!));
+    if (localSdpObject == null) {
+      localSdpObject = SdpObject.fromMap(parse((await _pc!.getLocalDescription())!.sdp!));
+    }
 
     // Get our local DTLS parameters.
     DtlsParameters dtlsParameters = CommonUtils.extractDtlsParameters(localSdpObject);
@@ -121,7 +121,7 @@ class UnifiedPlan extends HandlerInterface {
         await pc.close();
       } catch (error2) {}
 
-      rethrow;
+      throw error;
     }
   }
 
@@ -170,9 +170,6 @@ class UnifiedPlan extends HandlerInterface {
 
   @override
   Future<HandlerReceiveResult> receive(HandlerReceiveOptions options) async {
-    if (_pc == null) {
-      await Future.delayed(const Duration(milliseconds: 1500));
-    }
     _assertRecvDirection();
 
     _logger.debug(
@@ -185,7 +182,7 @@ class UnifiedPlan extends HandlerInterface {
       mid: localId,
       kind: options.kind,
       offerRtpParameters: options.rtpParameters,
-      streamId: options.rtpParameters.rtcp?.cname ?? 'default_cname',
+      streamId: options.rtpParameters.rtcp!.cname ?? '',
       trackId: options.trackId,
     );
 
@@ -232,30 +229,9 @@ class UnifiedPlan extends HandlerInterface {
     // Store in the map.
     _mapMidTransceiver[localId] = transceiver;
 
-    MediaStream? stream;
-
-    try {
-      // Attempt to retrieve the remote stream
-      stream = _pc!.getRemoteStreams().firstWhereOrNull(
-        (e) => e?.id == options.rtpParameters.rtcp?.cname,
-      );
-    } catch (e) {
-      // Log the error
-      // _logger.error('Error in getRemoteStreams: $e');
-
-      // Attempt fallback mechanism
-      final MediaStreamTrack? track = (await _pc!.getReceivers())
-          .firstWhereOrNull((receiver) => receiver.track?.id == options.trackId)
-          ?.track;
-
-      if (track == null) {
-        throw Exception('Track not found for trackId: ${options.trackId}');
-      }
-
-      // Create a new local media stream and add the track
-      stream = await createLocalMediaStream(options.rtpParameters.rtcp?.cname ?? 'default_cname');
-      stream.addTrack(track);
-    }
+    final MediaStream? stream = _pc!.getRemoteStreams().firstWhereOrNull(
+      (e) => e?.id == options.rtpParameters.rtcp!.cname,
+    );
 
     if (stream == null) {
       throw ('Stream not found');
@@ -329,7 +305,11 @@ class UnifiedPlan extends HandlerInterface {
   Future<void> replaceTrack(ReplaceTrackOptions options) async {
     _assertSendRirection();
 
-    _logger.debug('replaceTrack() [localId:${options.localId}, track.id${options.track.id}');
+    if (options.track != null) {
+      _logger.debug('replaceTrack() [localId:${options.localId}, track.id${options.track.id}');
+    } else {
+      _logger.debug('replaceTrack() [localId:${options.localId}, no track');
+    }
 
     RTCRtpTransceiver? transceiver = _mapMidTransceiver[options.localId];
 
@@ -349,7 +329,7 @@ class UnifiedPlan extends HandlerInterface {
     _remoteSdp.updateIceParameters(iceParameters);
 
     if (!_transportReady) {
-      return;
+      return null;
     }
 
     if (_direction == Direction.send) {
@@ -415,12 +395,12 @@ class UnifiedPlan extends HandlerInterface {
     };
 
     if (options.dtlsParameters.role != DtlsRole.auto) {
-      _forcedLocalDtlsRole = options.dtlsParameters.role == DtlsRole.server
+      this._forcedLocalDtlsRole = options.dtlsParameters.role == DtlsRole.server
           ? DtlsRole.client
           : DtlsRole.server;
     }
 
-    final constrains = options.proprietaryConstraints.isEmpty
+    final _constrains = options.proprietaryConstraints.isEmpty
         ? <String, dynamic>{
             'mandatory': {},
             'optional': [
@@ -429,8 +409,8 @@ class UnifiedPlan extends HandlerInterface {
           }
         : options.proprietaryConstraints;
 
-    constrains['optional'] = [
-      ...constrains['optional'],
+    _constrains['optional'] = [
+      ..._constrains['optional'],
       {'DtlsSrtpKeyAgreement': true},
     ];
 
@@ -441,7 +421,7 @@ class UnifiedPlan extends HandlerInterface {
       'rtcpMuxPolicy': 'require',
       'sdpSemantics': 'unified-plan',
       ...options.additionalSettings,
-    }, constrains);
+    }, _constrains);
 
     // Handle RTCPeerConnection connection status.
     _pc!.onIceConnectionState = (RTCIceConnectionState state) {
@@ -487,9 +467,9 @@ class UnifiedPlan extends HandlerInterface {
 
     if (options.encodings.length > 1) {
       int idx = 0;
-      for (var encoding in options.encodings) {
+      options.encodings.forEach((RtpEncodingParameters encoding) {
         encoding.rid = 'r${idx++}';
-      }
+      });
     }
 
     RtpParameters sendingRtpParameters = RtpParameters.copy(
@@ -561,9 +541,9 @@ class UnifiedPlan extends HandlerInterface {
     if (!kIsWeb) {
       final transceivers = await _pc!.getTransceivers();
       transceiver = transceivers.firstWhere(
-        (transceiver) =>
-            transceiver.sender.track?.id == options.track.id &&
-            transceiver.sender.track?.kind == options.track.kind,
+        (_transceiver) =>
+            _transceiver.sender.track?.id == options.track.id &&
+            _transceiver.sender.track?.kind == options.track.kind,
         orElse: () => throw 'No transceiver found',
       );
     }
@@ -721,14 +701,14 @@ class UnifiedPlan extends HandlerInterface {
     RTCRtpParameters parameters = transceiver.sender.parameters;
 
     int idx = 0;
-    for (var encoding in parameters.encodings!) {
+    parameters.encodings!.forEach((RTCRtpEncoding encoding) {
       if (idx <= options.spatialLayer) {
         encoding.active = true;
       } else {
         encoding.active = false;
       }
       idx++;
-    }
+    });
 
     await transceiver.sender.setParameters(parameters);
   }
@@ -750,9 +730,9 @@ class UnifiedPlan extends HandlerInterface {
     RTCRtpParameters parameters = transceiver.sender.parameters;
 
     int idx = 0;
-    for (var encoding in parameters.encodings!) {
+    parameters.encodings!.forEach((RTCRtpEncoding encoding) {
       parameters.encodings![idx] = RTCRtpEncoding(
-        active: options.params.active,
+        active: options.params.active != null ? options.params.active : encoding.active,
         maxBitrate: options.params.maxBitrate ?? encoding.maxBitrate,
         maxFramerate: options.params.maxFramerate ?? encoding.maxFramerate,
         minBitrate: options.params.minBitrate ?? encoding.minBitrate,
@@ -763,7 +743,7 @@ class UnifiedPlan extends HandlerInterface {
         ssrc: options.params.ssrc ?? encoding.ssrc,
       );
       idx++;
-    }
+    });
 
     await transceiver.sender.setParameters(parameters);
   }

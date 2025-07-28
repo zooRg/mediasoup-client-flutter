@@ -1,12 +1,10 @@
-// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables, constant_identifier_names
-
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
-import 'package:mediasoup_client_flutter/src/handlers/unified_plan.dart';
 import 'package:mediasoup_client_flutter/src/producer.dart';
-import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
+import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
+import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
+import 'package:mediasoup_client_flutter/src/handlers/unified_plan.dart';
 
 class SCTP_NUM_STREAMS {
   static const int OS = 1024;
@@ -218,7 +216,7 @@ abstract class HandlerInterface extends EnhancedEventEmitter {
   void run({required HandlerRunOptions options});
   Future<void> updateIceServers(List<RTCIceServer> iceServers);
   Future<void> restartIce(IceParameters iceParameters);
-  //-TODO: RTCStatsReport
+  // TODO: RTCStatsReport
   Future<List<StatsReport>> getTransportStats();
   Future<HandlerSendResult> send(HandlerSendOptions options);
   Future<void> stopSending(String localId);

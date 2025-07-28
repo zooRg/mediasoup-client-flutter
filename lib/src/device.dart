@@ -1,11 +1,11 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
-import 'package:mediasoup_client_flutter/src/common/logger.dart';
-import 'package:mediasoup_client_flutter/src/handlers/handler_interface.dart';
 import 'package:mediasoup_client_flutter/src/ortc.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
+import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
+import 'package:mediasoup_client_flutter/src/common/logger.dart';
+import 'package:mediasoup_client_flutter/src/handlers/handler_interface.dart';
 
 Logger _logger = Logger('Device');
 
@@ -22,7 +22,7 @@ class Device {
   // Local SCTP capabilities.
   SctpCapabilities? _sctpCapabilities;
   // Observer instance.
-  final EnhancedEventEmitter _observer = EnhancedEventEmitter();
+  EnhancedEventEmitter _observer = EnhancedEventEmitter();
 
   // Whether the Device is loaded.
   bool get loaded => _loaded;
@@ -117,7 +117,7 @@ class Device {
         await handler.close();
       }
 
-      rethrow;
+      throw error;
     }
   }
 

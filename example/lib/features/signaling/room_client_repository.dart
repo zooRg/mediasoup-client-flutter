@@ -21,14 +21,14 @@ class RoomClientRepository {
   final String url;
   final String displayName;
 
-  final bool _closed = false;
+  bool _closed = false;
 
   WebSocket? _webSocket;
   Device? _mediasoupDevice;
   Transport? _sendTransport;
   Transport? _recvTransport;
   bool _produce = false;
-  final bool _consume = true;
+  bool _consume = true;
   StreamSubscription<MediaDevicesState>? _mediaDevicesBlocSubscription;
   String? audioInputDeviceId;
   String? audioOutputDeviceId;

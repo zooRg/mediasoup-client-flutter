@@ -1,10 +1,8 @@
-// ignore_for_file: cast_from_null_always_fails
-
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sdp_object.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
+import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 
 class PlainRtpUtils {
   static PlainRtpParameters extractPlainRtpParameters(SdpObject sdpObject, RTCRtpMediaType kind) {
@@ -12,6 +10,10 @@ class PlainRtpUtils {
       (MediaObject m) => m.type == RTCRtpMediaTypeExtension.value(kind),
       orElse: () => null as MediaObject,
     );
+
+    if (mediaObject == null) {
+      throw ('m=${RTCRtpMediaTypeExtension.value(kind)} section not found');
+    }
 
     Connection connectionObject = (mediaObject.connection ?? sdpObject.connection)!;
 
@@ -29,6 +31,10 @@ class PlainRtpUtils {
       (MediaObject m) => m.type == RTCRtpMediaTypeExtension.value(kind),
       orElse: () => null as MediaObject,
     );
+
+    if (mediaObject == null) {
+      throw ('m=${RTCRtpMediaTypeExtension.value(kind)} section not found');
+    }
 
     if (mediaObject.ssrcs != null || mediaObject.ssrcs!.isNotEmpty) {
       Ssrc ssrc = mediaObject.ssrcs!.first;

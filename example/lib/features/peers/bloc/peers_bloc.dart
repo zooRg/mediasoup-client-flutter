@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'package:collection/collection.dart';
 
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:example/features/peers/enitity/peer.dart';
 import 'package:example/features/media_devices/bloc/media_devices_bloc.dart';
+import 'package:example/features/peers/enitity/peer.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:mediasoup_client_flutter/mediasoup_client_flutter.dart';
 
 part 'peers_event.dart';
@@ -15,7 +14,7 @@ part 'peers_state.dart';
 class PeersBloc extends Bloc<dynamic, PeersState> {
   final MediaDevicesBloc mediaDevicesBloc;
   String selectedOutputId = '';
-  PeersBloc({required this.mediaDevicesBloc}) : super(PeersState()) {
+  PeersBloc({required this.mediaDevicesBloc}) : super(const PeersState()) {
     // if (mediaDevicesBloc.state.selectedAudioOutput?.deviceId != null) {
     //   selectedOutputId = mediaDevicesBloc.state.selectedAudioOutput!.deviceId;
     // }
@@ -32,9 +31,7 @@ class PeersBloc extends Bloc<dynamic, PeersState> {
   }
 
   @override
-  Stream<PeersState> mapEventToState(
-    dynamic event,
-  ) async* {
+  Stream<PeersState> mapEventToState(dynamic event) async* {
     if (event is PeerAdd) {
       yield* _mapPeerAddToState(event);
     } else if (event is PeerRemove) {
@@ -51,38 +48,44 @@ class PeersBloc extends Bloc<dynamic, PeersState> {
   }
 
   Stream<PeersState> _mapPeerAddToState(PeerAdd event) async* {
-    final Map<String, Peer> newPeers = Map<String, Peer>.of(state.peers);
-    final Peer newPeer = Peer.fromMap(event.newPeer);
+    final newPeers = Map<String, Peer>.of(state.peers);
+    final newPeer = Peer.fromMap(event.newPeer);
     newPeers[newPeer.id] = newPeer;
 
     yield PeersState(peers: newPeers);
   }
 
   Stream<PeersState> _mapPeerRemoveToState(PeerRemove event) async* {
-    final Map<String, Peer> newPeers = Map<String, Peer>.of(state.peers);
+    final newPeers = Map<String, Peer>.of(state.peers);
     newPeers.remove(event.peerId);
 
     yield PeersState(peers: newPeers);
   }
 
   Stream<PeersState> _mapConsumerAddToState(PeerAddConsumer event) async* {
-    final Map<String, Peer> newPeers = Map<String, Peer>.of(state.peers);
+    final newPeers = Map<String, Peer>.of(state.peers);
 
     if (kIsWeb) {
       if (newPeers[event.peerId]!.renderer == null) {
-        newPeers[event.peerId!] = newPeers[event.peerId]!.copyWith(renderer: RTCVideoRenderer());
+        newPeers[event.peerId!] = newPeers[event.peerId]!.copyWith(
+          renderer: RTCVideoRenderer(),
+        );
         await newPeers[event.peerId]!.renderer!.initialize();
         // newPeers[event.peerId]!.renderer!.audioOutput = selectedOutputId;
       }
 
       if (event.consumer.kind == 'video') {
-        newPeers[event.peerId!] = newPeers[event.peerId]!.copyWith(video: event.consumer);
+        newPeers[event.peerId!] = newPeers[event.peerId]!.copyWith(
+          video: event.consumer,
+        );
         newPeers[event.peerId]!.renderer!.srcObject =
             newPeers[event.peerId]!.video!.stream;
       }
 
       if (event.consumer.kind == 'audio') {
-        newPeers[event.peerId!] = newPeers[event.peerId]!.copyWith(audio: event.consumer);
+        newPeers[event.peerId!] = newPeers[event.peerId]!.copyWith(
+          audio: event.consumer,
+        );
         if (newPeers[event.peerId]!.video == null) {
           newPeers[event.peerId]!.renderer!.srcObject =
               newPeers[event.peerId]!.audio!.stream;
@@ -109,10 +112,12 @@ class PeersBloc extends Bloc<dynamic, PeersState> {
   }
 
   Stream<PeersState> _mapConsumerRemoveToState(
-      PeerRemoveConsumer event) async* {
-    final Map<String, Peer> newPeers = Map<String, Peer>.of(state.peers);
-    final Peer? peer = newPeers.values
-        .firstWhereOrNull((p) => p.consumers.contains(event.consumerId));
+    PeerRemoveConsumer event,
+  ) async* {
+    final newPeers = Map<String, Peer>.of(state.peers);
+    final peer = newPeers.values.firstWhereOrNull(
+      (p) => p.consumers.contains(event.consumerId),
+    );
 
     if (peer != null) {
       if (kIsWeb) {
@@ -122,7 +127,7 @@ class PeersBloc extends Bloc<dynamic, PeersState> {
             final renderer = newPeers[peer.id]?.renderer!;
             newPeers[peer.id] = newPeers[peer.id]!.removeAudioAndRenderer();
             yield PeersState(peers: newPeers);
-            await Future.delayed(Duration(microseconds: 300));
+            await Future.delayed(const Duration(microseconds: 300));
             await renderer?.dispose();
           } else {
             newPeers[peer.id] = newPeers[peer.id]!.removeAudio();
@@ -156,18 +161,19 @@ class PeersBloc extends Bloc<dynamic, PeersState> {
           newPeers[peer.id] = newPeers[peer.id]!.removeVideoAndRenderer();
           yield PeersState(peers: newPeers);
           consumer
-            ?.close()
-            .then((_) => Future.delayed(Duration(microseconds: 300)))
-            .then((_) async => await renderer?.dispose());
+              ?.close()
+              .then((_) => Future.delayed(const Duration(microseconds: 300)))
+              .then((_) async => await renderer?.dispose());
         }
       }
     }
   }
 
   Stream<PeersState> _mapPeerPausedConsumer(PeerPausedConsumer event) async* {
-    final Map<String, Peer> newPeers = Map<String, Peer>.of(state.peers);
-    final Peer? peer = newPeers.values
-        .firstWhereOrNull((p) => p.consumers.contains(event.consumerId));
+    final newPeers = Map<String, Peer>.of(state.peers);
+    final peer = newPeers.values.firstWhereOrNull(
+      (p) => p.consumers.contains(event.consumerId),
+    );
 
     if (peer != null) {
       newPeers[peer.id] = newPeers[peer.id]!.copyWith(
@@ -179,9 +185,10 @@ class PeersBloc extends Bloc<dynamic, PeersState> {
   }
 
   Stream<PeersState> _mapPeerResumedConsumer(PeerResumedConsumer event) async* {
-    final Map<String, Peer> newPeers = Map<String, Peer>.of(state.peers);
-    final Peer? peer = newPeers.values
-        .firstWhereOrNull((p) => p.consumers.contains(event.consumerId));
+    final newPeers = Map<String, Peer>.of(state.peers);
+    final peer = newPeers.values.firstWhereOrNull(
+      (p) => p.consumers.contains(event.consumerId),
+    );
 
     if (peer != null) {
       newPeers[peer.id] = newPeers[peer.id]!.copyWith(
@@ -194,9 +201,9 @@ class PeersBloc extends Bloc<dynamic, PeersState> {
 
   @override
   Future<void> close() {
-    state.peers.values.forEach((peer) {
+    for (final peer in state.peers.values) {
       peer.renderer?.dispose();
-    });
+    }
     return super.close();
   }
 }

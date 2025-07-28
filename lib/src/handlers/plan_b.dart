@@ -1,19 +1,17 @@
-// ignore_for_file: cast_from_null_always_fails, empty_catches
-
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:sdp_transform/sdp_transform.dart';
+import 'package:mediasoup_client_flutter/src/ortc.dart';
+import 'package:mediasoup_client_flutter/src/sdp_object.dart';
+import 'package:mediasoup_client_flutter/src/transport.dart';
+import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
+import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/common/logger.dart';
 import 'package:mediasoup_client_flutter/src/handlers/handler_interface.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/common_utils.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/plan_b_utils.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/remote_sdp.dart';
-import 'package:mediasoup_client_flutter/src/ortc.dart';
-import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
-import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
-import 'package:mediasoup_client_flutter/src/sdp_object.dart';
-import 'package:mediasoup_client_flutter/src/transport.dart';
 import 'package:mediasoup_client_flutter/src/utils.dart';
-import 'package:sdp_transform/sdp_transform.dart';
 
 Logger _logger = Logger('Plan B handler');
 
@@ -32,12 +30,12 @@ class PlanB extends HandlerInterface {
   // // Local stream for sending.
   // MediaStream _sendStream;
   // Map of sending MediaStreamTracks indexed by localId.
-  final Map<String, MediaStreamTrack> _mapSendLocalIdTrack = <String, MediaStreamTrack>{};
+  Map<String, MediaStreamTrack> _mapSendLocalIdTrack = <String, MediaStreamTrack>{};
   // Next sending localId.
   int _nextSendLocalId = 0;
   // Map of MID, RTP parameters and RTCRtpReceiver indexed by local id.
   // Value is an Object with mid, rtpParameters and rtpReceiver.
-  final Map<String, Map<String, dynamic>> _mapRecvLocalIdInfo = <String, Map<String, dynamic>>{};
+  Map<String, Map<String, dynamic>> _mapRecvLocalIdInfo = <String, Map<String, dynamic>>{};
   // Whether  a DataChannel m=application section has been created.
   bool _hasDataChannelMediaSection = false;
   // Sending DataChannel id value counter. Increamented for each new DataChannel.
@@ -60,7 +58,9 @@ class PlanB extends HandlerInterface {
   }
 
   Future<void> _setupTransport({required DtlsRole localDtlsRole, SdpObject? localSdpObject}) async {
-    localSdpObject ??= SdpObject.fromMap(parse((await _pc!.getLocalDescription())!.sdp!));
+    if (localSdpObject == null) {
+      localSdpObject = SdpObject.fromMap(parse((await _pc!.getLocalDescription())!.sdp!));
+    }
 
     // Get our local DTLS parameters.
     DtlsParameters dtlsParameters = CommonUtils.extractDtlsParameters(localSdpObject);
@@ -131,7 +131,7 @@ class PlanB extends HandlerInterface {
         // pc?.dispose();
       } catch (error2) {}
 
-      rethrow;
+      throw error;
     }
   }
 
@@ -172,7 +172,7 @@ class PlanB extends HandlerInterface {
 
     String localId = options.trackId;
     String mid = RTCRtpMediaTypeExtension.value(options.kind);
-    String streamId = options.rtpParameters.rtcp?.cname ?? "default_cname";
+    String streamId = options.rtpParameters.rtcp!.cname ?? '';
 
     _logger.debug('receive() | forcing a random remote streamId to avoid well known bug in native');
     streamId += '-hack-${generateRandomNumber()}';
@@ -293,7 +293,7 @@ class PlanB extends HandlerInterface {
     _logger.debug('restartIce()');
 
     if (!_transportReady) {
-      return;
+      return null;
     }
 
     if (_direction == Direction.send) {
@@ -658,7 +658,7 @@ class PlanB extends HandlerInterface {
         return;
       }
 
-      rethrow;
+      throw error;
     }
 
     if (_pc!.signalingState == RTCSignalingState.RTCSignalingStateStable) {

@@ -18,12 +18,12 @@ class EnhancedEventEmitter extends EventEmitter {
   Future<dynamic> safeEmitAsFuture(String event, [Map<String, dynamic>? args]) async {
     try {
       final Completer<dynamic> completer = Completer<dynamic>();
-      Map<String, dynamic> args0 = {
+      Map<String, dynamic> _args = {
         'callback': completer.complete,
         'errback': completer.completeError,
         ...?args,
       };
-      emitAsFuture(event, args0);
+      emitAsFuture(event, _args);
       return completer.future;
     } catch (error) {
       _logger.error('safeEmitAsFuture() event listener threw an error [event:$event]:$error');

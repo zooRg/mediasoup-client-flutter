@@ -1,8 +1,6 @@
-// ignore_for_file: unused_local_variable, cast_from_null_always_fails
-
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
+import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 
 class PlanBUtils {
   static List<RtpEncodingParameters> getRtpEncodings(
@@ -11,7 +9,7 @@ class PlanBUtils {
   ) {
     // First media SSRC (or the only one).
     int? firstSsrc;
-    Set<int> ssrcs = <int>{};
+    Set<int> ssrcs = Set<int>();
 
     for (Ssrc line in offerMediaObject.ssrcs ?? []) {
       if (line.attribute != 'msid') {
@@ -25,7 +23,9 @@ class PlanBUtils {
 
         ssrcs.add(ssrc);
 
-        firstSsrc ??= ssrc;
+        if (firstSsrc == null) {
+          firstSsrc = ssrc;
+        }
       }
     }
 
@@ -44,7 +44,7 @@ class PlanBUtils {
       List<String> tokens = line.ssrcs.split(' ');
 
       int? ssrc;
-      if (tokens.isNotEmpty) {
+      if (tokens.length > 0) {
         ssrc = int.parse(tokens.first);
       }
 
@@ -117,6 +117,10 @@ class PlanBUtils {
         return false;
       }
     }, orElse: () => null as Ssrc);
+
+    if (ssrcMsidLine == null) {
+      throw ('a=ssrc line with msid information not found [track.id:${track.id}]');
+    }
 
     // Get the SSRC for RTX.
     (offerMediaObject.ssrcGroups ?? []).any((SsrcGroup line) {

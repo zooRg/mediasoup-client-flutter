@@ -15,7 +15,7 @@ class ScalabilityMode {
         temporalLayers: int.parse(match[0].group(2)!),
       );
     } else {
-      return const ScalabilityMode(spatialLayers: 1, temporalLayers: 1);
+      return ScalabilityMode(spatialLayers: 1, temporalLayers: 1);
     }
   }
 }

@@ -1,7 +1,6 @@
-// ignore_for_file: curly_braces_in_flow_control_structures, unnecessary_null_comparison, empty_catches
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+
 import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
 import 'package:mediasoup_client_flutter/src/common/logger.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
@@ -394,9 +393,9 @@ class Producer extends EnhancedEventEmitter {
 
   /// Sets the video max spatial layer to be sent.
   Future<void> setMaxSpatialLayer(int spatialLayer) async {
-    if (closed) {
+    if (closed)
       throw 'closed';
-    } else if (kind != 'video')
+    else if (kind != 'video')
       throw 'not a video Producer';
 
     if (spatialLayer == maxSpatialLayer) return;
@@ -408,9 +407,9 @@ class Producer extends EnhancedEventEmitter {
 
   /// Sets the DSCP value.
   Future<void> setRtpEncodingParameters(RtpEncodingParameters params) async {
-    if (closed) {
+    if (closed)
       throw 'closed';
-    } else if (params == null)
+    else if (params == null)
       throw 'invalid params';
 
     await safeEmitAsFuture('@setrtpencodingparameters', {'params': params});
