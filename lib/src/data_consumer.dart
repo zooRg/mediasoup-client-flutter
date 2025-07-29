@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-
-import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
 import 'package:mediasoup_client_flutter/src/common/logger.dart';
+import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 
 class DataConsumerOptions {
   final String id;
@@ -58,16 +57,16 @@ class DataConsumer extends EnhancedEventEmitter {
   /// @emits close
   /// @emits message - (message: any)
   /// @emits @close
-  DataConsumer({
-    required this.id,
-    required this.dataProducerId,
-    required this.dataChannel,
-    required this.sctpStreamParameters,
-    this.appData = const <String, dynamic>{},
-    this.closed = false,
-    this.peerId,
-  }) : observer = EnhancedEventEmitter(),
-       super() {
+  DataConsumer(
+      {required this.id,
+      required this.dataProducerId,
+      required this.dataChannel,
+      required this.sctpStreamParameters,
+      this.appData = const <String, dynamic>{},
+      this.closed = false,
+      this.peerId})
+      : observer = EnhancedEventEmitter(),
+        super() {
     _logger.debug('constructor()');
 
     _handleDataChannel();
@@ -137,7 +136,9 @@ class DataConsumer extends EnhancedEventEmitter {
     dataChannel.onMessage = (RTCDataChannelMessage data) {
       if (closed) return;
 
-      safeEmit('message', {'data': data});
+      safeEmit('message', {
+        'data': data,
+      });
     };
   }
 

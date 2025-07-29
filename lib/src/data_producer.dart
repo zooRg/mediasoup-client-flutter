@@ -1,9 +1,8 @@
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-
-import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
 import 'package:mediasoup_client_flutter/src/common/logger.dart';
+import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 
 class DataProducerOptions {
   final bool ordered;
@@ -58,8 +57,8 @@ class DataProducer extends EnhancedEventEmitter {
     required this.sctpStreamParameters,
     required this.appData,
     this.closed = false,
-  }) : observer = EnhancedEventEmitter(),
-       super() {
+  })  : observer = EnhancedEventEmitter(),
+        super() {
     _logger.debug('constructor()');
 
     _handleDataChannel();
@@ -107,9 +106,9 @@ class DataProducer extends EnhancedEventEmitter {
 
     if (closed) throw 'closed';
 
-    dataChannel.send(
-      data is String ? RTCDataChannelMessage(data) : RTCDataChannelMessage.fromBinary(data),
-    );
+    dataChannel.send(data is String
+        ? RTCDataChannelMessage(data)
+        : RTCDataChannelMessage.fromBinary(data));
   }
 
   void _handleDataChannel() {
@@ -135,7 +134,9 @@ class DataProducer extends EnhancedEventEmitter {
     dataChannel.onMessage = (RTCDataChannelMessage message) {
       if (closed) return;
 
-      _logger.warn('DataChannel "message" event is a DataProducer, message discarded');
+      _logger.warn(
+        'DataChannel "message" event is a DataProducer, message discarded',
+      );
     };
   }
 

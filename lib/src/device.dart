@@ -1,11 +1,11 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
+import 'package:mediasoup_client_flutter/src/common/logger.dart';
+import 'package:mediasoup_client_flutter/src/handlers/handler_interface.dart';
 import 'package:mediasoup_client_flutter/src/ortc.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
-import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
-import 'package:mediasoup_client_flutter/src/common/logger.dart';
-import 'package:mediasoup_client_flutter/src/handlers/handler_interface.dart';
 
 Logger _logger = Logger('Device');
 
@@ -22,7 +22,7 @@ class Device {
   // Local SCTP capabilities.
   SctpCapabilities? _sctpCapabilities;
   // Observer instance.
-  EnhancedEventEmitter _observer = EnhancedEventEmitter();
+  final EnhancedEventEmitter _observer = EnhancedEventEmitter();
 
   // Whether the Device is loaded.
   bool get loaded => _loaded;
@@ -52,8 +52,11 @@ class Device {
   EnhancedEventEmitter get observer => _observer;
 
   /// Initialize the Device.
-  Future<void> load({required RtpCapabilities routerRtpCapabilities}) async {
-    _logger.debug('load() [routerRtpCapabilities:${routerRtpCapabilities.toString()}]');
+  Future<void> load({
+    required RtpCapabilities routerRtpCapabilities,
+  }) async {
+    _logger.debug(
+        'load() [routerRtpCapabilities:${routerRtpCapabilities.toString()}]');
 
     routerRtpCapabilities = RtpCapabilities.copy(routerRtpCapabilities);
 
@@ -70,34 +73,39 @@ class Device {
 
       handler = HandlerInterface.handlerFactory();
 
-      RtpCapabilities nativeRtpCapabilities = await handler.getNativeRtpCapabilities();
+      RtpCapabilities nativeRtpCapabilities =
+          await handler.getNativeRtpCapabilities();
 
-      _logger.debug('load() | got native RTP capabilities:$nativeRtpCapabilities');
+      _logger
+          .debug('load() | got native RTP capabilities:$nativeRtpCapabilities');
 
       // This may throw.
       Ortc.validateRtpCapabilities(nativeRtpCapabilities);
 
       // Get extended RTP capabilities.
       _extendedRtpCapabilities = Ortc.getExtendedRtpCapabilities(
-        nativeRtpCapabilities,
-        routerRtpCapabilities,
-      );
+          nativeRtpCapabilities, routerRtpCapabilities);
 
-      _logger.debug('load() | got extended RTP capabilities:$_extendedRtpCapabilities');
+      _logger.debug(
+          'load() | got extended RTP capabilities:$_extendedRtpCapabilities');
 
       // Check wether we can produce audio/video.
       _canProduceByKind = CanProduceByKind(
-        audio: Ortc.canSend(RTCRtpMediaType.RTCRtpMediaTypeAudio, _extendedRtpCapabilities!),
-        video: Ortc.canSend(RTCRtpMediaType.RTCRtpMediaTypeVideo, _extendedRtpCapabilities!),
+        audio: Ortc.canSend(
+            RTCRtpMediaType.RTCRtpMediaTypeAudio, _extendedRtpCapabilities!),
+        video: Ortc.canSend(
+            RTCRtpMediaType.RTCRtpMediaTypeVideo, _extendedRtpCapabilities!),
       );
 
       // Generate our receiving RTP capabilities for receiving media.
-      _recvRtpCapabilities = Ortc.getRecvRtpCapabilities(_extendedRtpCapabilities!);
+      _recvRtpCapabilities =
+          Ortc.getRecvRtpCapabilities(_extendedRtpCapabilities!);
 
       // This may throw.
       Ortc.validateRtpCapabilities(_recvRtpCapabilities);
 
-      _logger.debug('load() | got receiving RTP capabilities:$_recvRtpCapabilities');
+      _logger.debug(
+          'load() | got receiving RTP capabilities:$_recvRtpCapabilities');
 
       // Generate our SCTP capabilities.
       _sctpCapabilities = handler.getNativeSctpCapabilities();
@@ -117,7 +125,7 @@ class Device {
         await handler.close();
       }
 
-      throw error;
+      rethrow;
     }
   }
 
@@ -197,7 +205,9 @@ class Device {
     );
 
     // Emit observer event.
-    _observer.safeEmit('newtransport', {'transport': transport});
+    _observer.safeEmit('newtransport', {
+      'transport': transport,
+    });
 
     return transport;
   }
@@ -247,9 +257,9 @@ class Device {
     return createSendTransport(
       id: data['id'],
       iceParameters: IceParameters.fromMap(data['iceParameters']),
-      iceCandidates: List<IceCandidate>.from(
-        data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList(),
-      ),
+      iceCandidates: List<IceCandidate>.from(data['iceCandidates']
+          .map((iceCandidate) => IceCandidate.fromMap(iceCandidate))
+          .toList()),
       dtlsParameters: DtlsParameters.fromMap(data['dtlsParameters']),
       sctpParameters: data['sctpParameters'] != null
           ? SctpParameters.fromMap(data['sctpParameters'])
@@ -258,10 +268,14 @@ class Device {
       appData: data['appData'] ?? <String, dynamic>{},
       proprietaryConstraints: Map<String, dynamic>.from({
         'optional': [
-          {'googDscp': true},
-        ],
+          {
+            'googDscp': true,
+          }
+        ]
       }),
-      additionalSettings: {'encodedInsertableStreams': false},
+      additionalSettings: {
+        'encodedInsertableStreams': false,
+      },
       producerCallback: producerCallback,
       dataProducerCallback: dataProducerCallback,
     );
@@ -312,9 +326,9 @@ class Device {
     return createRecvTransport(
       id: data['id'],
       iceParameters: IceParameters.fromMap(data['iceParameters']),
-      iceCandidates: List<IceCandidate>.from(
-        data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList(),
-      ),
+      iceCandidates: List<IceCandidate>.from(data['iceCandidates']
+          .map((iceCandidate) => IceCandidate.fromMap(iceCandidate))
+          .toList()),
       dtlsParameters: DtlsParameters.fromMap(data['dtlsParameters']),
       sctpParameters: data['sctpParameters'] != null
           ? SctpParameters.fromMap(data['sctpParameters'])
@@ -323,10 +337,14 @@ class Device {
       appData: data['appData'] ?? {},
       proprietaryConstraints: Map<String, dynamic>.from({
         'optional': [
-          {'googDscp': true},
-        ],
+          {
+            'googDscp': true,
+          }
+        ]
       }),
-      additionalSettings: {'encodedInsertableStreams': false},
+      additionalSettings: {
+        'encodedInsertableStreams': false,
+      },
       consumerCallback: consumerCallback,
       dataConsumerCallback: dataConsumerCallback,
     );

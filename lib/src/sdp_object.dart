@@ -18,12 +18,12 @@ class Origin {
   });
 
   Origin.fromMap(Map data)
-    : username = data['username'],
-      sessionId = data['sessionId'],
-      sessionVersion = data['sessionVersion'] ?? 0,
-      netType = data['netType'],
-      ipVer = data['ipVer'],
-      address = data['address'];
+      : username = data['username'],
+        sessionId = data['sessionId'],
+        sessionVersion = data['sessionVersion'] ?? 0,
+        netType = data['netType'],
+        ipVer = data['ipVer'],
+        address = data['address'];
 
   Map<String, dynamic> toMap() {
     return {
@@ -40,12 +40,16 @@ class Origin {
 class Invalid {
   final String value;
 
-  Invalid({required this.value});
+  Invalid({
+    required this.value,
+  });
 
   Invalid.fromMap(Map data) : value = data['value'];
 
   Map<String, String> toMap() {
-    return {'value': value};
+    return {
+      'value': value,
+    };
   }
 }
 
@@ -53,12 +57,20 @@ class Timing {
   final int start;
   final int stop;
 
-  Timing({required this.start, required this.stop});
+  Timing({
+    required this.start,
+    required this.stop,
+  });
 
-  Timing.fromMap(Map data) : start = data['start'], stop = data['stop'];
+  Timing.fromMap(Map data)
+      : start = data['start'],
+        stop = data['stop'];
 
   Map<String, int> toMap() {
-    return {'start': start, 'stop': stop};
+    return {
+      'start': start,
+      'stop': stop,
+    };
   }
 }
 
@@ -66,12 +78,20 @@ class Group {
   final String type;
   String mids;
 
-  Group({required this.type, required this.mids});
+  Group({
+    required this.type,
+    required this.mids,
+  });
 
-  Group.fromMap(Map data) : type = data['type'], mids = data['mids'].toString();
+  Group.fromMap(Map data)
+      : type = data['type'],
+        mids = data['mids'].toString();
 
   Map<String, String> toMap() {
-    return {'type': type, 'mids': mids};
+    return {
+      'type': type,
+      'mids': mids,
+    };
   }
 }
 
@@ -79,12 +99,20 @@ class MsidSemantic {
   final String semantic;
   final String token;
 
-  MsidSemantic({required this.semantic, required this.token});
+  MsidSemantic({
+    required this.semantic,
+    required this.token,
+  });
 
-  MsidSemantic.fromMap(Map data) : semantic = data['semantic'], token = data['token'];
+  MsidSemantic.fromMap(Map data)
+      : semantic = data['semantic'],
+        token = data['token'];
 
   Map<String, String> toMap() {
-    return {'semantic': semantic, 'token': token};
+    return {
+      'semantic': semantic,
+      'token': token,
+    };
   }
 }
 
@@ -122,26 +150,30 @@ class SdpObject {
   });
 
   SdpObject.fromMap(Map<String, dynamic> data)
-    : version = data['version'],
-      origin = Origin.fromMap(data['origin']),
-      name = data['name'],
-      invalid = List<Invalid>.from(
-        (data['invalid'] ?? []).map((inval) => Invalid.fromMap(inval)).toList(),
-      ),
-      timing = data['timing'] != null ? Timing.fromMap(data['timing']) : null,
-      connection = data['connection'] != null ? Connection.fromMap(data['connection']) : null,
-      iceUfrag = data['iceUfrag'],
-      icePwd = data['icePwd'],
-      fingerprint = data['fingerprint'] != null ? Fingerprint.fromMap(data['fingerprint']) : null,
-      msidSemantic = data['msidSemantic'] != null
-          ? MsidSemantic.fromMap(data['msidSemantic'])
-          : null,
-      media = List<MediaObject>.from(
-        (data['media'] ?? []).map((m) => MediaObject.fromMap(m)).toList(),
-      ),
-      groups = List<Group>.from((data['groups'] ?? []).map((g) => Group.fromMap(g)).toList()),
-      icelite = data['icelite'],
-      description = data['description'];
+      : version = data['version'],
+        origin = Origin.fromMap(data['origin']),
+        name = data['name'],
+        invalid = List<Invalid>.from((data['invalid'] ?? [])
+            .map((inval) => Invalid.fromMap(inval))
+            .toList()),
+        timing = data['timing'] != null ? Timing.fromMap(data['timing']) : null,
+        connection = data['connection'] != null
+            ? Connection.fromMap(data['connection'])
+            : null,
+        iceUfrag = data['iceUfrag'],
+        icePwd = data['icePwd'],
+        fingerprint = data['fingerprint'] != null
+            ? Fingerprint.fromMap(data['fingerprint'])
+            : null,
+        msidSemantic = data['msidSemantic'] != null
+            ? MsidSemantic.fromMap(data['msidSemantic'])
+            : null,
+        media = List<MediaObject>.from(
+            (data['media'] ?? []).map((m) => MediaObject.fromMap(m)).toList()),
+        groups = List<Group>.from(
+            (data['groups'] ?? []).map((g) => Group.fromMap(g)).toList()),
+        icelite = data['icelite'],
+        description = data['description'];
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> result = <String, dynamic>{};

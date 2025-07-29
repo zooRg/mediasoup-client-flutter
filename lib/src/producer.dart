@@ -1,6 +1,7 @@
+// ignore_for_file: curly_braces_in_flow_control_structures, unnecessary_null_comparison, empty_catches
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-
 import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
 import 'package:mediasoup_client_flutter/src/common/logger.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
@@ -34,12 +35,17 @@ class ProducerCodecOptions {
       if (opusStereo != null) 'opusStereo': opusStereo,
       if (opusFec != null) 'opusFec': opusFec,
       if (opusDtx != null) 'opusDtx': opusDtx,
-      if (opusMaxPlaybackRate != null) 'opusMaxPlaybackRate': opusMaxPlaybackRate,
-      if (opusMaxAverageBitrate != null) 'opusMaxAverageBitrate': opusMaxAverageBitrate,
+      if (opusMaxPlaybackRate != null)
+        'opusMaxPlaybackRate': opusMaxPlaybackRate,
+      if (opusMaxAverageBitrate != null)
+        'opusMaxAverageBitrate': opusMaxAverageBitrate,
       if (opusPtime != null) 'opusPtime': opusPtime,
-      if (videoGoogleStartBitrate != null) 'videoGoogleStartBitrate': videoGoogleStartBitrate,
-      if (videoGoogleMaxBitrate != null) 'videoGoogleMaxBitrate': videoGoogleMaxBitrate,
-      if (videoGoogleMinBitrate != null) 'videoGoogleMinBitrate': videoGoogleMinBitrate,
+      if (videoGoogleStartBitrate != null)
+        'videoGoogleStartBitrate': videoGoogleStartBitrate,
+      if (videoGoogleMaxBitrate != null)
+        'videoGoogleMaxBitrate': videoGoogleMaxBitrate,
+      if (videoGoogleMinBitrate != null)
+        'videoGoogleMinBitrate': videoGoogleMinBitrate,
     };
   }
 }
@@ -155,8 +161,8 @@ class Producer extends EnhancedEventEmitter {
     required this.stream,
     required this.source,
     this.closed = false,
-  }) : observer = EnhancedEventEmitter(),
-       super() {
+  })  : observer = EnhancedEventEmitter(),
+        super() {
     _logger.debug('constructor()');
 
     kind = track.kind!;
@@ -310,7 +316,9 @@ class Producer extends EnhancedEventEmitter {
     }
 
     if (zeroRtpOnPause) {
-      safeEmitAsFuture('@replacetrack', {'_track': track}).catchError((error, stackTrace) {});
+      safeEmitAsFuture('@replacetrack', {
+        '_track': track,
+      }).catchError((error, stackTrace) {});
     }
 
     // Emit observer event.
@@ -334,7 +342,9 @@ class Producer extends EnhancedEventEmitter {
     }
 
     if (zeroRtpOnPause) {
-      safeEmitAsFuture('@replacetrack', {'_track': track}).catchError((error, stackTrace) {});
+      safeEmitAsFuture('@replacetrack', {
+        '_track': track,
+      }).catchError((error, stackTrace) {});
     }
 
     // Emit observer event.
@@ -368,7 +378,9 @@ class Producer extends EnhancedEventEmitter {
     }
 
     if (zeroRtpOnPause || paused) {
-      await safeEmitAsFuture('@replacetrack', {'track': track});
+      await safeEmitAsFuture('@replacetrack', {
+        'track': track,
+      });
     }
 
     // Destroy the previous track.
@@ -393,26 +405,28 @@ class Producer extends EnhancedEventEmitter {
 
   /// Sets the video max spatial layer to be sent.
   Future<void> setMaxSpatialLayer(int spatialLayer) async {
-    if (closed)
+    if (closed) {
       throw 'closed';
-    else if (kind != 'video')
-      throw 'not a video Producer';
+    } else if (kind != 'video') throw 'not a video Producer';
 
     if (spatialLayer == maxSpatialLayer) return;
 
-    await safeEmitAsFuture('@setmaxspatiallayer', {'spatialLayer': spatialLayer});
+    await safeEmitAsFuture('@setmaxspatiallayer', {
+      'spatialLayer': spatialLayer,
+    });
 
     maxSpatialLayer = spatialLayer;
   }
 
   /// Sets the DSCP value.
   Future<void> setRtpEncodingParameters(RtpEncodingParameters params) async {
-    if (closed)
+    if (closed) {
       throw 'closed';
-    else if (params == null)
-      throw 'invalid params';
+    } else if (params == null) throw 'invalid params';
 
-    await safeEmitAsFuture('@setrtpencodingparameters', {'params': params});
+    await safeEmitAsFuture('@setrtpencodingparameters', {
+      'params': params,
+    });
   }
 
   void _onTrackEnded() {

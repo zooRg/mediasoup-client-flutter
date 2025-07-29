@@ -1,8 +1,10 @@
-import 'package:sdp_transform/sdp_transform.dart';
+// ignore_for_file: unused_local_variable, cast_from_null_always_fails
+
+import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sdp_object.dart';
-import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
+import 'package:sdp_transform/sdp_transform.dart';
 
 class CommonUtils {
   static RtpCapabilities extractRtpCapabilities(SdpObject sdpObject) {
@@ -80,7 +82,10 @@ class CommonUtils {
           continue;
         }
 
-        RtcpFeedback feedback = RtcpFeedback(type: fb.type, parameter: fb.subtype);
+        RtcpFeedback feedback = RtcpFeedback(
+          type: fb.type,
+          parameter: fb.subtype,
+        );
 
         // if (feedback.parameter == null || feedback.parameter.isEmpty) {
         //   feedback.parameter = null;
@@ -116,15 +121,16 @@ class CommonUtils {
 
   static DtlsParameters extractDtlsParameters(SdpObject sdpObject) {
     MediaObject? mediaObject = sdpObject.media.firstWhere(
-      (m) => m.iceUfrag != null && m.iceUfrag!.isNotEmpty && m.port != null && m.port != 0,
+      (m) =>
+          m.iceUfrag != null &&
+          m.iceUfrag!.isNotEmpty &&
+          m.port != null &&
+          m.port != 0,
       orElse: () => null as MediaObject,
     );
 
-    if (mediaObject == null) {
-      throw ('no active media section found');
-    }
-
-    Fingerprint fingerprint = (mediaObject.fingerprint ?? sdpObject.fingerprint)!;
+    Fingerprint fingerprint =
+        (mediaObject.fingerprint ?? sdpObject.fingerprint)!;
 
     DtlsRole role = DtlsRole.auto;
 
@@ -142,7 +148,12 @@ class CommonUtils {
 
     DtlsParameters dtlsParameters = DtlsParameters(
       role: role,
-      fingerprints: [DtlsFingerprint(algorithm: fingerprint.type, value: fingerprint.hash)],
+      fingerprints: [
+        DtlsFingerprint(
+          algorithm: fingerprint.type,
+          value: fingerprint.hash,
+        ),
+      ],
     );
 
     return dtlsParameters;
@@ -176,10 +187,6 @@ class CommonUtils {
         orElse: () => null as Rtp,
       );
 
-      if (rtp == null) {
-        continue;
-      }
-
       // Just in case.. ?
       answerMediaObject!.fmtp = answerMediaObject.fmtp ?? [];
 
@@ -187,11 +194,6 @@ class CommonUtils {
         (Fmtp f) => f.payload == codec.payloadType,
         orElse: () => null as Fmtp,
       );
-
-      if (fmtp == null) {
-        fmtp = Fmtp(payload: codec.payloadType, config: '');
-        answerMediaObject.fmtp!.add(fmtp);
-      }
 
       Map<dynamic, dynamic> parameters = parseParams(fmtp.config);
 
