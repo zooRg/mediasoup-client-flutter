@@ -53,8 +53,7 @@ class Device {
 
   /// Initialize the Device.
   Future<void> load({required RtpCapabilities routerRtpCapabilities}) async {
-    _logger.debug(
-        'load() [routerRtpCapabilities:${routerRtpCapabilities.toString()}]');
+    _logger.debug('load() [routerRtpCapabilities:${routerRtpCapabilities.toString()}]');
 
     routerRtpCapabilities = RtpCapabilities.copy(routerRtpCapabilities);
 
@@ -71,11 +70,9 @@ class Device {
 
       handler = HandlerInterface.handlerFactory();
 
-      RtpCapabilities nativeRtpCapabilities =
-          await handler.getNativeRtpCapabilities();
+      RtpCapabilities nativeRtpCapabilities = await handler.getNativeRtpCapabilities();
 
-      _logger
-          .debug('load() | got native RTP capabilities:$nativeRtpCapabilities');
+      _logger.debug('load() | got native RTP capabilities:$nativeRtpCapabilities');
 
       // This may throw.
       Ortc.validateRtpCapabilities(nativeRtpCapabilities);
@@ -86,26 +83,21 @@ class Device {
         routerRtpCapabilities,
       );
 
-      _logger.debug(
-          'load() | got extended RTP capabilities:$_extendedRtpCapabilities');
+      _logger.debug('load() | got extended RTP capabilities:$_extendedRtpCapabilities');
 
       // Check wether we can produce audio/video.
       _canProduceByKind = CanProduceByKind(
-        audio: Ortc.canSend(
-            RTCRtpMediaType.RTCRtpMediaTypeAudio, _extendedRtpCapabilities!),
-        video: Ortc.canSend(
-            RTCRtpMediaType.RTCRtpMediaTypeVideo, _extendedRtpCapabilities!),
+        audio: Ortc.canSend(RTCRtpMediaType.RTCRtpMediaTypeAudio, _extendedRtpCapabilities!),
+        video: Ortc.canSend(RTCRtpMediaType.RTCRtpMediaTypeVideo, _extendedRtpCapabilities!),
       );
 
       // Generate our receiving RTP capabilities for receiving media.
-      _recvRtpCapabilities =
-          Ortc.getRecvRtpCapabilities(_extendedRtpCapabilities!);
+      _recvRtpCapabilities = Ortc.getRecvRtpCapabilities(_extendedRtpCapabilities!);
 
       // This may throw.
       Ortc.validateRtpCapabilities(_recvRtpCapabilities);
 
-      _logger.debug(
-          'load() | got receiving RTP capabilities:$_recvRtpCapabilities');
+      _logger.debug('load() | got receiving RTP capabilities:$_recvRtpCapabilities');
 
       // Generate our SCTP capabilities.
       _sctpCapabilities = handler.getNativeSctpCapabilities();
@@ -256,14 +248,11 @@ class Device {
       id: data['id'],
       iceParameters: IceParameters.fromMap(data['iceParameters']),
       iceCandidates: List<IceCandidate>.from(
-        data['iceCandidates']
-            .map((iceCandidate) => IceCandidate.fromMap(iceCandidate))
-            .toList(),
+        data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList(),
       ),
       dtlsParameters: DtlsParameters.fromMap(data['dtlsParameters']),
-      sctpParameters: data['sctpParameters'] != null
-          ? SctpParameters.fromMap(data['sctpParameters'])
-          : null,
+      sctpParameters:
+          data['sctpParameters'] != null ? SctpParameters.fromMap(data['sctpParameters']) : null,
       iceServers: data['iceServers'] ?? [],
       appData: data['appData'] ?? <String, dynamic>{},
       proprietaryConstraints: Map<String, dynamic>.from({
@@ -323,14 +312,11 @@ class Device {
       id: data['id'],
       iceParameters: IceParameters.fromMap(data['iceParameters']),
       iceCandidates: List<IceCandidate>.from(
-        data['iceCandidates']
-            .map((iceCandidate) => IceCandidate.fromMap(iceCandidate))
-            .toList(),
+        data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList(),
       ),
       dtlsParameters: DtlsParameters.fromMap(data['dtlsParameters']),
-      sctpParameters: data['sctpParameters'] != null
-          ? SctpParameters.fromMap(data['sctpParameters'])
-          : null,
+      sctpParameters:
+          data['sctpParameters'] != null ? SctpParameters.fromMap(data['sctpParameters']) : null,
       iceServers: data['iceServers'] ?? [],
       appData: data['appData'] ?? {},
       proprietaryConstraints: Map<String, dynamic>.from({
