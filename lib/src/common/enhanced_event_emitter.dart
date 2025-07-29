@@ -17,8 +17,7 @@ class EnhancedEventEmitter extends EventEmitter {
     }
   }
 
-  Future<dynamic> safeEmitAsFuture(String event,
-      [Map<String, dynamic>? args]) async {
+  Future<dynamic> safeEmitAsFuture(String event, [Map<String, dynamic>? args]) async {
     try {
       final Completer<dynamic> completer = Completer<dynamic>();
       Map<String, dynamic> args0 = {

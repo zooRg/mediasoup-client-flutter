@@ -10,8 +10,7 @@ class ScalabilityMode {
   });
 
   static ScalabilityMode parse(String? scalabilityMode) {
-    List<RegExpMatch> match =
-        scalabilityModeRegex.allMatches(scalabilityMode ?? '').toList();
+    List<RegExpMatch> match = scalabilityModeRegex.allMatches(scalabilityMode ?? '').toList();
 
     if (match.isNotEmpty) {
       return ScalabilityMode(

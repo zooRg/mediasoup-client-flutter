@@ -106,9 +106,8 @@ class DataProducer extends EnhancedEventEmitter {
 
     if (closed) throw 'closed';
 
-    dataChannel.send(data is String
-        ? RTCDataChannelMessage(data)
-        : RTCDataChannelMessage.fromBinary(data));
+    dataChannel.send(
+        data is String ? RTCDataChannelMessage(data) : RTCDataChannelMessage.fromBinary(data));
   }
 
   void _handleDataChannel() {

@@ -121,16 +121,11 @@ class CommonUtils {
 
   static DtlsParameters extractDtlsParameters(SdpObject sdpObject) {
     MediaObject? mediaObject = sdpObject.media.firstWhere(
-      (m) =>
-          m.iceUfrag != null &&
-          m.iceUfrag!.isNotEmpty &&
-          m.port != null &&
-          m.port != 0,
+      (m) => m.iceUfrag != null && m.iceUfrag!.isNotEmpty && m.port != null && m.port != 0,
       orElse: () => null as MediaObject,
     );
 
-    Fingerprint fingerprint =
-        (mediaObject.fingerprint ?? sdpObject.fingerprint)!;
+    Fingerprint fingerprint = (mediaObject.fingerprint ?? sdpObject.fingerprint)!;
 
     DtlsRole role = DtlsRole.auto;
 
