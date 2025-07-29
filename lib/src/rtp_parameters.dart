@@ -20,13 +20,13 @@ class RtpCapabilities {
   });
 
   RtpCapabilities.fromMap(Map data)
-    : codecs = data['codecs']
-          .map<RtpCodecCapability>((codec) => RtpCodecCapability.fromMap(codec))
-          .toList(),
-      headerExtensions = (data['headerExtensions'] as List<dynamic>)
-          .map<RtpHeaderExtension>((headExt) => RtpHeaderExtension.fromMap(headExt))
-          .toList(),
-      fecMechanisms = data['fecMechanisms'] ?? [];
+      : codecs = data['codecs']
+            .map<RtpCodecCapability>((codec) => RtpCodecCapability.fromMap(codec))
+            .toList(),
+        headerExtensions = (data['headerExtensions'] as List<dynamic>)
+            .map<RtpHeaderExtension>((headExt) => RtpHeaderExtension.fromMap(headExt))
+            .toList(),
+        fecMechanisms = data['fecMechanisms'] ?? [];
 
   static RtpCapabilities copy(
     RtpCapabilities old, {
@@ -104,8 +104,8 @@ class RtcpFeedback {
   RtcpFeedback({required this.type, this.parameter = ''});
 
   RtcpFeedback.fromMap(Map<String, dynamic> map)
-    : type = map['type'],
-      parameter = map['parameter'] ?? '';
+      : type = map['type'],
+        parameter = map['parameter'] ?? '';
 
   Map<String, String> toMap() {
     return {'type': this.type, 'parameter': this.parameter};
@@ -211,15 +211,15 @@ class RtpCodecCapability {
   });
 
   RtpCodecCapability.fromMap(Map<String, dynamic> data)
-    : kind = RTCRtpMediaTypeExtension.fromString(data['kind']),
-      mimeType = data['mimeType'],
-      preferredPayloadType = data['preferredPayloadType'],
-      clockRate = data['clockRate'],
-      channels = data['channels'],
-      parameters = data['parameters'],
-      rtcpFeedback = data['rtcpFeedback']
-          .map<RtcpFeedback>((rtcpFb) => RtcpFeedback.fromMap(rtcpFb))
-          .toList();
+      : kind = RTCRtpMediaTypeExtension.fromString(data['kind']),
+        mimeType = data['mimeType'],
+        preferredPayloadType = data['preferredPayloadType'],
+        clockRate = data['clockRate'],
+        channels = data['channels'],
+        parameters = data['parameters'],
+        rtcpFeedback = data['rtcpFeedback']
+            .map<RtcpFeedback>((rtcpFb) => RtcpFeedback.fromMap(rtcpFb))
+            .toList();
 
   Map<String, dynamic> toMap() {
     return {
@@ -292,11 +292,11 @@ class RtpHeaderExtension {
   });
 
   RtpHeaderExtension.fromMap(Map data)
-    : kind = RTCRtpMediaTypeExtension.fromString(data['kind']),
-      uri = data['uri'],
-      preferredId = data['preferredId'],
-      preferredEncrypt = data['preferredEncrypt'],
-      direction = RtpHeaderDirectionExtension.fromString(data['direction']);
+      : kind = RTCRtpMediaTypeExtension.fromString(data['kind']),
+        uri = data['uri'],
+        preferredId = data['preferredId'],
+        preferredEncrypt = data['preferredEncrypt'],
+        direction = RtpHeaderDirectionExtension.fromString(data['direction']);
 }
 
 class RtxSsrc {
@@ -333,10 +333,10 @@ class RtpHeaderExtensionParameters {
   RtpHeaderExtensionParameters({this.uri, this.id, this.encrypt, this.parameters = const {}});
 
   RtpHeaderExtensionParameters.fromMap(Map data)
-    : uri = data['uri'],
-      id = data['id'],
-      encrypt = data['encrypt'],
-      parameters = Map<dynamic, dynamic>.from(data['parameters']);
+      : uri = data['uri'],
+        id = data['id'],
+        encrypt = data['encrypt'],
+        parameters = Map<dynamic, dynamic>.from(data['parameters']);
 
   Map<String, dynamic> toMap() {
     return {'uri': uri, 'id': id, 'encrypt': encrypt, 'parameters': parameters};
@@ -394,15 +394,15 @@ class RtpEncodingParameters extends RTCRtpEncoding {
     double? scaleResolutionDownBy,
     int? ssrc,
   }) : super(
-         active: active,
-         maxBitrate: maxBitrate,
-         maxFramerate: maxFramerate,
-         minBitrate: minBitrate,
-         numTemporalLayers: numTemporalLayers,
-         rid: rid,
-         scaleResolutionDownBy: scaleResolutionDownBy,
-         ssrc: ssrc,
-       );
+          active: active,
+          maxBitrate: maxBitrate,
+          maxFramerate: maxFramerate,
+          minBitrate: minBitrate,
+          numTemporalLayers: numTemporalLayers,
+          rid: rid,
+          scaleResolutionDownBy: scaleResolutionDownBy,
+          ssrc: ssrc,
+        );
 
   static RtpEncodingParameters fromMap(Map data) {
     return RtpEncodingParameters(
@@ -600,14 +600,14 @@ class RtpCodecParameters {
   });
 
   RtpCodecParameters.fromMap(Map data)
-    : mimeType = data['mimeType'],
-      payloadType = data['payloadType'],
-      clockRate = data['clockRate'],
-      channels = data['channels'],
-      parameters = Map<dynamic, dynamic>.from(data['parameters']),
-      rtcpFeedback = data['rtcpFeedback'] != null
-          ? data['rtcpFeedback'].map<RtcpFeedback>((e) => RtcpFeedback.fromMap(e)).toList()
-          : [];
+      : mimeType = data['mimeType'],
+        payloadType = data['payloadType'],
+        clockRate = data['clockRate'],
+        channels = data['channels'],
+        parameters = Map<dynamic, dynamic>.from(data['parameters']),
+        rtcpFeedback = data['rtcpFeedback'] != null
+            ? data['rtcpFeedback'].map<RtcpFeedback>((e) => RtcpFeedback.fromMap(e)).toList()
+            : [];
 
   Map<String, dynamic> toMap() {
     return {
@@ -675,19 +675,19 @@ class RtpParameters {
   });
 
   RtpParameters.fromMap(Map data)
-    : mid = data['mid'],
-      codecs = List<RtpCodecParameters>.from(
-        data['codecs'].map((codec) => RtpCodecParameters.fromMap(codec)).toList(),
-      ),
-      headerExtensions = List<RtpHeaderExtensionParameters>.from(
-        data['headerExtensions']
-            .map((headerExtension) => RtpHeaderExtensionParameters.fromMap(headerExtension))
-            .toList(),
-      ),
-      encodings = List<RtpEncodingParameters>.from(
-        data['encodings'].map((encoding) => RtpEncodingParameters.fromMap(encoding)).toList(),
-      ),
-      rtcp = RtcpParameters.fromMap(data['rtcp']);
+      : mid = data['mid'],
+        codecs = List<RtpCodecParameters>.from(
+          data['codecs'].map((codec) => RtpCodecParameters.fromMap(codec)).toList(),
+        ),
+        headerExtensions = List<RtpHeaderExtensionParameters>.from(
+          data['headerExtensions']
+              .map((headerExtension) => RtpHeaderExtensionParameters.fromMap(headerExtension))
+              .toList(),
+        ),
+        encodings = List<RtpEncodingParameters>.from(
+          data['encodings'].map((encoding) => RtpEncodingParameters.fromMap(encoding)).toList(),
+        ),
+        rtcp = RtcpParameters.fromMap(data['rtcp']);
 
   static RtpParameters copy(
     RtpParameters old, {
@@ -707,8 +707,8 @@ class RtpParameters {
       rtcp: rtcp != null
           ? rtcp
           : old.rtcp != null
-          ? RtcpParameters.copy(old.rtcp!)
-          : null,
+              ? RtcpParameters.copy(old.rtcp!)
+              : null,
     );
   }
 
@@ -742,7 +742,7 @@ class RtcpParameters extends RTCRTCPParameters {
   bool? mux;
 
   RtcpParameters({this.mux, String cname = '', bool reducedSize = true})
-    : super(cname, reducedSize);
+      : super(cname, reducedSize);
 
   factory RtcpParameters.fromMap(Map<dynamic, dynamic> map) {
     return RtcpParameters(cname: map['cname'], mux: map['mux'], reducedSize: map['reducedSize']);

@@ -215,9 +215,9 @@ class PlanB extends HandlerInterface {
 
     MediaStream? stream =
         (_pc!.getRemoteStreams().where((s) => s != null).toList() as List<MediaStream>).firstWhere(
-          (MediaStream s) => s.id == streamId,
-          orElse: () => null as MediaStream,
-        );
+      (MediaStream s) => s.id == streamId,
+      orElse: () => null as MediaStream,
+    );
     MediaStreamTrack? track = stream.getTrackById(localId);
 
     if (track == null) {

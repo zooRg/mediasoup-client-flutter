@@ -17,7 +17,9 @@ class MediaSectionIdx {
 
   MediaSectionIdx({required this.idx, this.reuseMid});
 
-  MediaSectionIdx.fromMap(Map data) : idx = data['idx'], reuseMid = data['reuseMid'];
+  MediaSectionIdx.fromMap(Map data)
+      : idx = data['idx'],
+        reuseMid = data['reuseMid'];
 
   Map<String, dynamic> toMap() {
     return {'idx': idx, 'reuseMid': reuseMid};
