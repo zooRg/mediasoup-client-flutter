@@ -160,7 +160,7 @@ class Device {
     required List<IceCandidate> iceCandidates,
     required DtlsParameters dtlsParameters,
     SctpParameters? sctpParameters,
-    List<RTCIceServer> iceServers = const <RTCIceServer>[],
+    List<Map> iceServers = const [],
     RTCIceTransportPolicy? iceTransportPolicy,
     Map<String, dynamic> additionalSettings = const <String, dynamic>{},
     Map<String, dynamic> proprietaryConstraints = const <String, dynamic>{},
@@ -220,7 +220,7 @@ class Device {
     required List<IceCandidate> iceCandidates,
     required DtlsParameters dtlsParameters,
     SctpParameters? sctpParameters,
-    List<RTCIceServer> iceServers = const <RTCIceServer>[],
+    List<Map> iceServers = const [],
     RTCIceTransportPolicy? iceTransportPolicy,
     Map<String, dynamic> additionalSettings = const <String, dynamic>{},
     Map<String, dynamic> proprietaryConstraints = const <String, dynamic>{},
@@ -249,6 +249,7 @@ class Device {
 
   Transport createSendTransportFromMap(
     Map data, {
+    List<Map>? iceServers,
     Function? producerCallback,
     Function? dataProducerCallback,
   }) {
@@ -264,9 +265,7 @@ class Device {
       sctpParameters: data['sctpParameters'] != null
           ? SctpParameters.fromMap(data['sctpParameters'])
           : null,
-      iceServers: data['iceServers'] != null && data['iceServers'] is Iterable
-          ? data['iceServers'].map((e) => RTCIceServer.fromMap(e))
-          : [],
+      iceServers: iceServers ?? [],
       appData: data['appData'] ?? <String, dynamic>{},
       proprietaryConstraints: Map<String, dynamic>.from({
         'optional': [
@@ -289,7 +288,7 @@ class Device {
     required List<IceCandidate> iceCandidates,
     required DtlsParameters dtlsParameters,
     SctpParameters? sctpParameters,
-    List<RTCIceServer> iceServers = const <RTCIceServer>[],
+    List<Map> iceServers = const [],
     RTCIceTransportPolicy? iceTransportPolicy,
     Map<String, dynamic> additionalSettings = const <String, dynamic>{},
     Map<String, dynamic> proprietaryConstraints = const <String, dynamic>{},
@@ -318,6 +317,7 @@ class Device {
 
   Transport createRecvTransportFromMap(
     Map data, {
+    List<Map>? iceServers,
     Function? consumerCallback,
     Function? dataConsumerCallback,
   }) {
@@ -333,9 +333,7 @@ class Device {
       sctpParameters: data['sctpParameters'] != null
           ? SctpParameters.fromMap(data['sctpParameters'])
           : null,
-      iceServers: data['iceServers'] != null && data['iceServers'] is Iterable
-          ? data['iceServers'].map((e) => RTCIceServer.fromMap(e))
-          : [],
+      iceServers: iceServers ?? [],
       appData: data['appData'] ?? {},
       proprietaryConstraints: Map<String, dynamic>.from({
         'optional': [

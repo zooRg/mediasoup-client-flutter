@@ -93,7 +93,7 @@ class HandlerRunOptions {
   List<IceCandidate> iceCandidates;
   DtlsParameters dtlsParameters;
   SctpParameters? sctpParameters;
-  List<RTCIceServer> iceServers;
+  List<Map> iceServers;
   RTCIceTransportPolicy? iceTransportPolicy;
   var additionalSettings;
   Map<String, dynamic> proprietaryConstraints;
