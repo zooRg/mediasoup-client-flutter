@@ -1,10 +1,10 @@
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
+import 'package:mediasoup_client_flutter/src/handlers/unified_plan.dart';
 import 'package:mediasoup_client_flutter/src/producer.dart';
+import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
-import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
-import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
-import 'package:mediasoup_client_flutter/src/handlers/unified_plan.dart';
 
 class SCTP_NUM_STREAMS {
   static const int OS = 1024;
@@ -74,6 +74,17 @@ class RTCIceServer {
       'username': username,
     };
   }
+
+  static RTCIceServer fromMap(Map data) {
+    return RTCIceServer(
+      credential: data['credential'],
+      credentialType:
+          RTCIceCredentialTypeToString.types[data['credentialType']] ??
+              RTCIceCredentialType.password,
+      urls: data['urls'],
+      username: data['username'],
+    );
+  }
 }
 
 class HandlerRunOptions {
@@ -107,7 +118,8 @@ class HandlerSendResult {
   final RtpParameters rtpParameters;
   final RTCRtpSender? rtpSender;
 
-  const HandlerSendResult({required this.localId, required this.rtpParameters, this.rtpSender});
+  const HandlerSendResult(
+      {required this.localId, required this.rtpParameters, this.rtpSender});
 }
 
 class HandlerSendOptions {
@@ -155,7 +167,8 @@ class HandlerReceiveOptions {
   final RTCRtpMediaType kind;
   final RtpParameters rtpParameters;
 
-  HandlerReceiveOptions({required this.trackId, required this.kind, required this.rtpParameters});
+  HandlerReceiveOptions(
+      {required this.trackId, required this.kind, required this.rtpParameters});
 }
 
 class HandlerReceiveDataChannelOptions {
@@ -187,14 +200,16 @@ class SetMaxSpatialLayerOptions {
   final String localId;
   final int spatialLayer;
 
-  const SetMaxSpatialLayerOptions({required this.localId, required this.spatialLayer});
+  const SetMaxSpatialLayerOptions(
+      {required this.localId, required this.spatialLayer});
 }
 
 class SetRtpEncodingParametersOptions {
   final String localId;
   final RtpEncodingParameters params;
 
-  const SetRtpEncodingParametersOptions({required this.localId, required this.params});
+  const SetRtpEncodingParametersOptions(
+      {required this.localId, required this.params});
 }
 
 abstract class HandlerInterface extends EnhancedEventEmitter {
@@ -222,9 +237,11 @@ abstract class HandlerInterface extends EnhancedEventEmitter {
   Future<void> stopSending(String localId);
   Future<void> replaceTrack(ReplaceTrackOptions options);
   Future<void> setMaxSpatialLayer(SetMaxSpatialLayerOptions options);
-  Future<void> setRtpEncodingParameters(SetRtpEncodingParametersOptions options);
+  Future<void> setRtpEncodingParameters(
+      SetRtpEncodingParametersOptions options);
   Future<List<StatsReport>> getSenderStats(String localId);
-  Future<HandlerSendDataChannelResult> sendDataChannel(SendDataChannelArguments options);
+  Future<HandlerSendDataChannelResult> sendDataChannel(
+      SendDataChannelArguments options);
   Future<HandlerReceiveResult> receive(HandlerReceiveOptions options);
   Future<void> stopReceiving(String localId);
   Future<List<StatsReport>> getReceiverStats(String localId);
