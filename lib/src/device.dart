@@ -331,7 +331,7 @@ class Device {
       sctpParameters: data['sctpParameters'] != null
           ? SctpParameters.fromMap(data['sctpParameters'])
           : null,
-      iceServers: [],
+      iceServers: data['iceServers'] ?? [],
       appData: data['appData'] ?? {},
       proprietaryConstraints: Map<String, dynamic>.from({
         'optional': [
