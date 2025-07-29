@@ -146,15 +146,30 @@ class RoomClientRepository {
 
   Future<MediaStream> createAudioStream() async {
     audioInputDeviceId = mediaDevicesBloc.state.selectedAudioInput!.deviceId;
+    print('Selected audio device ID: $audioInputDeviceId');
+
     var mediaConstraints = <String, dynamic>{
-      'audio': {
-        'optional': [
-          {'sourceId': audioInputDeviceId},
-        ],
-      },
+      'audio': {'deviceId': audioInputDeviceId},
     };
 
+    print('Audio constraints: $mediaConstraints');
+
     var stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+    print(
+      'Audio stream created with ${stream.getAudioTracks().length} audio tracks',
+    );
+
+    stream.getTracks().first.onEnded = () {
+      print('Audio track ended');
+    };
+
+    stream.getTracks().first.onMute = () {
+      print('Audio track muted');
+    };
+
+    stream.getTracks().first.onUnMute = () {
+      print('Audio track unmuted');
+    };
 
     return stream;
   }
@@ -164,15 +179,10 @@ class RoomClientRepository {
     var mediaConstraints = <String, dynamic>{
       'audio': false,
       'video': {
-        'mandatory': {
-          'minWidth':
-              '1280', // Provide your own width, height and frame rate here
-          'minHeight': '720',
-          'minFrameRate': '30',
-        },
-        'optional': [
-          {'sourceId': videoInputDeviceId},
-        ],
+        'deviceId': videoInputDeviceId,
+        'width': {'min': 1280},
+        'height': {'min': 720},
+        'frameRate': {'min': 30},
       },
     };
 
@@ -235,14 +245,24 @@ class RoomClientRepository {
   void enableMic() async {
     if (_mediasoupDevice!.canProduce(RTCRtpMediaType.RTCRtpMediaTypeAudio) ==
         false) {
+      print('Device cannot produce audio');
       return;
     }
 
     MediaStream? audioStream;
     MediaStreamTrack? track;
     try {
+      print('Creating audio stream...');
       audioStream = await createAudioStream();
+
+      if (audioStream.getAudioTracks().isEmpty) {
+        print('No audio tracks found in stream');
+        return;
+      }
+
       track = audioStream.getAudioTracks().first;
+      print('Audio track created: ${track.id}, enabled: ${track.enabled}');
+
       _sendTransport!.produce(
         track: track,
         codecOptions: ProducerCodecOptions(opusStereo: 1, opusDtx: 1),
@@ -250,7 +270,10 @@ class RoomClientRepository {
         appData: {'source': 'mic'},
         source: 'mic',
       );
+
+      print('Audio producer created successfully');
     } catch (error) {
+      print('Error enabling mic: $error');
       if (audioStream != null) {
         await audioStream.dispose();
       }

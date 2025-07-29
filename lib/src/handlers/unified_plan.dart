@@ -230,8 +230,8 @@ class UnifiedPlan extends HandlerInterface {
     _mapMidTransceiver[localId] = transceiver;
 
     final MediaStream? stream = _pc!.getRemoteStreams().firstWhereOrNull(
-          (e) => e?.id == options.rtpParameters.rtcp!.cname,
-        );
+      (e) => e?.id == options.rtpParameters.rtcp!.cname,
+    );
 
     if (stream == null) {
       throw ('Stream not found');
@@ -395,8 +395,9 @@ class UnifiedPlan extends HandlerInterface {
     };
 
     if (options.dtlsParameters.role != DtlsRole.auto) {
-      this._forcedLocalDtlsRole =
-          options.dtlsParameters.role == DtlsRole.server ? DtlsRole.client : DtlsRole.server;
+      this._forcedLocalDtlsRole = options.dtlsParameters.role == DtlsRole.server
+          ? DtlsRole.client
+          : DtlsRole.server;
     }
 
     final _constrains = options.proprietaryConstraints.isEmpty

@@ -830,16 +830,18 @@ class Ortc {
           ext.uri == 'http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01',
     )) {
       for (RtpCodecParameters codec in rtpParameters.codecs) {
-        codec.rtcpFeedback =
-            codec.rtcpFeedback.where((RtcpFeedback fb) => fb.type != 'goog-remb').toList();
+        codec.rtcpFeedback = codec.rtcpFeedback
+            .where((RtcpFeedback fb) => fb.type != 'goog-remb')
+            .toList();
       }
     } else if (rtpParameters.headerExtensions.any(
       (RtpHeaderExtensionParameters ext) =>
           ext.uri == 'http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time',
     )) {
       for (RtpCodecParameters codec in rtpParameters.codecs) {
-        codec.rtcpFeedback =
-            codec.rtcpFeedback.where((RtcpFeedback fb) => fb.type != 'transport-cc').toList();
+        codec.rtcpFeedback = codec.rtcpFeedback
+            .where((RtcpFeedback fb) => fb.type != 'transport-cc')
+            .toList();
       }
     } else {
       for (RtpCodecParameters codec in rtpParameters.codecs) {
