@@ -155,8 +155,8 @@ class Producer extends EnhancedEventEmitter {
     required this.stream,
     required this.source,
     this.closed = false,
-  }) : observer = EnhancedEventEmitter(),
-       super() {
+  })  : observer = EnhancedEventEmitter(),
+        super() {
     _logger.debug('constructor()');
 
     kind = track.kind!;
@@ -395,8 +395,7 @@ class Producer extends EnhancedEventEmitter {
   Future<void> setMaxSpatialLayer(int spatialLayer) async {
     if (closed)
       throw 'closed';
-    else if (kind != 'video')
-      throw 'not a video Producer';
+    else if (kind != 'video') throw 'not a video Producer';
 
     if (spatialLayer == maxSpatialLayer) return;
 
@@ -409,8 +408,7 @@ class Producer extends EnhancedEventEmitter {
   Future<void> setRtpEncodingParameters(RtpEncodingParameters params) async {
     if (closed)
       throw 'closed';
-    else if (params == null)
-      throw 'invalid params';
+    else if (params == null) throw 'invalid params';
 
     await safeEmitAsFuture('@setrtpencodingparameters', {'params': params});
   }

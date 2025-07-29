@@ -66,8 +66,8 @@ class DataConsumer extends EnhancedEventEmitter {
     this.appData = const <String, dynamic>{},
     this.closed = false,
     this.peerId,
-  }) : observer = EnhancedEventEmitter(),
-       super() {
+  })  : observer = EnhancedEventEmitter(),
+        super() {
     _logger.debug('constructor()');
 
     _handleDataChannel();

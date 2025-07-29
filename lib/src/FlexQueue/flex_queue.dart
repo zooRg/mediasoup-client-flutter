@@ -25,13 +25,13 @@ class FlexTaskAdd extends FlexTask {
     Function? errorCallbackFun,
     String? message,
   }) : super(
-         id: id,
-         execFun: execFun,
-         argument: argument,
-         callbackFun: callbackFun,
-         errorCallbackFun: errorCallbackFun,
-         message: message,
-       );
+          id: id,
+          execFun: execFun,
+          argument: argument,
+          callbackFun: callbackFun,
+          errorCallbackFun: errorCallbackFun,
+          message: message,
+        );
 }
 
 class FlexTaskRemove extends FlexTask {
@@ -43,13 +43,13 @@ class FlexTaskRemove extends FlexTask {
     Function? errorCallbackFun,
     String? message,
   }) : super(
-         id: id,
-         execFun: execFun,
-         argument: argument,
-         callbackFun: callbackFun,
-         errorCallbackFun: errorCallbackFun,
-         message: message,
-       );
+          id: id,
+          execFun: execFun,
+          argument: argument,
+          callbackFun: callbackFun,
+          errorCallbackFun: errorCallbackFun,
+          message: message,
+        );
 }
 
 class FlexQueue {

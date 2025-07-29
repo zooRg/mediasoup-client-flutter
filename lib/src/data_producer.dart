@@ -58,8 +58,8 @@ class DataProducer extends EnhancedEventEmitter {
     required this.sctpStreamParameters,
     required this.appData,
     this.closed = false,
-  }) : observer = EnhancedEventEmitter(),
-       super() {
+  })  : observer = EnhancedEventEmitter(),
+        super() {
     _logger.debug('constructor()');
 
     _handleDataChannel();

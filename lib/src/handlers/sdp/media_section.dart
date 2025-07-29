@@ -13,10 +13,10 @@ class Rtp {
   Rtp({required this.payload, required this.codec, required this.rate, this.encoding});
 
   Rtp.fromMap(Map data)
-    : payload = data['payload'],
-      codec = data['codec'],
-      rate = data['rate'],
-      encoding = data['encoding'];
+      : payload = data['payload'],
+        codec = data['codec'],
+        rate = data['rate'],
+        encoding = data['encoding'];
 
   Map<String, dynamic> toMap() {
     return {'payload': payload, 'codec': codec, 'rate': rate, 'encoding': encoding};
@@ -29,7 +29,9 @@ class Fmtp {
 
   Fmtp({required this.payload, required this.config});
 
-  Fmtp.fromMap(Map data) : payload = data['payload'], config = data['config'];
+  Fmtp.fromMap(Map data)
+      : payload = data['payload'],
+        config = data['config'];
 
   Map<String, dynamic> toMap() {
     return {'payload': payload, 'config': config};
@@ -42,7 +44,9 @@ class Connection {
 
   Connection({required this.version, required this.ip});
 
-  Connection.fromMap(Map data) : version = data['version'], ip = data['ip'];
+  Connection.fromMap(Map data)
+      : version = data['version'],
+        ip = data['ip'];
 
   Map<String, dynamic> toMap() {
     return {'version': version, 'ip': ip};
@@ -58,10 +62,10 @@ class Rtcp {
   Rtcp({required this.port, required this.netType, required this.address, required this.ipVer});
 
   Rtcp.fromMap(Map data)
-    : port = data['port'],
-      netType = data['netType'],
-      ipVer = data['ipVer'],
-      address = data['address'];
+      : port = data['port'],
+        netType = data['netType'],
+        ipVer = data['ipVer'],
+        address = data['address'];
 
   Map<String, dynamic> toMap() {
     return {'port': port, 'netType': netType, 'ipVer': ipVer, 'address': address};
@@ -74,7 +78,9 @@ class Fingerprint {
 
   Fingerprint({required this.type, required this.hash});
 
-  Fingerprint.fromMap(Map data) : type = data['type'], hash = data['hash'];
+  Fingerprint.fromMap(Map data)
+      : type = data['type'],
+        hash = data['hash'];
 
   Map<String, String> toMap() {
     return {'type': type, 'hash': hash};
@@ -91,11 +97,11 @@ class Ext {
   Ext({this.value, this.direction, this.uri, this.config, this.encryptUri});
 
   Ext.fromMap(Map data)
-    : value = data['value'],
-      direction = data['direction'],
-      uri = data['uri'],
-      config = data['config'],
-      encryptUri = data['encrypt-uri'];
+      : value = data['value'],
+        direction = data['direction'],
+        uri = data['uri'],
+        config = data['config'],
+        encryptUri = data['encrypt-uri'];
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> result = {
@@ -118,9 +124,9 @@ class RtcpFb {
 
   RtcpFb({required this.payload, required this.type, this.subtype = ''});
   RtcpFb.fromMap(Map data)
-    : payload = data['payload'],
-      type = data['type'],
-      subtype = data['subtype'] ?? '';
+      : payload = data['payload'],
+        type = data['type'],
+        subtype = data['subtype'] ?? '';
 
   Map<String, dynamic> toMap() {
     return {'payload': payload, 'type': type, 'subtype': subtype};
@@ -134,7 +140,10 @@ class Ssrc {
 
   Ssrc({this.id, this.attribute, required this.value});
 
-  Ssrc.fromMap(Map data) : id = data['id'], attribute = data['attribute'], value = data['value'];
+  Ssrc.fromMap(Map data)
+      : id = data['id'],
+        attribute = data['attribute'],
+        value = data['value'];
 
   Map<String, dynamic> toMap() {
     return {'id': id, 'attribute': attribute, 'value': value};
@@ -147,7 +156,9 @@ class SsrcGroup {
 
   SsrcGroup({required this.semantics, required this.ssrcs});
 
-  SsrcGroup.fromMap(Map data) : semantics = data['semantics'], ssrcs = data['ssrcs'];
+  SsrcGroup.fromMap(Map data)
+      : semantics = data['semantics'],
+        ssrcs = data['ssrcs'];
 
   Map<String, String> toMap() {
     return {'semantics': semantics, 'ssrcs': ssrcs};
@@ -162,9 +173,9 @@ class Sctpmap {
   Sctpmap({required this.app, required this.sctpmanNumber, required this.maxMessageSize});
 
   Sctpmap.fromMap(Map data)
-    : app = data['app'],
-      sctpmanNumber = data['sctpmanNumber'],
-      maxMessageSize = data['maxMessageSize'];
+      : app = data['app'],
+        sctpmanNumber = data['sctpmanNumber'],
+        maxMessageSize = data['maxMessageSize'];
 
   Map<String, dynamic> toMap() {
     return {'app': app, 'sctpmanNumber': sctpmanNumber, 'maxMessageSize': maxMessageSize};
@@ -178,7 +189,10 @@ class Rid {
 
   Rid({required this.id, required this.direction, this.params});
 
-  Rid.fromMap(Map data) : id = data['id'], direction = data['direction'], params = data['params'];
+  Rid.fromMap(Map data)
+      : id = data['id'],
+        direction = data['direction'],
+        params = data['params'];
 
   Map<String, dynamic> toMap() {
     return {'id': id, 'direction': direction, 'params': params};
@@ -194,10 +208,10 @@ class Simulcast {
   Simulcast({this.dir1, this.list1, this.dir2, this.list2});
 
   Simulcast.fromMap(Map data)
-    : dir1 = data['dir1'],
-      list1 = data['list1'],
-      dir2 = data['dir2'],
-      list2 = data['list2'];
+      : dir1 = data['dir1'],
+        list1 = data['list1'],
+        dir2 = data['dir2'],
+        list2 = data['list2'];
 
   Map<String, String?> toMap() {
     return {'dir1': dir1, 'list1': list1, 'dir2': dir2, 'list2': list2};
@@ -222,7 +236,9 @@ class RtcpFbTrrInt {
 
   RtcpFbTrrInt({required this.payload, required this.value});
 
-  RtcpFbTrrInt.fromMap(Map data) : payload = data['payload'], value = data['value'];
+  RtcpFbTrrInt.fromMap(Map data)
+      : payload = data['payload'],
+        value = data['value'];
 
   Map<String, int> toMap() {
     return {'payload': payload, 'value': value};
@@ -238,10 +254,10 @@ class Crypto {
   Crypto({required this.id, required this.suite, required this.config, this.sessionConfig});
 
   Crypto.fromMap(Map data)
-    : id = data['id'],
-      suite = data['suite'],
-      config = data['config'],
-      sessionConfig = data['sessionConfig'];
+      : id = data['id'],
+        suite = data['suite'],
+        config = data['config'],
+        sessionConfig = data['sessionConfig'];
 
   Map<String, dynamic> toMap() {
     return {'id': id, 'suite': suite, 'config': config, 'sessionConfig': sessionConfig};
@@ -254,7 +270,9 @@ class Bandwidth {
 
   Bandwidth({required this.type, required this.limit});
 
-  Bandwidth.fromMap(Map data) : type = data['type'], limit = data['limit'];
+  Bandwidth.fromMap(Map data)
+      : type = data['type'],
+        limit = data['limit'];
 
   Map<String, dynamic> toMap() {
     return {'type': type, 'limit': limit};
@@ -277,11 +295,11 @@ class Imageattrs {
   });
 
   Imageattrs.fromMap(Map data)
-    : pt = data['pt'],
-      dir1 = data['dir1'],
-      attrs1 = data['attrs1'],
-      dir2 = data['dir2'],
-      attrs2 = data['attrs2'];
+      : pt = data['pt'],
+        dir1 = data['dir1'],
+        attrs1 = data['attrs1'],
+        dir2 = data['dir2'],
+        attrs2 = data['attrs2'];
 
   Map<String, dynamic> toMap() {
     return {'pt': pt, 'dir1': dir1, 'attrs1': attrs1, 'dir2': dir2, 'attrs2': attrs2};
@@ -304,11 +322,11 @@ class SourceFilter {
   });
 
   SourceFilter.fromMap(Map data)
-    : this.filterMode = data['filterMode'],
-      this.netType = data['netType'],
-      this.addressTypes = data['addressTypes'],
-      this.destAddress = data['destAddress'],
-      this.srcList = data['srcList'];
+      : this.filterMode = data['filterMode'],
+        this.netType = data['netType'],
+        this.addressTypes = data['addressTypes'],
+        this.destAddress = data['destAddress'],
+        this.srcList = data['srcList'];
 
   Map<String, String> toMap() {
     return {
@@ -798,11 +816,11 @@ class AnswerMediaSection extends MediaSection {
     ProducerCodecOptions? codecOptions,
     bool extmapAllowMixed = false,
   }) : super(
-         iceParameters: iceParameters,
-         iceCandidates: iceCandidates,
-         dtlsParameters: dtlsParameters,
-         planB: planB,
-       ) {
+          iceParameters: iceParameters,
+          iceCandidates: iceCandidates,
+          dtlsParameters: dtlsParameters,
+          planB: planB,
+        ) {
     _mediaObject.mid = offerMediaObject.mid;
     _mediaObject.type = offerMediaObject.type;
     _mediaObject.protocol = offerMediaObject.protocol;
@@ -1068,11 +1086,11 @@ class OfferMediaSection extends MediaSection {
     String? trackId,
     bool oldDataChannelSpec = false,
   }) : super(
-         planB: planB,
-         dtlsParameters: dtlsParameters,
-         iceCandidates: iceCandidates,
-         iceParameters: iceParameters,
-       ) {
+          planB: planB,
+          dtlsParameters: dtlsParameters,
+          iceCandidates: iceCandidates,
+          iceParameters: iceParameters,
+        ) {
     _mediaObject.mid = mid;
     _mediaObject.type = kind;
 
@@ -1158,9 +1176,8 @@ class OfferMediaSection extends MediaSection {
 
           RtpEncodingParameters encoding = offerRtpParameters!.encodings.first;
           int ssrc = encoding.ssrc!;
-          int? rtxSsrc = (encoding.rtx != null && encoding.rtx!.ssrc != null)
-              ? encoding.rtx?.ssrc
-              : null;
+          int? rtxSsrc =
+              (encoding.rtx != null && encoding.rtx!.ssrc != null) ? encoding.rtx?.ssrc : null;
 
           _mediaObject.ssrcs = <Ssrc>[];
           _mediaObject.ssrcGroups = [];
@@ -1268,9 +1285,8 @@ class OfferMediaSection extends MediaSection {
     int ssrc = encoding.ssrc!;
     int? rtxSsrc = (encoding.rtx != null && encoding.rtx?.ssrc != null) ? encoding.rtx!.ssrc : null;
 
-    _mediaObject.ssrcs = _mediaObject.ssrcs!
-        .where((Ssrc s) => s.id != ssrc && s.id != rtxSsrc)
-        .toList();
+    _mediaObject.ssrcs =
+        _mediaObject.ssrcs!.where((Ssrc s) => s.id != ssrc && s.id != rtxSsrc).toList();
 
     if (rtxSsrc != null) {
       _mediaObject.ssrcGroups = _mediaObject.ssrcGroups!
