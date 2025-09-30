@@ -65,16 +65,16 @@ extension RTCIceTransportPolicyToString on RTCIceTransportPolicy {
 
 class RTCIceServer {
   /// String or RTCOAuthCredential.
-  final credential;
   final RTCIceCredentialType credentialType;
+  final credential;
   final List<String> urls;
   final String username;
 
   RTCIceServer({
-    this.credential,
     required this.credentialType,
+    this.credential,
     this.urls = const [],
-    required this.username,
+    this.username = '',
   });
 
   Map<String, dynamic> toMap() {
@@ -88,7 +88,8 @@ class RTCIceServer {
 
   RTCIceServer.fromMap(Map<String, dynamic> data)
       : credential = data['credential'],
-        credentialType = data['credentialType'],
+        credentialType =
+            data['credentialType'] ?? RTCIceCredentialType.password.value,
         urls = data['urls'],
         username = data['username'];
 }
