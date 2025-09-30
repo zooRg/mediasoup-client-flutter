@@ -16,10 +16,10 @@ class Logger {
   Logger(this._prefix) {
     if (_prefix != null) {
       debug = (dynamic message) {
-        // print('$APP_NAME:$_prefix $message');
+        print('$APP_NAME:$_prefix $message');
       };
       warn = (dynamic message) {
-        // print('$APP_NAME:WARN:$_prefix $message');
+        print('$APP_NAME:WARN:$_prefix $message');
       };
       error = (dynamic message) {
         if (kDebugMode) {
@@ -28,10 +28,10 @@ class Logger {
       };
     } else {
       debug = (dynamic message) {
-        // print('$APP_NAME $message');
+        print('$APP_NAME $message');
       };
       warn = (dynamic message) {
-        // print('$APP_NAME:WARN $message');
+        print('$APP_NAME:WARN $message');
       };
       error = (dynamic message) {
         if (kDebugMode) {
