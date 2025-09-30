@@ -75,7 +75,7 @@ class RTCIceServer {
   RTCIceServer({
     required this.credentialType,
     this.urls = const [],
-    this.username = '',
+    this.username,
     this.credential,
   });
 
@@ -83,7 +83,7 @@ class RTCIceServer {
     return {
       'credentialType': credentialType.value,
       'urls': urls,
-      'username': username,
+      if (credential != null) 'username': username,
       if (credential != null) 'credential': credential,
     };
   }
