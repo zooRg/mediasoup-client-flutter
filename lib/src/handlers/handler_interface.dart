@@ -39,6 +39,8 @@ extension RTCIceCredentialTypeToString on RTCIceCredentialType {
     RTCIceCredentialType.password: 'password',
   };
 
+  static RTCIceCredentialType fromString(String type) => types[type]!;
+
   RTCIceCredentialType? operator [](String i) => types[i];
   String get value => values[this]!;
 }
@@ -66,30 +68,30 @@ extension RTCIceTransportPolicyToString on RTCIceTransportPolicy {
 class RTCIceServer {
   /// String or RTCOAuthCredential.
   final RTCIceCredentialType credentialType;
-  final credential;
   final List<String> urls;
   final String username;
+  final credential;
 
   RTCIceServer({
     required this.credentialType,
-    this.credential,
     this.urls = const [],
     this.username = '',
+    this.credential,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      if (credential != null) 'credential': credential,
       'credentialType': credentialType.value,
       'urls': urls,
       'username': username,
+      if (credential != null) 'credential': credential,
     };
   }
 
   RTCIceServer.fromMap(Map<String, dynamic> data)
       : credential = data['credential'],
         credentialType =
-            data['credentialType'] ?? RTCIceCredentialType.password.value,
+            RTCIceCredentialTypeToString.fromString(data['credentialType']),
         urls = data['urls'],
         username = data['username'];
 }
