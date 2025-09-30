@@ -11,8 +11,7 @@ class CommonUtils {
     // Map of RtpCodecParameters indexed by payload type.
     Map<int, RtpCodecCapability> codecsMap = <int, RtpCodecCapability>{};
     // Map of RtpHeaderExtensions indexed by URI to avoid duplicates.
-    Map<String, RtpHeaderExtension> headerExtensionsMap =
-        <String, RtpHeaderExtension>{};
+    Map<String, RtpHeaderExtension> headerExtensionsMap = <String, RtpHeaderExtension>{};
     // Whether a m=audio/video section has been already found.
     bool gotAudio = false;
     bool gotVideo = false;
@@ -117,8 +116,7 @@ class CommonUtils {
     RtpParameters templateParameters,
   ) {
     if (mediaSectionIdx >= sdpObject.media.length) {
-      throw Exception(
-          'Invalid media section index: $mediaSectionIdx >= ${sdpObject.media.length}');
+      throw Exception('Invalid media section index: $mediaSectionIdx >= ${sdpObject.media.length}');
     }
     MediaObject mediaObject = sdpObject.media[mediaSectionIdx];
     // Verify we have the right media type
@@ -148,8 +146,7 @@ class CommonUtils {
     Map<int, int> payloadTypeMapping = {};
     for (Rtp rtp in mediaObject.rtp ?? []) {
       String mimeType = '${mediaObject.type}/${rtp.codec}';
-      RtpCodecParameters? templateCodec =
-          codecsByMimeType[mimeType.toLowerCase()];
+      RtpCodecParameters? templateCodec = codecsByMimeType[mimeType.toLowerCase()];
       if (templateCodec != null && templateCodec.payloadType != rtp.payload) {
         payloadTypeMapping[templateCodec.payloadType] = rtp.payload;
       }
@@ -170,9 +167,7 @@ class CommonUtils {
             RtpCodecParameters? mainCodec;
             try {
               mainCodec = rtpParameters.codecs.firstWhere(
-                (c) =>
-                    !c.mimeType.toLowerCase().endsWith('/rtx') &&
-                    c.payloadType == currentApt,
+                (c) => !c.mimeType.toLowerCase().endsWith('/rtx') && c.payloadType == currentApt,
               );
             } catch (e) {
               mainCodec = null;
@@ -219,12 +214,10 @@ class CommonUtils {
     // Rebuild extension list with Chrome's actual assigned IDs
     for (Ext ext in mediaObject.ext ?? []) {
       if (ext.uri != null && ext.value != null) {
-        RtpHeaderExtensionParameters? templateExtension =
-            extensionsByUri[ext.uri!];
+        RtpHeaderExtensionParameters? templateExtension = extensionsByUri[ext.uri!];
         if (templateExtension != null) {
           // Create new extension with Chrome's assigned ID
-          RtpHeaderExtensionParameters actualExtension =
-              RtpHeaderExtensionParameters(
+          RtpHeaderExtensionParameters actualExtension = RtpHeaderExtensionParameters(
             uri: templateExtension.uri,
             id: ext.value!, // Use Chrome's actual assigned ID
             encrypt: templateExtension.encrypt,
@@ -239,15 +232,10 @@ class CommonUtils {
 
   static DtlsParameters extractDtlsParameters(SdpObject sdpObject) {
     MediaObject? mediaObject = sdpObject.media.firstWhere(
-      (m) =>
-          m.iceUfrag != null &&
-          m.iceUfrag!.isNotEmpty &&
-          m.port != null &&
-          m.port != 0,
+      (m) => m.iceUfrag != null && m.iceUfrag!.isNotEmpty && m.port != null && m.port != 0,
       orElse: () => null as MediaObject,
     );
-    Fingerprint fingerprint =
-        (mediaObject.fingerprint ?? sdpObject.fingerprint)!;
+    Fingerprint fingerprint = (mediaObject.fingerprint ?? sdpObject.fingerprint)!;
     DtlsRole role = DtlsRole.auto;
     switch (mediaObject.setup) {
       case 'active':
@@ -289,9 +277,7 @@ class CommonUtils {
     for (RtpCodecParameters codec in offerRtpParameters.codecs) {
       String mimeType = codec.mimeType.toLowerCase();
       // Handle supported audio codecs: Opus, PCMU, and PCMA
-      if (mimeType != 'audio/opus' &&
-          mimeType != 'audio/pcmu' &&
-          mimeType != 'audio/pcma') {
+      if (mimeType != 'audio/opus' && mimeType != 'audio/pcmu' && mimeType != 'audio/pcma') {
         continue;
       }
       Rtp? rtp = (answerMediaObject?.rtp ?? []).firstWhere(

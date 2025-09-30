@@ -58,12 +58,10 @@ class UnifiedPlan extends HandlerInterface {
     required DtlsRole localDtlsRole,
     SdpObject? localSdpObject,
   }) async {
-    localSdpObject ??=
-        SdpObject.fromMap(parse((await _pc!.getLocalDescription())!.sdp!));
+    localSdpObject ??= SdpObject.fromMap(parse((await _pc!.getLocalDescription())!.sdp!));
 
     // Get our local DTLS parameters.
-    DtlsParameters dtlsParameters =
-        CommonUtils.extractDtlsParameters(localSdpObject);
+    DtlsParameters dtlsParameters = CommonUtils.extractDtlsParameters(localSdpObject);
 
     // Set our DTLS role.
     dtlsParameters.role = localDtlsRole;
@@ -125,8 +123,7 @@ class UnifiedPlan extends HandlerInterface {
       final parsedOffer = parse(offer.sdp!);
       SdpObject sdpObject = SdpObject.fromMap(parsedOffer);
 
-      RtpCapabilities nativeRtpCapabilities =
-          CommonUtils.extractRtpCapabilities(sdpObject);
+      RtpCapabilities nativeRtpCapabilities = CommonUtils.extractRtpCapabilities(sdpObject);
 
       return nativeRtpCapabilities;
     } catch (error) {
@@ -190,8 +187,7 @@ class UnifiedPlan extends HandlerInterface {
 
     // 'receive() [trackId:${options.trackId}, kind:${RTCRtpMediaTypeExtension.value(options.kind)}]');
 
-    String localId =
-        options.rtpParameters.mid ?? _mapMidTransceiver.length.toString();
+    String localId = options.rtpParameters.mid ?? _mapMidTransceiver.length.toString();
 
     _remoteSdp.receive(
       mid: localId,
@@ -267,16 +263,14 @@ class UnifiedPlan extends HandlerInterface {
 
       // Attempt fallback mechanism
       final MediaStreamTrack? track = _firstWhereOrNull(
-          (await _pc!.getReceivers()),
-          (receiver) => receiver.track?.id == options.trackId)?.track;
+          (await _pc!.getReceivers()), (receiver) => receiver.track?.id == options.trackId)?.track;
 
       if (track == null) {
         throw Exception('Track not found for trackId: ${options.trackId}');
       }
 
       // Create a new local media stream and add the track
-      stream = await createLocalMediaStream(
-          options.rtpParameters.rtcp?.cname ?? 'default_cname');
+      stream = await createLocalMediaStream(options.rtpParameters.rtcp?.cname ?? 'default_cname');
       stream.addTrack(track);
     }
 
@@ -300,25 +294,21 @@ class UnifiedPlan extends HandlerInterface {
     RTCDataChannelInit initOptions = RTCDataChannelInit();
     initOptions.negotiated = true;
     initOptions.id = options.sctpStreamParameters.streamId;
-    initOptions.ordered =
-        options.sctpStreamParameters.ordered ?? initOptions.ordered;
+    initOptions.ordered = options.sctpStreamParameters.ordered ?? initOptions.ordered;
     initOptions.maxRetransmitTime =
-        options.sctpStreamParameters.maxPacketLifeTime ??
-            initOptions.maxRetransmitTime;
-    initOptions.maxRetransmits = options.sctpStreamParameters.maxRetransmits ??
-        initOptions.maxRetransmits;
+        options.sctpStreamParameters.maxPacketLifeTime ?? initOptions.maxRetransmitTime;
+    initOptions.maxRetransmits =
+        options.sctpStreamParameters.maxRetransmits ?? initOptions.maxRetransmits;
     initOptions.protocol = options.protocol;
 
-    RTCDataChannel dataChannel =
-        await _pc!.createDataChannel(options.label, initOptions);
+    RTCDataChannel dataChannel = await _pc!.createDataChannel(options.label, initOptions);
 
     // If this is the first DataChannel we need to create the SDP offer with
     // m=application section.
     if (!_hasDataChannelMediaSection) {
       _remoteSdp.receiveSctpAssociation();
 
-      RTCSessionDescription offer =
-          RTCSessionDescription(_remoteSdp.getSdp(), 'offer');
+      RTCSessionDescription offer = RTCSessionDescription(_remoteSdp.getSdp(), 'offer');
 
       // // 'receiveDataChannel() | calling pc.setRemoteDescription() [offer:${offer.toMap()}]');
 
@@ -369,22 +359,19 @@ class UnifiedPlan extends HandlerInterface {
     }
 
     if (_direction == Direction.send) {
-      RTCSessionDescription offer =
-          await _pc!.createOffer({'iceRestart': true});
+      RTCSessionDescription offer = await _pc!.createOffer({'iceRestart': true});
 
       // // 'restartIce() | calling pc.setLocalDescription() [offer:${offer.toMap()}]');
 
       await _pc!.setLocalDescription(offer);
 
-      RTCSessionDescription answer =
-          RTCSessionDescription(_remoteSdp.getSdp(), 'answer');
+      RTCSessionDescription answer = RTCSessionDescription(_remoteSdp.getSdp(), 'answer');
 
       // // 'restartIce() | calling pc.setRemoteDescription() [answer:${answer.toMap()}]');
 
       await _pc!.setRemoteDescription(answer);
     } else {
-      RTCSessionDescription offer =
-          RTCSessionDescription(_remoteSdp.getSdp(), 'offer');
+      RTCSessionDescription offer = RTCSessionDescription(_remoteSdp.getSdp(), 'offer');
 
       // // 'restartIce() | calling pc.setRemoteDescription() [offer:${offer.toMap()}]');
 
@@ -435,9 +422,8 @@ class UnifiedPlan extends HandlerInterface {
     };
 
     if (options.dtlsParameters.role != DtlsRole.auto) {
-      _forcedLocalDtlsRole = options.dtlsParameters.role == DtlsRole.server
-          ? DtlsRole.client
-          : DtlsRole.server;
+      _forcedLocalDtlsRole =
+          options.dtlsParameters.role == DtlsRole.server ? DtlsRole.client : DtlsRole.server;
     }
 
     final constrains = options.proprietaryConstraints.isEmpty
@@ -456,8 +442,7 @@ class UnifiedPlan extends HandlerInterface {
 
     _pc = await createPeerConnection(
       {
-        'iceServers':
-            options.iceServers.map((RTCIceServer i) => i.toMap()).toList(),
+        'iceServers': options.iceServers.map((RTCIceServer i) => i.toMap()).toList(),
         'iceTransportPolicy': options.iceTransportPolicy?.value ?? 'all',
         'bundlePolicy': 'max-bundle',
         'rtcpMuxPolicy': 'require',
@@ -515,16 +500,13 @@ class UnifiedPlan extends HandlerInterface {
     }
 
     RtpParameters sendingRtpParameters = RtpParameters.copy(
-        _sendingRtpParametersByKind[
-            RTCRtpMediaTypeExtension.fromString(options.track.kind!)]!);
+        _sendingRtpParametersByKind[RTCRtpMediaTypeExtension.fromString(options.track.kind!)]!);
 
     // This may throw.
-    sendingRtpParameters.codecs =
-        Ortc.reduceCodecs(sendingRtpParameters.codecs, options.codec);
+    sendingRtpParameters.codecs = Ortc.reduceCodecs(sendingRtpParameters.codecs, options.codec);
 
-    RtpParameters sendingRemoteRtpParameters = RtpParameters.copy(
-        _sendingRemoteRtpParametersByKind[
-            RTCRtpMediaTypeExtension.fromString(options.track.kind!)]!);
+    RtpParameters sendingRemoteRtpParameters = RtpParameters.copy(_sendingRemoteRtpParametersByKind[
+        RTCRtpMediaTypeExtension.fromString(options.track.kind!)]!);
 
     // This may throw.
     sendingRemoteRtpParameters.codecs =
@@ -564,8 +546,7 @@ class UnifiedPlan extends HandlerInterface {
 
     if (options.encodings.length == 1 &&
         layers.spatialLayers > 1 &&
-        sendingRtpParameters.codecs.first.mimeType.toLowerCase() ==
-            'video/vp9') {
+        sendingRtpParameters.codecs.first.mimeType.toLowerCase() == 'video/vp9') {
       hackVp9Svc = true;
       localSdpObject = SdpObject.fromMap(parse(offer.sdp!));
       offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
@@ -575,8 +556,7 @@ class UnifiedPlan extends HandlerInterface {
         layers.spatialLayers,
       );
 
-      offer =
-          RTCSessionDescription(write(localSdpObject.toMap(), null), 'offer');
+      offer = RTCSessionDescription(write(localSdpObject.toMap(), null), 'offer');
     }
 
     await _pc!.setLocalDescription(offer);
@@ -598,8 +578,7 @@ class UnifiedPlan extends HandlerInterface {
     sendingRtpParameters.mid = localId;
 
     // Get the latest local SDP after setLocalDescription
-    localSdpObject =
-        SdpObject.fromMap(parse((await _pc!.getLocalDescription())!.sdp!));
+    localSdpObject = SdpObject.fromMap(parse((await _pc!.getLocalDescription())!.sdp!));
     offerMediaObject = localSdpObject.media[mediaSectionIdx.idx];
 
     // Chrome M140+ compatibility: Extract RTP parameters directly from actual SDP
@@ -632,8 +611,7 @@ class UnifiedPlan extends HandlerInterface {
 
       // Apply codec reduction if specified
       if (options.codec != null) {
-        sendingRtpParameters.codecs =
-            Ortc.reduceCodecs(sendingRtpParameters.codecs, options.codec);
+        sendingRtpParameters.codecs = Ortc.reduceCodecs(sendingRtpParameters.codecs, options.codec);
         sendingRemoteRtpParameters.codecs =
             Ortc.reduceCodecs(sendingRemoteRtpParameters.codecs, options.codec);
       }
@@ -642,8 +620,7 @@ class UnifiedPlan extends HandlerInterface {
       sendingRtpParameters.mid = localId;
 
       // Synchronize remote parameters with local parameters
-      _synchronizeRemoteParametersWithLocal(
-          sendingRtpParameters, sendingRemoteRtpParameters);
+      _synchronizeRemoteParametersWithLocal(sendingRtpParameters, sendingRemoteRtpParameters);
     } catch (e) {
       // Fallback to capability-based recomputation if SDP extraction fails
       try {
@@ -675,15 +652,13 @@ class UnifiedPlan extends HandlerInterface {
         );
 
         // Compute extended capabilities with the fresh local capabilities
-        ExtendedRtpCapabilities currentExtendedCapabilities =
-            Ortc.getExtendedRtpCapabilities(
+        ExtendedRtpCapabilities currentExtendedCapabilities = Ortc.getExtendedRtpCapabilities(
           currentLocalRtpCapabilities,
           remoteRtpCapabilities,
         );
 
         // Generate completely fresh sending parameters with Chrome's actual dynamic values
-        RTCRtpMediaType mediaType =
-            RTCRtpMediaTypeExtension.fromString(options.track.kind!);
+        RTCRtpMediaType mediaType = RTCRtpMediaTypeExtension.fromString(options.track.kind!);
         sendingRtpParameters = Ortc.getSendingRtpParameters(
           mediaType,
           currentExtendedCapabilities,
@@ -698,16 +673,15 @@ class UnifiedPlan extends HandlerInterface {
         if (options.codec != null) {
           sendingRtpParameters.codecs =
               Ortc.reduceCodecs(sendingRtpParameters.codecs, options.codec);
-          sendingRemoteRtpParameters.codecs = Ortc.reduceCodecs(
-              sendingRemoteRtpParameters.codecs, options.codec);
+          sendingRemoteRtpParameters.codecs =
+              Ortc.reduceCodecs(sendingRemoteRtpParameters.codecs, options.codec);
         }
 
         // Set MID since we regenerated the parameters
         sendingRtpParameters.mid = localId;
 
         // CRITICAL Chrome M140+ Fix: Ensure remote parameters match local parameters
-        _synchronizeRemoteParametersWithLocal(
-            sendingRtpParameters, sendingRemoteRtpParameters);
+        _synchronizeRemoteParametersWithLocal(sendingRtpParameters, sendingRemoteRtpParameters);
       } catch (e2) {
         // Continue with original parameters
       }
@@ -718,17 +692,14 @@ class UnifiedPlan extends HandlerInterface {
 
     // Set RTP encdoings by parsing the SDP offer if no encoding are given.
     if (options.encodings.isEmpty) {
-      sendingRtpParameters.encodings =
-          UnifiedPlanUtils.getRtpEncodings(offerMediaObject);
+      sendingRtpParameters.encodings = UnifiedPlanUtils.getRtpEncodings(offerMediaObject);
     }
     // Set RTP encodings by parsing the SDP offer and complete them with given
     // one if just a single encoding has been given.
     else if (options.encodings.length == 1) {
-      List<RtpEncodingParameters> newEncodings =
-          UnifiedPlanUtils.getRtpEncodings(offerMediaObject);
+      List<RtpEncodingParameters> newEncodings = UnifiedPlanUtils.getRtpEncodings(offerMediaObject);
 
-      newEncodings[0] =
-          RtpEncodingParameters.assign(newEncodings[0], options.encodings[0]);
+      newEncodings[0] = RtpEncodingParameters.assign(newEncodings[0], options.encodings[0]);
 
       // Hack for VP9 SVC.
       if (hackVp9Svc) {
@@ -746,8 +717,7 @@ class UnifiedPlan extends HandlerInterface {
     // each encoding.
     if (sendingRtpParameters.encodings.length > 1 &&
         (sendingRtpParameters.codecs[0].mimeType.toLowerCase() == 'video/vp8' ||
-            sendingRtpParameters.codecs[0].mimeType.toLowerCase() ==
-                'video/h264')) {
+            sendingRtpParameters.codecs[0].mimeType.toLowerCase() == 'video/h264')) {
       for (RtpEncodingParameters encoding in sendingRtpParameters.encodings) {
         encoding.scalabilityMode = 'S1T3';
       }
@@ -757,20 +727,17 @@ class UnifiedPlan extends HandlerInterface {
       offerMediaObject: offerMediaObject,
       reuseMid: mediaSectionIdx.reuseMid,
       offerRtpParameters: sendingRtpParameters,
-      answerRtpParameters:
-          sendingRemoteRtpParameters, // Use properly synchronized remote params
+      answerRtpParameters: sendingRemoteRtpParameters, // Use properly synchronized remote params
       codecOptions: options.codecOptions,
       extmapAllowMixed: true,
     );
 
-    RTCSessionDescription answer =
-        RTCSessionDescription(_remoteSdp.getSdp(), 'answer');
+    RTCSessionDescription answer = RTCSessionDescription(_remoteSdp.getSdp(), 'answer');
 
     // Chrome M140+ Additional Fix: Ensure the generated answer SDP also matches Chrome's expectations
     try {
       // Get the current local description to compare with our answer
-      RTCSessionDescription? currentLocalDesc =
-          await _pc!.getLocalDescription();
+      RTCSessionDescription? currentLocalDesc = await _pc!.getLocalDescription();
       if (currentLocalDesc?.sdp != null) {
         answer = _ensureAnswerCompatibilityWithLocal(
             answer, currentLocalDesc!, localId, options.track.kind!);
@@ -781,19 +748,16 @@ class UnifiedPlan extends HandlerInterface {
 
     // CRITICAL Chrome M140+ Fix: Apply H.264 parameter and payload synchronization
     try {
-      RTCSessionDescription? currentLocalDesc =
-          await _pc!.getLocalDescription();
+      RTCSessionDescription? currentLocalDesc = await _pc!.getLocalDescription();
       if (currentLocalDesc?.sdp != null) {
         Map<String, String> localH264Params =
             _extractH264Parameters(currentLocalDesc!.sdp!, localId);
-        Map<String, String> answerH264Params =
-            _extractH264Parameters(answer.sdp!, localId);
+        Map<String, String> answerH264Params = _extractH264Parameters(answer.sdp!, localId);
 
         // Check for H.264 parameter mismatches and apply fixes
         for (String key in localH264Params.keys) {
           if (answerH264Params[key] != localH264Params[key]) {
-            answer =
-                _fixH264ParameterMismatch(answer, currentLocalDesc, localId);
+            answer = _fixH264ParameterMismatch(answer, currentLocalDesc, localId);
             break;
           }
         }
@@ -810,17 +774,14 @@ class UnifiedPlan extends HandlerInterface {
     } catch (e) {
       // Fallback to capability-based recomputation if SDP extraction fails
       sendingRtpParameters = Ortc.getSendingRtpParameters(
-          RTCRtpMediaTypeExtension.fromString(options.track.kind!),
-          _extendedRtpCapabilities);
+          RTCRtpMediaTypeExtension.fromString(options.track.kind!), _extendedRtpCapabilities);
 
       sendingRemoteRtpParameters = Ortc.getSendingRemoteRtpParameters(
-          RTCRtpMediaTypeExtension.fromString(options.track.kind!),
-          _extendedRtpCapabilities);
+          RTCRtpMediaTypeExtension.fromString(options.track.kind!), _extendedRtpCapabilities);
 
       // Apply codec reduction if specified
       if (options.codec != null) {
-        sendingRtpParameters.codecs =
-            Ortc.reduceCodecs(sendingRtpParameters.codecs, options.codec);
+        sendingRtpParameters.codecs = Ortc.reduceCodecs(sendingRtpParameters.codecs, options.codec);
         sendingRemoteRtpParameters.codecs =
             Ortc.reduceCodecs(sendingRemoteRtpParameters.codecs, options.codec);
       }
@@ -852,23 +813,19 @@ class UnifiedPlan extends HandlerInterface {
   }
 
   @override
-  Future<HandlerSendDataChannelResult> sendDataChannel(
-      SendDataChannelArguments options) async {
+  Future<HandlerSendDataChannelResult> sendDataChannel(SendDataChannelArguments options) async {
     _assertSendRirection();
 
     RTCDataChannelInit initOptions = RTCDataChannelInit();
     initOptions.negotiated = true;
     initOptions.id = _nextSendSctpStreamId;
     initOptions.ordered = options.ordered ?? initOptions.ordered;
-    initOptions.maxRetransmitTime =
-        options.maxPacketLifeTime ?? initOptions.maxRetransmitTime;
-    initOptions.maxRetransmits =
-        options.maxRetransmits ?? initOptions.maxRetransmits;
+    initOptions.maxRetransmitTime = options.maxPacketLifeTime ?? initOptions.maxRetransmitTime;
+    initOptions.maxRetransmits = options.maxRetransmits ?? initOptions.maxRetransmits;
     initOptions.protocol = options.protocol ?? initOptions.protocol;
     // initOptions.priority = options.priority;
 
-    RTCDataChannel dataChannel =
-        await _pc!.createDataChannel(options.label!, initOptions);
+    RTCDataChannel dataChannel = await _pc!.createDataChannel(options.label!, initOptions);
 
     // Increase next id.
     _nextSendSctpStreamId = ++_nextSendSctpStreamId % SCTP_NUM_STREAMS.MIS;
@@ -878,8 +835,8 @@ class UnifiedPlan extends HandlerInterface {
     if (!_hasDataChannelMediaSection) {
       RTCSessionDescription offer = await _pc!.createOffer({});
       SdpObject localSdpObject = SdpObject.fromMap(parse(offer.sdp!));
-      MediaObject? offerMediaObject = _firstWhereOrNull(
-          localSdpObject.media, (MediaObject m) => m.type == 'application');
+      MediaObject? offerMediaObject =
+          _firstWhereOrNull(localSdpObject.media, (MediaObject m) => m.type == 'application');
 
       if (!_transportReady) {
         await _setupTransport(
@@ -894,8 +851,7 @@ class UnifiedPlan extends HandlerInterface {
 
       _remoteSdp.sendSctpAssociation(offerMediaObject!);
 
-      RTCSessionDescription answer =
-          RTCSessionDescription(_remoteSdp.getSdp(), 'answer');
+      RTCSessionDescription answer = RTCSessionDescription(_remoteSdp.getSdp(), 'answer');
 
       // // 'sendDataChannel() | calling pc.setRemoteDescription() [answer:${answer.toMap()}]');
 
@@ -943,8 +899,7 @@ class UnifiedPlan extends HandlerInterface {
   }
 
   @override
-  Future<void> setRtpEncodingParameters(
-      SetRtpEncodingParametersOptions options) async {
+  Future<void> setRtpEncodingParameters(SetRtpEncodingParametersOptions options) async {
     _assertSendRirection();
 
     // 'setRtpEncodingParameters() [localId:${options.localId}, params:${options.params}]');
@@ -964,11 +919,10 @@ class UnifiedPlan extends HandlerInterface {
         maxBitrate: options.params.maxBitrate ?? encoding.maxBitrate,
         maxFramerate: options.params.maxFramerate ?? encoding.maxFramerate,
         minBitrate: options.params.minBitrate ?? encoding.minBitrate,
-        numTemporalLayers:
-            options.params.numTemporalLayers ?? encoding.numTemporalLayers,
+        numTemporalLayers: options.params.numTemporalLayers ?? encoding.numTemporalLayers,
         rid: options.params.rid ?? encoding.rid,
-        scaleResolutionDownBy: options.params.scaleResolutionDownBy ??
-            encoding.scaleResolutionDownBy,
+        scaleResolutionDownBy:
+            options.params.scaleResolutionDownBy ?? encoding.scaleResolutionDownBy,
         ssrc: options.params.ssrc ?? encoding.ssrc,
       );
       idx++;
@@ -989,8 +943,7 @@ class UnifiedPlan extends HandlerInterface {
 
     _remoteSdp.closeMediaSection(transceiver.mid);
 
-    RTCSessionDescription offer =
-        RTCSessionDescription(_remoteSdp.getSdp(), 'offer');
+    RTCSessionDescription offer = RTCSessionDescription(_remoteSdp.getSdp(), 'offer');
 
     // 'stopReceiving() | calling pc.setRemoteDescription() [offer:${offer.toMap()}');
 
@@ -1024,8 +977,7 @@ class UnifiedPlan extends HandlerInterface {
 
     await _pc!.setLocalDescription(offer);
 
-    RTCSessionDescription answer =
-        RTCSessionDescription(_remoteSdp.getSdp(), 'answer');
+    RTCSessionDescription answer = RTCSessionDescription(_remoteSdp.getSdp(), 'answer');
 
     // 'stopSending() | calling pc.setRemoteDescription() [answer:${answer.toMap()}');
 
@@ -1037,8 +989,7 @@ class UnifiedPlan extends HandlerInterface {
   Future<void> updateIceServers(List<RTCIceServer> iceServers) async {
     Map<String, dynamic> configuration = _pc!.getConfiguration;
 
-    configuration['iceServers'] =
-        iceServers.map((RTCIceServer ice) => ice.toMap()).toList();
+    configuration['iceServers'] = iceServers.map((RTCIceServer ice) => ice.toMap()).toList();
 
     await _pc!.setConfiguration(configuration);
   }
@@ -1078,8 +1029,7 @@ class UnifiedPlan extends HandlerInterface {
                 try {
                   correspondingRemoteMainCodec = remoteParams.codecs.firstWhere(
                     (c) =>
-                        c.mimeType.toLowerCase() ==
-                            localCodec.mimeType.toLowerCase() &&
+                        c.mimeType.toLowerCase() == localCodec.mimeType.toLowerCase() &&
                         !c.mimeType.toLowerCase().endsWith('/rtx'),
                   );
                 } catch (e) {
@@ -1106,10 +1056,8 @@ class UnifiedPlan extends HandlerInterface {
       }
 
       // Update remote extension IDs to match local
-      for (RtpHeaderExtensionParameters remoteExt
-          in remoteParams.headerExtensions) {
-        if (remoteExt.uri != null &&
-            localExtensionIds.containsKey(remoteExt.uri!)) {
+      for (RtpHeaderExtensionParameters remoteExt in remoteParams.headerExtensions) {
+        if (remoteExt.uri != null && localExtensionIds.containsKey(remoteExt.uri!)) {
           int localId = localExtensionIds[remoteExt.uri!]!;
           if (remoteExt.id != localId) {
             // 'send() | Updating remote extension ${remoteExt.uri} ID: ${remoteExt.id} -> $localId');
@@ -1131,11 +1079,8 @@ class UnifiedPlan extends HandlerInterface {
 
   /// Chrome M140+ Fix: Ensure answer SDP is compatible with local offer SDP
   /// This addresses cases where parameter synchronization alone isn't enough
-  RTCSessionDescription _ensureAnswerCompatibilityWithLocal(
-      RTCSessionDescription answer,
-      RTCSessionDescription localOffer,
-      String mid,
-      String trackKind) {
+  RTCSessionDescription _ensureAnswerCompatibilityWithLocal(RTCSessionDescription answer,
+      RTCSessionDescription localOffer, String mid, String trackKind) {
     try {
       // 'send() | Checking answer SDP compatibility for mid: $mid, kind: $trackKind');
 
@@ -1203,8 +1148,7 @@ class UnifiedPlan extends HandlerInterface {
 
           for (int i = 0; i < answerMedia.ext!.length; i++) {
             Ext answerExt = answerMedia.ext![i];
-            if (answerExt.uri != null &&
-                localExtIds.containsKey(answerExt.uri!)) {
+            if (answerExt.uri != null && localExtIds.containsKey(answerExt.uri!)) {
               int expectedId = localExtIds[answerExt.uri!]!;
               if (answerExt.value != expectedId) {
                 // 'send() | Correcting answer extension ID for ${answerExt.uri}: ${answerExt.value} -> $expectedId');
@@ -1236,8 +1180,8 @@ class UnifiedPlan extends HandlerInterface {
 
   /// Chrome M140+ Last Resort Fix: Direct SDP text manipulation for payload synchronization
   /// This is the most aggressive approach to ensure payload types match exactly
-  RTCSessionDescription _directSdpPayloadSync(RTCSessionDescription answer,
-      RTCSessionDescription localOffer, String targetMid) {
+  RTCSessionDescription _directSdpPayloadSync(
+      RTCSessionDescription answer, RTCSessionDescription localOffer, String targetMid) {
     try {
       // 'send() | Direct SDP payload sync - examining local offer and answer for mid: $targetMid');
 
@@ -1245,10 +1189,8 @@ class UnifiedPlan extends HandlerInterface {
       String answerSdp = answer.sdp!;
 
       // Parse both SDPs to extract payload mappings for the target MID
-      Map<String, int> localPayloadTypes =
-          _extractPayloadTypesFromSdp(localSdp, targetMid);
-      Map<String, int> answerPayloadTypes =
-          _extractPayloadTypesFromSdp(answerSdp, targetMid);
+      Map<String, int> localPayloadTypes = _extractPayloadTypesFromSdp(localSdp, targetMid);
+      Map<String, int> answerPayloadTypes = _extractPayloadTypesFromSdp(answerSdp, targetMid);
 
       // 'send() | Local offer payload types for mid $targetMid: $localPayloadTypes');
       // 'send() | Answer payload types for mid $targetMid: $answerPayloadTypes');
@@ -1271,8 +1213,7 @@ class UnifiedPlan extends HandlerInterface {
       if (needsSync) {
         // 'send() | Applying direct SDP payload synchronization with mapping: $payloadMapping');
 
-        String syncedSdp =
-            _applySdpPayloadMapping(answerSdp, targetMid, payloadMapping);
+        String syncedSdp = _applySdpPayloadMapping(answerSdp, targetMid, payloadMapping);
 
         // 'send() | Direct SDP sync completed - payload types synchronized');
 
@@ -1327,8 +1268,7 @@ class UnifiedPlan extends HandlerInterface {
   }
 
   /// Apply payload type mapping to SDP text for a specific MID
-  String _applySdpPayloadMapping(
-      String sdp, String targetMid, Map<int, int> payloadMapping) {
+  String _applySdpPayloadMapping(String sdp, String targetMid, Map<int, int> payloadMapping) {
     try {
       List<String> lines = sdp.split('\n');
       List<String> modifiedLines = [];
@@ -1359,18 +1299,15 @@ class UnifiedPlan extends HandlerInterface {
 
             // Update rtpmap lines: a=rtpmap:96 VP8/90000
             modifiedLine = modifiedLine.replaceAll(
-                RegExp(r'a=rtpmap:' + oldPt.toString() + r'\s+'),
-                'a=rtpmap:$newPt ');
+                RegExp(r'a=rtpmap:' + oldPt.toString() + r'\s+'), 'a=rtpmap:$newPt ');
 
             // Update fmtp lines: a=fmtp:96 max-fs=12288
             modifiedLine = modifiedLine.replaceAll(
-                RegExp(r'a=fmtp:' + oldPt.toString() + r'\s+'),
-                'a=fmtp:$newPt ');
+                RegExp(r'a=fmtp:' + oldPt.toString() + r'\s+'), 'a=fmtp:$newPt ');
 
             // Update rtcp-fb lines: a=rtcp-fb:96 nack
             modifiedLine = modifiedLine.replaceAll(
-                RegExp(r'a=rtcp-fb:' + oldPt.toString() + r'\s+'),
-                'a=rtcp-fb:$newPt ');
+                RegExp(r'a=rtcp-fb:' + oldPt.toString() + r'\s+'), 'a=rtcp-fb:$newPt ');
 
             // Update m= line payload types
             if (modifiedLine.startsWith('m=')) {
@@ -1394,8 +1331,7 @@ class UnifiedPlan extends HandlerInterface {
             }
 
             // Also update any apt parameters in fmtp lines for RTX codecs
-            if (modifiedLine.contains('a=fmtp:') &&
-                modifiedLine.contains('apt=')) {
+            if (modifiedLine.contains('a=fmtp:') && modifiedLine.contains('apt=')) {
               RegExp aptRegex = RegExp(r'apt=(\d+)');
               modifiedLine = modifiedLine.replaceAllMapped(aptRegex, (match) {
                 int aptValue = int.parse(match.group(1)!);
@@ -1481,10 +1417,8 @@ class UnifiedPlan extends HandlerInterface {
         }
 
         // Find H.264 fmtp parameters: a=fmtp:119 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f
-        if (h264PayloadType != null &&
-            trimmedLine.startsWith('a=fmtp:$h264PayloadType ')) {
-          String fmtpParams =
-              trimmedLine.substring('a=fmtp:$h264PayloadType '.length);
+        if (h264PayloadType != null && trimmedLine.startsWith('a=fmtp:$h264PayloadType ')) {
+          String fmtpParams = trimmedLine.substring('a=fmtp:$h264PayloadType '.length);
           List<String> paramPairs = fmtpParams.split(';');
 
           for (String pair in paramPairs) {
@@ -1505,15 +1439,14 @@ class UnifiedPlan extends HandlerInterface {
   }
 
   /// Fix H.264 parameter mismatches between local offer and answer
-  RTCSessionDescription _fixH264ParameterMismatch(RTCSessionDescription answer,
-      RTCSessionDescription localOffer, String targetMid) {
+  RTCSessionDescription _fixH264ParameterMismatch(
+      RTCSessionDescription answer, RTCSessionDescription localOffer, String targetMid) {
     try {
       String answerSdp = answer.sdp!;
       String localSdp = localOffer.sdp!;
 
       // Extract H.264 parameters from local offer
-      Map<String, String> localH264Params =
-          _extractH264Parameters(localSdp, targetMid);
+      Map<String, String> localH264Params = _extractH264Parameters(localSdp, targetMid);
       String? localPayloadType = localH264Params['payload_type'];
       String? localProfileLevelId = localH264Params['profile-level-id'];
 
@@ -1544,8 +1477,7 @@ class UnifiedPlan extends HandlerInterface {
           // Fix H.264 fmtp line to match local profile-level-id
           if (trimmedLine.startsWith('a=fmtp:$localPayloadType ')) {
             // Extract existing fmtp parameters
-            String fmtpParams =
-                trimmedLine.substring('a=fmtp:$localPayloadType '.length);
+            String fmtpParams = trimmedLine.substring('a=fmtp:$localPayloadType '.length);
             Map<String, String> params = {};
 
             List<String> paramPairs = fmtpParams.split(';');
@@ -1558,10 +1490,8 @@ class UnifiedPlan extends HandlerInterface {
 
             // Update critical H.264 parameters from local offer
             params['profile-level-id'] = localProfileLevelId;
-            params['level-asymmetry-allowed'] =
-                localH264Params['level-asymmetry-allowed'] ?? '1';
-            params['packetization-mode'] =
-                localH264Params['packetization-mode'] ?? '1';
+            params['level-asymmetry-allowed'] = localH264Params['level-asymmetry-allowed'] ?? '1';
+            params['packetization-mode'] = localH264Params['packetization-mode'] ?? '1';
 
             // Rebuild fmtp line
             List<String> paramStrings = [];
@@ -1573,8 +1503,7 @@ class UnifiedPlan extends HandlerInterface {
           }
 
           // Fix RTX apt parameter to point to correct H.264 payload type
-          else if (trimmedLine.contains('apt=') &&
-              trimmedLine.startsWith('a=fmtp:')) {
+          else if (trimmedLine.contains('apt=') && trimmedLine.startsWith('a=fmtp:')) {
             // Extract the RTX payload type from this fmtp line
             // Handle both formats: "a=fmtp:124 apt=109" and "a=fmtp:124apt=109"
             RegExp fmtpRegex = RegExp(r'a=fmtp:(\d+)\s*apt=(\d+)');
@@ -1584,8 +1513,7 @@ class UnifiedPlan extends HandlerInterface {
 
               // Check if we need to fix the apt parameter
               if (currentApt != localPayloadType) {
-                fixedLine = trimmedLine.replaceAll(
-                    'apt=$currentApt', 'apt=$localPayloadType');
+                fixedLine = trimmedLine.replaceAll('apt=$currentApt', 'apt=$localPayloadType');
               }
             }
           }

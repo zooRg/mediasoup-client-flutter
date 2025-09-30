@@ -250,11 +250,9 @@ abstract class HandlerInterface extends EnhancedEventEmitter {
   Future<void> stopSending(String localId);
   Future<void> replaceTrack(ReplaceTrackOptions options);
   Future<void> setMaxSpatialLayer(SetMaxSpatialLayerOptions options);
-  Future<void> setRtpEncodingParameters(
-      SetRtpEncodingParametersOptions options);
+  Future<void> setRtpEncodingParameters(SetRtpEncodingParametersOptions options);
   Future<List<StatsReport>> getSenderStats(String localId);
-  Future<HandlerSendDataChannelResult> sendDataChannel(
-      SendDataChannelArguments options);
+  Future<HandlerSendDataChannelResult> sendDataChannel(SendDataChannelArguments options);
   Future<HandlerReceiveResult> receive(HandlerReceiveOptions options);
   Future<void> stopReceiving(
     String localId,

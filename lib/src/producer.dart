@@ -39,19 +39,14 @@ class ProducerCodecOptions {
       if (opusStereo != null) 'opusStereo': opusStereo,
       if (opusFec != null) 'opusFec': opusFec,
       if (opusDtx != null) 'opusDtx': opusDtx,
-      if (opusMaxPlaybackRate != null)
-        'opusMaxPlaybackRate': opusMaxPlaybackRate,
-      if (opusMaxAverageBitrate != null)
-        'opusMaxAverageBitrate': opusMaxAverageBitrate,
+      if (opusMaxPlaybackRate != null) 'opusMaxPlaybackRate': opusMaxPlaybackRate,
+      if (opusMaxAverageBitrate != null) 'opusMaxAverageBitrate': opusMaxAverageBitrate,
       if (opusPtime != null) 'opusPtime': opusPtime,
       if (pcmuPtime != null) 'pcmuPtime': pcmuPtime,
       if (pcmaPtime != null) 'pcmaPtime': pcmaPtime,
-      if (videoGoogleStartBitrate != null)
-        'videoGoogleStartBitrate': videoGoogleStartBitrate,
-      if (videoGoogleMaxBitrate != null)
-        'videoGoogleMaxBitrate': videoGoogleMaxBitrate,
-      if (videoGoogleMinBitrate != null)
-        'videoGoogleMinBitrate': videoGoogleMinBitrate,
+      if (videoGoogleStartBitrate != null) 'videoGoogleStartBitrate': videoGoogleStartBitrate,
+      if (videoGoogleMaxBitrate != null) 'videoGoogleMaxBitrate': videoGoogleMaxBitrate,
+      if (videoGoogleMinBitrate != null) 'videoGoogleMinBitrate': videoGoogleMinBitrate,
     };
   }
 }

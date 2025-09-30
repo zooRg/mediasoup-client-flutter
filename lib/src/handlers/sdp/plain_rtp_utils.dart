@@ -16,8 +16,7 @@ class PlainRtpUtils {
       orElse: () => null as MediaObject,
     );
 
-    Connection connectionObject =
-        (mediaObject.connection ?? sdpObject.connection)!;
+    Connection connectionObject = (mediaObject.connection ?? sdpObject.connection)!;
 
     PlainRtpParameters result = PlainRtpParameters(
       ip: connectionObject.ip,
