@@ -39,7 +39,7 @@ extension RTCIceCredentialTypeToString on RTCIceCredentialType {
     RTCIceCredentialType.password: 'password',
   };
 
-  operator [](String i) => types[i];
+  RTCIceCredentialType? operator [](String i) => types[i];
   String get value => values[this]!;
 }
 
@@ -59,7 +59,7 @@ extension RTCIceTransportPolicyToString on RTCIceTransportPolicy {
     RTCIceTransportPolicy.relay: 'relay',
   };
 
-  operator [](String i) => types[i];
+  RTCIceTransportPolicy? operator [](String i) => types[i];
   String get value => values[this]!;
 }
 
@@ -85,6 +85,12 @@ class RTCIceServer {
       'username': username,
     };
   }
+
+  RTCIceServer.fromMap(Map<String, dynamic> data)
+      : credential = data['credential'],
+        credentialType = data['credentialType'],
+        urls = data['urls'],
+        username = data['username'];
 }
 
 class HandlerRunOptions {
@@ -250,9 +256,11 @@ abstract class HandlerInterface extends EnhancedEventEmitter {
   Future<void> stopSending(String localId);
   Future<void> replaceTrack(ReplaceTrackOptions options);
   Future<void> setMaxSpatialLayer(SetMaxSpatialLayerOptions options);
-  Future<void> setRtpEncodingParameters(SetRtpEncodingParametersOptions options);
+  Future<void> setRtpEncodingParameters(
+      SetRtpEncodingParametersOptions options);
   Future<List<StatsReport>> getSenderStats(String localId);
-  Future<HandlerSendDataChannelResult> sendDataChannel(SendDataChannelArguments options);
+  Future<HandlerSendDataChannelResult> sendDataChannel(
+      SendDataChannelArguments options);
   Future<HandlerReceiveResult> receive(HandlerReceiveOptions options);
   Future<void> stopReceiving(
     String localId,
