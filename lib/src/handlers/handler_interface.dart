@@ -95,11 +95,9 @@ class RTCIceServer {
     if (data['urls'] is String) {
       data['urls'] = [data['urls'].toString()];
     }
-    if (data['username'] == null) {
-      data['username'] = '';
-    }
     return RTCIceServer(
-      credentialType: RTCIceCredentialTypeToString.fromString(data['credentialType']),
+      credentialType:
+          RTCIceCredentialTypeToString.fromString(data['credentialType']),
       urls: data['urls'],
       credential: data['credential'],
       username: data['username'],
@@ -270,9 +268,11 @@ abstract class HandlerInterface extends EnhancedEventEmitter {
   Future<void> stopSending(String localId);
   Future<void> replaceTrack(ReplaceTrackOptions options);
   Future<void> setMaxSpatialLayer(SetMaxSpatialLayerOptions options);
-  Future<void> setRtpEncodingParameters(SetRtpEncodingParametersOptions options);
+  Future<void> setRtpEncodingParameters(
+      SetRtpEncodingParametersOptions options);
   Future<List<StatsReport>> getSenderStats(String localId);
-  Future<HandlerSendDataChannelResult> sendDataChannel(SendDataChannelArguments options);
+  Future<HandlerSendDataChannelResult> sendDataChannel(
+      SendDataChannelArguments options);
   Future<HandlerReceiveResult> receive(HandlerReceiveOptions options);
   Future<void> stopReceiving(
     String localId,
