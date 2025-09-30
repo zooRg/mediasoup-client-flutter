@@ -69,13 +69,13 @@ class RTCIceServer {
   /// String or RTCOAuthCredential.
   final RTCIceCredentialType credentialType;
   final List<String> urls;
-  final String username;
+  final String? username;
   final credential;
 
   RTCIceServer({
     required this.credentialType,
     this.urls = const [],
-    this.username = '',
+    this.username,
     this.credential,
   });
 
@@ -83,17 +83,23 @@ class RTCIceServer {
     return {
       'credentialType': credentialType.value,
       'urls': urls,
-      'username': username,
+      if (credential != null) 'username': username,
       if (credential != null) 'credential': credential,
     };
   }
 
-  RTCIceServer.fromMap(Map<String, dynamic> data)
-      : credential = data['credential'],
-        credentialType = RTCIceCredentialTypeToString.fromString(
-            data['credentialType'] ?? 'password'),
-        urls = data['urls'],
-        username = data['username'];
+  static RTCIceServer fromMap(Map<String, dynamic> data) {
+    if (data['credentialType'] == null) {
+      data['credentialType'] = 'password';
+    }
+    return RTCIceServer(
+      credentialType:
+          RTCIceCredentialTypeToString.fromString(data['credentialType']),
+      urls: data['urls'],
+      credential: data['credential'],
+      username: data['username'],
+    );
+  }
 }
 
 class HandlerRunOptions {
