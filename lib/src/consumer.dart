@@ -1,6 +1,7 @@
+// ignore_for_file: empty_catches
+
 import 'package:flutter/foundation.dart' show mapEquals;
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-
 import 'package:mediasoup_client_flutter/src/common/enhanced_event_emitter.dart';
 import 'package:mediasoup_client_flutter/src/common/logger.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
@@ -21,7 +22,7 @@ class ConsumerOptions {
   });
 }
 
-typedef void ConsumerOnTrackEnded();
+typedef ConsumerOnTrackEnded = void Function();
 
 class Consumer extends EnhancedEventEmitter {
   /// Id.
