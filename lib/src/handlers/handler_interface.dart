@@ -92,6 +92,9 @@ class RTCIceServer {
     if (data['credentialType'] == null) {
       data['credentialType'] = 'password';
     }
+    if (data['urls'] is String) {
+      data['urls'] = [data['urls'].toString()];
+    }
     return RTCIceServer(
       credentialType:
           RTCIceCredentialTypeToString.fromString(data['credentialType']),
