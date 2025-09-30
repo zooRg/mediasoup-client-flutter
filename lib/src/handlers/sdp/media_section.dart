@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types, prefer_typing_uninitialized_variables, cast_from_null_always_fails
+
 import 'package:mediasoup_client_flutter/src/producer.dart';
 import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sdp_object.dart';
@@ -10,7 +12,12 @@ class Rtp {
   final int rate;
   int? encoding;
 
-  Rtp({required this.payload, required this.codec, required this.rate, this.encoding});
+  Rtp({
+    required this.payload,
+    required this.codec,
+    required this.rate,
+    this.encoding,
+  });
 
   Rtp.fromMap(Map data)
       : payload = data['payload'],
@@ -19,7 +26,12 @@ class Rtp {
         encoding = data['encoding'];
 
   Map<String, dynamic> toMap() {
-    return {'payload': payload, 'codec': codec, 'rate': rate, 'encoding': encoding};
+    return {
+      'payload': payload,
+      'codec': codec,
+      'rate': rate,
+      'encoding': encoding,
+    };
   }
 }
 
@@ -27,14 +39,20 @@ class Fmtp {
   final int payload;
   String config;
 
-  Fmtp({required this.payload, required this.config});
+  Fmtp({
+    required this.payload,
+    required this.config,
+  });
 
   Fmtp.fromMap(Map data)
       : payload = data['payload'],
         config = data['config'];
 
   Map<String, dynamic> toMap() {
-    return {'payload': payload, 'config': config};
+    return {
+      'payload': payload,
+      'config': config,
+    };
   }
 }
 
@@ -42,14 +60,20 @@ class Connection {
   final int version;
   final String ip;
 
-  Connection({required this.version, required this.ip});
+  Connection({
+    required this.version,
+    required this.ip,
+  });
 
   Connection.fromMap(Map data)
       : version = data['version'],
         ip = data['ip'];
 
   Map<String, dynamic> toMap() {
-    return {'version': version, 'ip': ip};
+    return {
+      'version': version,
+      'ip': ip,
+    };
   }
 }
 
@@ -59,7 +83,12 @@ class Rtcp {
   final int ipVer;
   final String address;
 
-  Rtcp({required this.port, required this.netType, required this.address, required this.ipVer});
+  Rtcp({
+    required this.port,
+    required this.netType,
+    required this.address,
+    required this.ipVer,
+  });
 
   Rtcp.fromMap(Map data)
       : port = data['port'],
@@ -68,7 +97,12 @@ class Rtcp {
         address = data['address'];
 
   Map<String, dynamic> toMap() {
-    return {'port': port, 'netType': netType, 'ipVer': ipVer, 'address': address};
+    return {
+      'port': port,
+      'netType': netType,
+      'ipVer': ipVer,
+      'address': address,
+    };
   }
 }
 
@@ -76,14 +110,20 @@ class Fingerprint {
   final String type;
   final String hash;
 
-  Fingerprint({required this.type, required this.hash});
+  Fingerprint({
+    required this.type,
+    required this.hash,
+  });
 
   Fingerprint.fromMap(Map data)
       : type = data['type'],
         hash = data['hash'];
 
   Map<String, String> toMap() {
-    return {'type': type, 'hash': hash};
+    return {
+      'type': type,
+      'hash': hash,
+    };
   }
 }
 
@@ -94,7 +134,13 @@ class Ext {
   final String? config;
   final String? encryptUri;
 
-  Ext({this.value, this.direction, this.uri, this.config, this.encryptUri});
+  Ext({
+    this.value,
+    this.direction,
+    this.uri,
+    this.config,
+    this.encryptUri,
+  });
 
   Ext.fromMap(Map data)
       : value = data['value'],
@@ -122,14 +168,22 @@ class RtcpFb {
   final String type;
   final String subtype;
 
-  RtcpFb({required this.payload, required this.type, this.subtype = ''});
+  RtcpFb({
+    required this.payload,
+    required this.type,
+    this.subtype = '',
+  });
   RtcpFb.fromMap(Map data)
       : payload = data['payload'],
         type = data['type'],
         subtype = data['subtype'] ?? '';
 
   Map<String, dynamic> toMap() {
-    return {'payload': payload, 'type': type, 'subtype': subtype};
+    return {
+      'payload': payload,
+      'type': type,
+      'subtype': subtype,
+    };
   }
 }
 
@@ -138,7 +192,11 @@ class Ssrc {
   final String? attribute;
   final String value;
 
-  Ssrc({this.id, this.attribute, required this.value});
+  Ssrc({
+    this.id,
+    this.attribute,
+    required this.value,
+  });
 
   Ssrc.fromMap(Map data)
       : id = data['id'],
@@ -146,7 +204,11 @@ class Ssrc {
         value = data['value'];
 
   Map<String, dynamic> toMap() {
-    return {'id': id, 'attribute': attribute, 'value': value};
+    return {
+      'id': id,
+      'attribute': attribute,
+      'value': value,
+    };
   }
 }
 
@@ -154,14 +216,20 @@ class SsrcGroup {
   final String semantics;
   final String ssrcs;
 
-  SsrcGroup({required this.semantics, required this.ssrcs});
+  SsrcGroup({
+    required this.semantics,
+    required this.ssrcs,
+  });
 
   SsrcGroup.fromMap(Map data)
       : semantics = data['semantics'],
         ssrcs = data['ssrcs'];
 
   Map<String, String> toMap() {
-    return {'semantics': semantics, 'ssrcs': ssrcs};
+    return {
+      'semantics': semantics,
+      'ssrcs': ssrcs,
+    };
   }
 }
 
@@ -170,7 +238,11 @@ class Sctpmap {
   final int sctpmanNumber;
   final int maxMessageSize;
 
-  Sctpmap({required this.app, required this.sctpmanNumber, required this.maxMessageSize});
+  Sctpmap({
+    required this.app,
+    required this.sctpmanNumber,
+    required this.maxMessageSize,
+  });
 
   Sctpmap.fromMap(Map data)
       : app = data['app'],
@@ -178,16 +250,24 @@ class Sctpmap {
         maxMessageSize = data['maxMessageSize'];
 
   Map<String, dynamic> toMap() {
-    return {'app': app, 'sctpmanNumber': sctpmanNumber, 'maxMessageSize': maxMessageSize};
+    return {
+      'app': app,
+      'sctpmanNumber': sctpmanNumber,
+      'maxMessageSize': maxMessageSize,
+    };
   }
 }
 
 class Rid {
-  final int id;
+  final String id;
   final String direction;
   final String? params;
 
-  Rid({required this.id, required this.direction, this.params});
+  Rid({
+    required this.id,
+    required this.direction,
+    this.params,
+  });
 
   Rid.fromMap(Map data)
       : id = data['id'],
@@ -195,7 +275,11 @@ class Rid {
         params = data['params'];
 
   Map<String, dynamic> toMap() {
-    return {'id': id, 'direction': direction, 'params': params};
+    return {
+      'id': id,
+      'direction': direction,
+      'params': params,
+    };
   }
 }
 
@@ -205,7 +289,12 @@ class Simulcast {
   final String? dir2;
   final String? list2;
 
-  Simulcast({this.dir1, this.list1, this.dir2, this.list2});
+  Simulcast({
+    this.dir1,
+    this.list1,
+    this.dir2,
+    this.list2,
+  });
 
   Simulcast.fromMap(Map data)
       : dir1 = data['dir1'],
@@ -214,7 +303,12 @@ class Simulcast {
         list2 = data['list2'];
 
   Map<String, String?> toMap() {
-    return {'dir1': dir1, 'list1': list1, 'dir2': dir2, 'list2': list2};
+    return {
+      'dir1': dir1,
+      'list1': list1,
+      'dir2': dir2,
+      'list2': list2,
+    };
   }
 }
 
@@ -226,7 +320,9 @@ class Simulcast_03 {
   Simulcast_03.fromMap(Map data) : value = data['value'];
 
   Map<String, String> toMap() {
-    return {'value': value};
+    return {
+      'value': value,
+    };
   }
 }
 
@@ -234,14 +330,20 @@ class RtcpFbTrrInt {
   final int payload;
   final int value;
 
-  RtcpFbTrrInt({required this.payload, required this.value});
+  RtcpFbTrrInt({
+    required this.payload,
+    required this.value,
+  });
 
   RtcpFbTrrInt.fromMap(Map data)
       : payload = data['payload'],
         value = data['value'];
 
   Map<String, int> toMap() {
-    return {'payload': payload, 'value': value};
+    return {
+      'payload': payload,
+      'value': value,
+    };
   }
 }
 
@@ -251,7 +353,12 @@ class Crypto {
   final String config;
   var sessionConfig;
 
-  Crypto({required this.id, required this.suite, required this.config, this.sessionConfig});
+  Crypto({
+    required this.id,
+    required this.suite,
+    required this.config,
+    this.sessionConfig,
+  });
 
   Crypto.fromMap(Map data)
       : id = data['id'],
@@ -260,7 +367,12 @@ class Crypto {
         sessionConfig = data['sessionConfig'];
 
   Map<String, dynamic> toMap() {
-    return {'id': id, 'suite': suite, 'config': config, 'sessionConfig': sessionConfig};
+    return {
+      'id': id,
+      'suite': suite,
+      'config': config,
+      'sessionConfig': sessionConfig,
+    };
   }
 }
 
@@ -268,14 +380,20 @@ class Bandwidth {
   final String type;
   final int limit;
 
-  Bandwidth({required this.type, required this.limit});
+  Bandwidth({
+    required this.type,
+    required this.limit,
+  });
 
   Bandwidth.fromMap(Map data)
       : type = data['type'],
         limit = data['limit'];
 
   Map<String, dynamic> toMap() {
-    return {'type': type, 'limit': limit};
+    return {
+      'type': type,
+      'limit': limit,
+    };
   }
 }
 
@@ -302,7 +420,13 @@ class Imageattrs {
         attrs2 = data['attrs2'];
 
   Map<String, dynamic> toMap() {
-    return {'pt': pt, 'dir1': dir1, 'attrs1': attrs1, 'dir2': dir2, 'attrs2': attrs2};
+    return {
+      'pt': pt,
+      'dir1': dir1,
+      'attrs1': attrs1,
+      'dir2': dir2,
+      'attrs2': attrs2,
+    };
   }
 }
 
@@ -322,11 +446,11 @@ class SourceFilter {
   });
 
   SourceFilter.fromMap(Map data)
-      : this.filterMode = data['filterMode'],
-        this.netType = data['netType'],
-        this.addressTypes = data['addressTypes'],
-        this.destAddress = data['destAddress'],
-        this.srcList = data['srcList'];
+      : filterMode = data['filterMode'],
+        netType = data['netType'],
+        addressTypes = data['addressTypes'],
+        destAddress = data['destAddress'],
+        srcList = data['srcList'];
 
   Map<String, String> toMap() {
     return {
@@ -436,8 +560,7 @@ class MediaObject {
   MediaObject.fromMap(Map data) {
     if (data['candidates'] != null) {
       candidates = List<IceCandidate>.from(
-        (data['candidates'] ?? []).map((candidate) => IceCandidate.fromMap(candidate)).toList(),
-      );
+          (data['candidates'] ?? []).map((candidate) => IceCandidate.fromMap(candidate)).toList());
     }
     if (data['iceUfrag'] != null) {
       iceUfrag = data['iceUfrag'];
@@ -501,8 +624,7 @@ class MediaObject {
     }
     if (data['ssrcGroups'] != null) {
       ssrcGroups = List<SsrcGroup>.from(
-        (data['ssrcGroups'] ?? []).map((ssrcGroup) => SsrcGroup.fromMap(ssrcGroup)).toList(),
-      );
+          (data['ssrcGroups'] ?? []).map((ssrcGroup) => SsrcGroup.fromMap(ssrcGroup)).toList());
     }
     if (data['simulcast'] != null) {
       simulcast = Simulcast.fromMap(data['simulcast']);
@@ -535,11 +657,9 @@ class MediaObject {
       fingerprint = Fingerprint.fromMap(data['fingerprint']);
     }
     if (data['rtcpFbTrrInt'] != null) {
-      rtcpFbTrrInt = List<RtcpFbTrrInt>.from(
-        (data['rtcpFbTrrInt'] ?? [])
-            .map((rFTI) => RtcpFbTrrInt.fromMap(data['rtcpFbTrrInt']))
-            .toList(),
-      );
+      rtcpFbTrrInt = List<RtcpFbTrrInt>.from((data['rtcpFbTrrInt'] ?? [])
+          .map((rFTI) => RtcpFbTrrInt.fromMap(data['rtcpFbTrrInt']))
+          .toList());
     }
     if (data['crypto'] != null) {
       crypto = List<Crypto>.from((data['crypto'] ?? []).map((c) => Crypto.fromMap(c)).toList());
@@ -557,9 +677,8 @@ class MediaObject {
       label = data['label'];
     }
     if (data['bandwidth'] != null) {
-      bandwidth = List<Bandwidth>.from(
-        (data['bandwidth'] ?? []).map((b) => Bandwidth.fromMap(b)).toList(),
-      );
+      bandwidth =
+          List<Bandwidth>.from((data['bandwidth'] ?? []).map((b) => Bandwidth.fromMap(b)).toList());
     }
     if (data['framerate'] != null) {
       framerate = data['framerate'];
@@ -569,8 +688,7 @@ class MediaObject {
     }
     if (data['imageattrs'] != null) {
       imageattrs = List<Imageattrs>.from(
-        (data['imageattrs'] ?? []).map((ia) => Imageattrs.fromMap(ia)).toList(),
-      );
+          (data['imageattrs'] ?? []).map((ia) => Imageattrs.fromMap(ia)).toList());
     }
     if (data['sourceFilter'] != null) {
       sourceFilter = SourceFilter.fromMap(data['sourceFilter']);
@@ -749,9 +867,8 @@ abstract class MediaSection {
     IceParameters iceParameters = IceParameters.fromMap(data['iceParameters']);
     List<IceCandidate> iceCandidates = [];
     if (data['iceCandidates'] != null) {
-      iceCandidates.addAll(
-        data['iceCandidates'].map((iceC) => IceCandidate.fromMap(iceC)).toList(),
-      );
+      iceCandidates
+          .addAll(data['iceCandidates'].map((iceC) => IceCandidate.fromMap(iceC)).toList());
     }
 
     _planB = data['planB'] == true;
@@ -772,7 +889,7 @@ abstract class MediaSection {
 
   void setDtlsRole(DtlsRole role);
 
-  String? get mid => _mediaObject.mid != null ? _mediaObject.mid.toString() : null;
+  String? get mid => _mediaObject.mid?.toString();
 
   bool get closed => _mediaObject.port == 0;
 
@@ -804,10 +921,10 @@ abstract class MediaSection {
 
 class AnswerMediaSection extends MediaSection {
   AnswerMediaSection({
-    required IceParameters iceParameters,
-    required List<IceCandidate> iceCandidates,
-    required DtlsParameters dtlsParameters,
-    bool planB = false,
+    required IceParameters super.iceParameters,
+    required List<IceCandidate> super.iceCandidates,
+    required DtlsParameters super.dtlsParameters,
+    super.planB = false,
     SctpParameters? sctpParameters,
     PlainRtpParameters? plainRtpParameters,
     required MediaObject offerMediaObject,
@@ -815,18 +932,16 @@ class AnswerMediaSection extends MediaSection {
     RtpParameters? answerRtpParameters,
     ProducerCodecOptions? codecOptions,
     bool extmapAllowMixed = false,
-  }) : super(
-          iceParameters: iceParameters,
-          iceCandidates: iceCandidates,
-          dtlsParameters: dtlsParameters,
-          planB: planB,
-        ) {
+  }) {
     _mediaObject.mid = offerMediaObject.mid;
     _mediaObject.type = offerMediaObject.type;
     _mediaObject.protocol = offerMediaObject.protocol;
 
     if (plainRtpParameters == null) {
-      _mediaObject.connection = Connection(ip: '127.0.0.1', version: 4);
+      _mediaObject.connection = Connection(
+        ip: '127.0.0.1',
+        version: 4,
+      );
       _mediaObject.port = 7;
     } else {
       _mediaObject.connection = Connection(
@@ -869,77 +984,112 @@ class AnswerMediaSection extends MediaSection {
               final int? opusMaxPlaybackRate = codecOptions.opusMaxPlaybackRate;
               final int? opusMaxAverageBitrate = codecOptions.opusMaxAverageBitrate;
               final int? opusPtime = codecOptions.opusPtime;
+              final int? pcmuPtime = codecOptions.pcmuPtime;
+              final int? pcmaPtime = codecOptions.pcmaPtime;
               final int? videoGoogleStartBitrate = codecOptions.videoGoogleStartBitrate;
               final int? videoGoogleMaxBitrate = codecOptions.videoGoogleMaxBitrate;
               final int? videoGoogleMinBitrate = codecOptions.videoGoogleMinBitrate;
 
-              final RtpCodecParameters? offerCodec = offerRtpParameters?.codecs.firstWhere(
-                (RtpCodecParameters c) => c.payloadType == codec.payloadType,
-                orElse: () => null as RtpCodecParameters,
-              );
+              RtpCodecParameters? offerCodec;
+              try {
+                offerCodec = offerRtpParameters?.codecs.firstWhere(
+                  (RtpCodecParameters c) => c.payloadType == codec.payloadType,
+                );
+              } catch (e) {
+                offerCodec = null;
+              }
 
-              switch (codec.mimeType.toLowerCase()) {
-                case 'audio/opus':
-                  {
-                    // if (opusStereo != null) {
-                    // offerCodec.parameters['sprop-stereo'] = opusStereo ? 1 : 0;
-                    offerCodec!.parameters['sprop-stereo'] = opusStereo != null ? opusStereo : 0;
-                    // codecParameters['stereo'] = opusStereo ? 1 : 0;
-                    codecParameters['stereo'] = opusStereo != null ? opusStereo : 0;
-                    // }
+              if (offerCodec != null) {
+                switch (codec.mimeType.toLowerCase()) {
+                  case 'audio/opus':
+                    {
+                      // if (opusStereo != null) {
+                      // offerCodec.parameters['sprop-stereo'] = opusStereo ? 1 : 0;
+                      offerCodec.parameters['sprop-stereo'] = opusStereo ?? 0;
+                      // codecParameters['stereo'] = opusStereo ? 1 : 0;
+                      codecParameters['stereo'] = opusStereo ?? 0;
+                      // }
 
-                    // if (opusFec != null) {
-                    // offerCodec.parameters['useinbandfec'] = opusFec ? 1 : 0;
-                    offerCodec.parameters['useinbandfec'] = opusFec != null ? opusFec : 0;
-                    // codecParameters['useinbandfec'] = opusFec ? 1 : 0;
-                    codecParameters['useinbandfec'] = opusFec != null ? opusFec : 0;
-                    // }
+                      // if (opusFec != null) {
+                      // offerCodec.parameters['useinbandfec'] = opusFec ? 1 : 0;
+                      offerCodec.parameters['useinbandfec'] = opusFec ?? 0;
+                      // codecParameters['useinbandfec'] = opusFec ? 1 : 0;
+                      codecParameters['useinbandfec'] = opusFec ?? 0;
+                      // }
 
-                    // if (opusDtx != null) {
-                    // offerCodec.parameters['usedtx'] = opusDtx ? 1 : 0;
-                    offerCodec.parameters['usedtx'] = opusDtx != null ? opusDtx : 0;
-                    // codecParameters['usedtx'] = opusDtx ? 1 : 0;
-                    codecParameters['usedtx'] = opusDtx != null ? opusDtx : 0;
-                    // }
+                      // if (opusDtx != null) {
+                      // offerCodec.parameters['usedtx'] = opusDtx ? 1 : 0;
+                      offerCodec.parameters['usedtx'] = opusDtx ?? 0;
+                      // codecParameters['usedtx'] = opusDtx ? 1 : 0;
+                      codecParameters['usedtx'] = opusDtx ?? 0;
+                      // }
 
-                    if (opusMaxPlaybackRate != null) {
-                      codecParameters['maxplaybackrate'] = opusMaxPlaybackRate;
+                      if (opusMaxPlaybackRate != null) {
+                        codecParameters['maxplaybackrate'] = opusMaxPlaybackRate;
+                      }
+
+                      if (opusMaxAverageBitrate != null) {
+                        codecParameters['maxaveragebitrate'] = opusMaxAverageBitrate;
+                      }
+
+                      if (opusPtime != null) {
+                        offerCodec.parameters['ptime'] = opusPtime;
+                        codecParameters['ptime'] = opusPtime;
+                      }
+
+                      break;
                     }
 
-                    if (opusMaxAverageBitrate != null) {
-                      codecParameters['maxaveragebitrate'] = opusMaxAverageBitrate;
+                  case 'audio/pcmu':
+                    {
+                      // PCMU (G.711 μ-law) - standard audio codec, 8kHz, 1 channel
+                      // Use PCMU-specific ptime if available, otherwise use general opusPtime
+                      final int? ptimeValue = pcmuPtime ?? opusPtime;
+                      if (ptimeValue != null) {
+                        offerCodec.parameters['ptime'] = ptimeValue;
+                        codecParameters['ptime'] = ptimeValue;
+                      }
+                      break;
                     }
 
-                    if (opusPtime != null) {
-                      offerCodec.parameters['ptime'] = opusPtime;
-                      codecParameters['ptime'] = opusPtime;
+                  case 'audio/pcma':
+                    {
+                      // PCMA (G.711 A-law) - standard audio codec, 8kHz, 1 channel
+                      // Use PCMA-specific ptime if available, otherwise use general opusPtime
+                      final int? ptimeValue = pcmaPtime ?? opusPtime;
+                      if (ptimeValue != null) {
+                        offerCodec.parameters['ptime'] = ptimeValue;
+                        codecParameters['ptime'] = ptimeValue;
+                      }
+                      break;
                     }
 
-                    break;
-                  }
+                  case 'video/vp8':
+                  case 'video/vp9':
+                  case 'video/h264':
+                  case 'video/h265':
+                    {
+                      if (videoGoogleStartBitrate != null) {
+                        codecParameters['x-google-start-bitrate'] = videoGoogleStartBitrate;
+                      }
 
-                case 'video/vp8':
-                case 'video/vp9':
-                case 'video/h264':
-                case 'video/h265':
-                  {
-                    if (videoGoogleStartBitrate != null) {
-                      codecParameters['x-google-start-bitrate'] = videoGoogleStartBitrate;
-                    }
+                      if (videoGoogleMaxBitrate != null) {
+                        codecParameters['x-google-max-bitrate'] = videoGoogleMaxBitrate;
+                      }
 
-                    if (videoGoogleMaxBitrate != null) {
-                      codecParameters['x-google-max-bitrate'] = videoGoogleMaxBitrate;
+                      if (videoGoogleMinBitrate != null) {
+                        codecParameters['x-google-min-bitrate'] = videoGoogleMinBitrate;
+                      }
+                      break;
                     }
-
-                    if (videoGoogleMinBitrate != null) {
-                      codecParameters['x-google-min-bitrate'] = videoGoogleMinBitrate;
-                    }
-                    break;
-                  }
+                }
               }
             }
 
-            Fmtp fmtp = Fmtp(payload: codec.payloadType, config: '');
+            Fmtp fmtp = Fmtp(
+              payload: codec.payloadType,
+              config: '',
+            );
 
             for (String key in codecParameters.keys) {
               if (fmtp.config.isNotEmpty) {
@@ -954,9 +1104,11 @@ class AnswerMediaSection extends MediaSection {
             }
 
             for (RtcpFeedback fb in codec.rtcpFeedback) {
-              _mediaObject.rtcpFb!.add(
-                RtcpFb(payload: codec.payloadType, type: fb.type, subtype: fb.parameter),
-              );
+              _mediaObject.rtcpFb!.add(RtcpFb(
+                payload: codec.payloadType,
+                type: fb.type,
+                subtype: fb.parameter,
+              ));
             }
           }
 
@@ -969,15 +1121,17 @@ class AnswerMediaSection extends MediaSection {
 
           for (RtpHeaderExtensionParameters ext in answerRtpParameters?.headerExtensions ?? []) {
             // Don't add a header extension if not present in the offer.
-            bool found = (offerMediaObject.ext ?? []).any(
-              (Ext localExt) => localExt.uri == ext.uri,
-            );
+            bool found =
+                (offerMediaObject.ext ?? []).any((Ext localExt) => localExt.uri == ext.uri);
 
             if (!found) {
               continue;
             }
 
-            _mediaObject.ext!.add(Ext(uri: ext.uri, value: ext.id));
+            _mediaObject.ext!.add(Ext(
+              uri: ext.uri,
+              value: ext.id,
+            ));
           }
 
           // Allow both 1 byte and 2 bytes length header extensions.
@@ -999,7 +1153,10 @@ class AnswerMediaSection extends MediaSection {
                 continue;
               }
 
-              _mediaObject.rids!.add(Rid(id: rid.id, direction: 'recv'));
+              _mediaObject.rids!.add(Rid(
+                id: rid.id,
+                direction: 'recv',
+              ));
             }
           } else if (offerMediaObject.simulcast_03 != null) {
             // Simulcast (draft version 03).
@@ -1014,7 +1171,10 @@ class AnswerMediaSection extends MediaSection {
                 continue;
               }
 
-              _mediaObject.rids!.add(Rid(id: rid.id, direction: 'recv'));
+              _mediaObject.rids!.add(Rid(
+                id: rid.id,
+                direction: 'recv',
+              ));
             }
           }
 
@@ -1073,29 +1233,27 @@ class AnswerMediaSection extends MediaSection {
 
 class OfferMediaSection extends MediaSection {
   OfferMediaSection({
-    required IceParameters iceParameters,
-    required List<IceCandidate> iceCandidates,
-    required DtlsParameters dtlsParameters,
+    required IceParameters super.iceParameters,
+    required List<IceCandidate> super.iceCandidates,
+    required DtlsParameters super.dtlsParameters,
     SctpParameters? sctpParameters,
     PlainRtpParameters? plainRtpParameters,
-    bool planB = false,
+    super.planB = false,
     required String mid,
     required String kind,
     RtpParameters? offerRtpParameters,
     String? streamId,
     String? trackId,
     bool oldDataChannelSpec = false,
-  }) : super(
-          planB: planB,
-          dtlsParameters: dtlsParameters,
-          iceCandidates: iceCandidates,
-          iceParameters: iceParameters,
-        ) {
+  }) {
     _mediaObject.mid = mid;
     _mediaObject.type = kind;
 
     if (plainRtpParameters == null) {
-      _mediaObject.connection = Connection(ip: '127.0.0.1', version: 4);
+      _mediaObject.connection = Connection(
+        ip: '127.0.0.1',
+        version: 4,
+      );
 
       if (sctpParameters == null) {
         _mediaObject.protocol = 'UDP/TLS/RTP/SAVPF';
@@ -1139,7 +1297,10 @@ class OfferMediaSection extends MediaSection {
 
             _mediaObject.rtp!.add(rtp);
 
-            Fmtp fmtp = Fmtp(payload: codec.payloadType, config: '');
+            Fmtp fmtp = Fmtp(
+              payload: codec.payloadType,
+              config: '',
+            );
 
             for (String key in codec.parameters.keys) {
               if (fmtp.config.isNotEmpty) {
@@ -1154,9 +1315,8 @@ class OfferMediaSection extends MediaSection {
             }
 
             for (RtcpFeedback fb in codec.rtcpFeedback) {
-              _mediaObject.rtcpFb!.add(
-                RtcpFb(payload: codec.payloadType, type: fb.type, subtype: fb.parameter),
-              );
+              _mediaObject.rtcpFb!
+                  .add(RtcpFb(payload: codec.payloadType, type: fb.type, subtype: fb.parameter));
             }
           }
 
@@ -1168,7 +1328,10 @@ class OfferMediaSection extends MediaSection {
           _mediaObject.ext = <Ext>[];
 
           for (RtpHeaderExtensionParameters ext in offerRtpParameters?.headerExtensions ?? []) {
-            _mediaObject.ext!.add(Ext(uri: ext.uri, value: ext.id));
+            _mediaObject.ext!.add(Ext(
+              uri: ext.uri,
+              value: ext.id,
+            ));
           }
 
           _mediaObject.rtcpMux = 'rtcp-mux';
@@ -1182,35 +1345,44 @@ class OfferMediaSection extends MediaSection {
           _mediaObject.ssrcs = <Ssrc>[];
           _mediaObject.ssrcGroups = [];
 
-          if (offerRtpParameters.rtcp?.cname != null &&
-              offerRtpParameters.rtcp!.cname!.isNotEmpty) {
-            _mediaObject.ssrcs!.add(
-              Ssrc(id: ssrc, attribute: 'cname', value: offerRtpParameters.rtcp!.cname!),
-            );
+          if (offerRtpParameters.rtcp?.cname != null && offerRtpParameters.rtcp!.cname != '') {
+            _mediaObject.ssrcs!.add(Ssrc(
+              id: ssrc,
+              attribute: 'cname',
+              value: offerRtpParameters.rtcp!.cname ?? '',
+            ));
           }
 
           if (_planB) {
-            _mediaObject.ssrcs!.add(
-              Ssrc(id: ssrc, attribute: 'msid', value: '${streamId ?? '-'} $trackId'),
-            );
+            _mediaObject.ssrcs!.add(Ssrc(
+              id: ssrc,
+              attribute: 'msid',
+              value: '${streamId ?? '-'} $trackId',
+            ));
           }
 
           if (rtxSsrc != null) {
-            if (offerRtpParameters.rtcp?.cname != null &&
-                offerRtpParameters.rtcp!.cname!.isNotEmpty) {
-              _mediaObject.ssrcs!.add(
-                Ssrc(id: rtxSsrc, attribute: 'cname', value: offerRtpParameters.rtcp!.cname!),
-              );
+            if (offerRtpParameters.rtcp?.cname != null && offerRtpParameters.rtcp!.cname != '') {
+              _mediaObject.ssrcs!.add(Ssrc(
+                id: rtxSsrc,
+                attribute: 'cname',
+                value: offerRtpParameters.rtcp!.cname ?? '',
+              ));
             }
 
             if (_planB) {
-              _mediaObject.ssrcs!.add(
-                Ssrc(id: rtxSsrc, attribute: 'msid', value: '${streamId ?? '-'} $trackId'),
-              );
+              _mediaObject.ssrcs!.add(Ssrc(
+                id: rtxSsrc,
+                attribute: 'msid',
+                value: '${streamId ?? '-'} $trackId',
+              ));
             }
 
             // Associate original and retransmission SSRCs.
-            _mediaObject.ssrcGroups!.add(SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'));
+            _mediaObject.ssrcGroups!.add(SsrcGroup(
+              semantics: 'FID',
+              ssrcs: '$ssrc $rtxSsrc',
+            ));
           }
 
           break;
@@ -1237,7 +1409,7 @@ class OfferMediaSection extends MediaSection {
     }
   }
 
-  OfferMediaSection.fromMap(Map data) : super.fromMap(data);
+  OfferMediaSection.fromMap(super.data) : super.fromMap();
 
   @override
   void setDtlsRole(DtlsRole role) {
@@ -1254,33 +1426,46 @@ class OfferMediaSection extends MediaSection {
     int ssrc = encoding.ssrc!;
     int? rtxSsrc = (encoding.rtx != null && encoding.rtx!.ssrc != null) ? encoding.rtx!.ssrc : null;
 
-    if (offerRtpParameters.rtcp?.cname != null) {
-      _mediaObject.ssrcs!.add(
-        Ssrc(id: ssrc, attribute: 'cname', value: offerRtpParameters.rtcp!.cname!),
-      );
+    if (offerRtpParameters.rtcp?.cname != null && offerRtpParameters.rtcp!.cname != '') {
+      _mediaObject.ssrcs!.add(Ssrc(
+        id: ssrc,
+        attribute: 'cname',
+        value: offerRtpParameters.rtcp!.cname ?? '',
+      ));
     }
 
-    _mediaObject.ssrcs!.add(
-      Ssrc(id: ssrc, attribute: 'msid', value: '${streamId ?? '-'} $trackId'),
-    );
+    _mediaObject.ssrcs!.add(Ssrc(
+      id: ssrc,
+      attribute: 'msid',
+      value: '${streamId ?? '-'} $trackId',
+    ));
 
     if (rtxSsrc != null) {
-      if (offerRtpParameters.rtcp?.cname != null && offerRtpParameters.rtcp!.cname!.isNotEmpty) {
-        _mediaObject.ssrcs!.add(
-          Ssrc(id: rtxSsrc, attribute: 'cname', value: offerRtpParameters.rtcp!.cname!),
-        );
+      if (offerRtpParameters.rtcp?.cname != null && offerRtpParameters.rtcp!.cname != '') {
+        _mediaObject.ssrcs!.add(Ssrc(
+          id: rtxSsrc,
+          attribute: 'cname',
+          value: offerRtpParameters.rtcp?.cname ?? '',
+        ));
       }
 
-      _mediaObject.ssrcs!.add(
-        Ssrc(id: rtxSsrc, attribute: 'msid', value: '${streamId ?? '-'} $trackId'),
-      );
+      _mediaObject.ssrcs!.add(Ssrc(
+        id: rtxSsrc,
+        attribute: 'msid',
+        value: '${streamId ?? '-'} $trackId',
+      ));
 
       // Associate original and retransmission SSRCs.
-      _mediaObject.ssrcGroups!.add(SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'));
+      _mediaObject.ssrcGroups!.add(SsrcGroup(
+        semantics: 'FID',
+        ssrcs: '$ssrc $rtxSsrc',
+      ));
     }
   }
 
-  void planBStopReceiving({required RtpParameters offerRtpParameters}) {
+  void planBStopReceiving({
+    required RtpParameters offerRtpParameters,
+  }) {
     RtpEncodingParameters encoding = offerRtpParameters.encodings.first;
     int ssrc = encoding.ssrc!;
     int? rtxSsrc = (encoding.rtx != null && encoding.rtx?.ssrc != null) ? encoding.rtx!.ssrc : null;
@@ -1299,10 +1484,6 @@ class OfferMediaSection extends MediaSection {
 String getCodecName(RtpCodecParameters codec) {
   RegExp? mimeTypeRegex = RegExp(r"^(audio|video)/(.+)", caseSensitive: true);
   Iterable<RegExpMatch> mimeTypeMatch = mimeTypeRegex.allMatches(codec.mimeType);
-
-  if (mimeTypeMatch == null) {
-    throw ('invalid codec.mimeType');
-  }
 
   return mimeTypeMatch.elementAt(0).group(2)!;
 }

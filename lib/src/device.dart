@@ -22,7 +22,7 @@ class Device {
   // Local SCTP capabilities.
   SctpCapabilities? _sctpCapabilities;
   // Observer instance.
-  EnhancedEventEmitter _observer = EnhancedEventEmitter();
+  final EnhancedEventEmitter _observer = EnhancedEventEmitter();
 
   // Whether the Device is loaded.
   bool get loaded => _loaded;
@@ -52,7 +52,9 @@ class Device {
   EnhancedEventEmitter get observer => _observer;
 
   /// Initialize the Device.
-  Future<void> load({required RtpCapabilities routerRtpCapabilities}) async {
+  Future<void> load({
+    required RtpCapabilities routerRtpCapabilities,
+  }) async {
     _logger.debug('load() [routerRtpCapabilities:${routerRtpCapabilities.toString()}]');
 
     routerRtpCapabilities = RtpCapabilities.copy(routerRtpCapabilities);
@@ -78,10 +80,8 @@ class Device {
       Ortc.validateRtpCapabilities(nativeRtpCapabilities);
 
       // Get extended RTP capabilities.
-      _extendedRtpCapabilities = Ortc.getExtendedRtpCapabilities(
-        nativeRtpCapabilities,
-        routerRtpCapabilities,
-      );
+      _extendedRtpCapabilities =
+          Ortc.getExtendedRtpCapabilities(nativeRtpCapabilities, routerRtpCapabilities);
 
       _logger.debug('load() | got extended RTP capabilities:$_extendedRtpCapabilities');
 
@@ -117,7 +117,7 @@ class Device {
         await handler.close();
       }
 
-      throw error;
+      rethrow;
     }
   }
 
@@ -152,7 +152,7 @@ class Device {
     required List<IceCandidate> iceCandidates,
     required DtlsParameters dtlsParameters,
     SctpParameters? sctpParameters,
-    List<Map> iceServers = const [],
+    List<RTCIceServer> iceServers = const <RTCIceServer>[],
     RTCIceTransportPolicy? iceTransportPolicy,
     Map<String, dynamic> additionalSettings = const <String, dynamic>{},
     Map<String, dynamic> proprietaryConstraints = const <String, dynamic>{},
@@ -197,7 +197,9 @@ class Device {
     );
 
     // Emit observer event.
-    _observer.safeEmit('newtransport', {'transport': transport});
+    _observer.safeEmit('newtransport', {
+      'transport': transport,
+    });
 
     return transport;
   }
@@ -212,7 +214,7 @@ class Device {
     required List<IceCandidate> iceCandidates,
     required DtlsParameters dtlsParameters,
     SctpParameters? sctpParameters,
-    List<Map> iceServers = const [],
+    List<RTCIceServer> iceServers = const <RTCIceServer>[],
     RTCIceTransportPolicy? iceTransportPolicy,
     Map<String, dynamic> additionalSettings = const <String, dynamic>{},
     Map<String, dynamic> proprietaryConstraints = const <String, dynamic>{},
@@ -241,7 +243,6 @@ class Device {
 
   Transport createSendTransportFromMap(
     Map data, {
-    List<Map>? iceServers,
     Function? producerCallback,
     Function? dataProducerCallback,
   }) {
@@ -249,19 +250,22 @@ class Device {
       id: data['id'],
       iceParameters: IceParameters.fromMap(data['iceParameters']),
       iceCandidates: List<IceCandidate>.from(
-        data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList(),
-      ),
+          data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList()),
       dtlsParameters: DtlsParameters.fromMap(data['dtlsParameters']),
       sctpParameters:
           data['sctpParameters'] != null ? SctpParameters.fromMap(data['sctpParameters']) : null,
-      iceServers: iceServers ?? [],
+      iceServers: [],
       appData: data['appData'] ?? <String, dynamic>{},
       proprietaryConstraints: Map<String, dynamic>.from({
         'optional': [
-          {'googDscp': true},
-        ],
+          {
+            'googDscp': true,
+          }
+        ]
       }),
-      additionalSettings: {'encodedInsertableStreams': false},
+      additionalSettings: {
+        'encodedInsertableStreams': false,
+      },
       producerCallback: producerCallback,
       dataProducerCallback: dataProducerCallback,
     );
@@ -277,7 +281,7 @@ class Device {
     required List<IceCandidate> iceCandidates,
     required DtlsParameters dtlsParameters,
     SctpParameters? sctpParameters,
-    List<Map> iceServers = const [],
+    List<RTCIceServer> iceServers = const <RTCIceServer>[],
     RTCIceTransportPolicy? iceTransportPolicy,
     Map<String, dynamic> additionalSettings = const <String, dynamic>{},
     Map<String, dynamic> proprietaryConstraints = const <String, dynamic>{},
@@ -306,7 +310,6 @@ class Device {
 
   Transport createRecvTransportFromMap(
     Map data, {
-    List<Map>? iceServers,
     Function? consumerCallback,
     Function? dataConsumerCallback,
   }) {
@@ -314,19 +317,22 @@ class Device {
       id: data['id'],
       iceParameters: IceParameters.fromMap(data['iceParameters']),
       iceCandidates: List<IceCandidate>.from(
-        data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList(),
-      ),
+          data['iceCandidates'].map((iceCandidate) => IceCandidate.fromMap(iceCandidate)).toList()),
       dtlsParameters: DtlsParameters.fromMap(data['dtlsParameters']),
       sctpParameters:
           data['sctpParameters'] != null ? SctpParameters.fromMap(data['sctpParameters']) : null,
-      iceServers: iceServers ?? [],
+      iceServers: [],
       appData: data['appData'] ?? {},
       proprietaryConstraints: Map<String, dynamic>.from({
         'optional': [
-          {'googDscp': true},
-        ],
+          {
+            'googDscp': true,
+          }
+        ]
       }),
-      additionalSettings: {'encodedInsertableStreams': false},
+      additionalSettings: {
+        'encodedInsertableStreams': false,
+      },
       consumerCallback: consumerCallback,
       dataConsumerCallback: dataConsumerCallback,
     );

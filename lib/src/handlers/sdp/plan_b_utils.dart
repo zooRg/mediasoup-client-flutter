@@ -1,6 +1,8 @@
+// ignore_for_file: unused_local_variable, cast_from_null_always_fails
+
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
+import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 
 class PlanBUtils {
   static List<RtpEncodingParameters> getRtpEncodings(
@@ -9,7 +11,7 @@ class PlanBUtils {
   ) {
     // First media SSRC (or the only one).
     int? firstSsrc;
-    Set<int> ssrcs = Set<int>();
+    Set<int> ssrcs = <int>{};
 
     for (Ssrc line in offerMediaObject.ssrcs ?? []) {
       if (line.attribute != 'msid') {
@@ -23,9 +25,7 @@ class PlanBUtils {
 
         ssrcs.add(ssrc);
 
-        if (firstSsrc == null) {
-          firstSsrc = ssrc;
-        }
+        firstSsrc ??= ssrc;
       }
     }
 
@@ -44,7 +44,7 @@ class PlanBUtils {
       List<String> tokens = line.ssrcs.split(' ');
 
       int? ssrc;
-      if (tokens.length > 0) {
+      if (tokens.isNotEmpty) {
         ssrc = int.parse(tokens.first);
       }
 
@@ -74,7 +74,9 @@ class PlanBUtils {
     List<RtpEncodingParameters> encodings = <RtpEncodingParameters>[];
 
     ssrcToRtxSsrc.forEach((ssrc, rtxSsrc) {
-      RtpEncodingParameters encoding = RtpEncodingParameters(ssrc: ssrc);
+      RtpEncodingParameters encoding = RtpEncodingParameters(
+        ssrc: ssrc,
+      );
 
       if (rtxSsrc != null) {
         encoding.rtx = RtxSsrc(rtxSsrc);
@@ -101,26 +103,25 @@ class PlanBUtils {
     String? streamId;
 
     // Get the SSRC.
-    Ssrc? ssrcMsidLine = (offerMediaObject.ssrcs ?? []).firstWhere((Ssrc line) {
-      if (line.attribute != 'msid') {
-        return false;
-      }
+    Ssrc? ssrcMsidLine = (offerMediaObject.ssrcs ?? []).firstWhere(
+      (Ssrc line) {
+        if (line.attribute != 'msid') {
+          return false;
+        }
 
-      String trackId = line.value.split(' ')[1];
+        String trackId = line.value.split(' ')[1];
 
-      if (trackId == track.id) {
-        firstSsrc = line.id;
-        streamId = line.value.split(' ')[0];
+        if (trackId == track.id) {
+          firstSsrc = line.id;
+          streamId = line.value.split(' ')[0];
 
-        return true;
-      } else {
-        return false;
-      }
-    }, orElse: () => null as Ssrc);
-
-    if (ssrcMsidLine == null) {
-      throw ('a=ssrc line with msid information not found [track.id:${track.id}]');
-    }
+          return true;
+        } else {
+          return false;
+        }
+      },
+      orElse: () => null as Ssrc,
+    );
 
     // Get the SSRC for RTX.
     (offerMediaObject.ssrcGroups ?? []).any((SsrcGroup line) {
@@ -163,29 +164,47 @@ class PlanBUtils {
     offerMediaObject.ssrcGroups = offerMediaObject.ssrcGroups ?? [];
     offerMediaObject.ssrcs = offerMediaObject.ssrcs ?? [];
 
-    offerMediaObject.ssrcGroups!.add(SsrcGroup(semantics: 'SIM', ssrcs: ssrcs.join(' ')));
+    offerMediaObject.ssrcGroups!.add(SsrcGroup(
+      semantics: 'SIM',
+      ssrcs: ssrcs.join(' '),
+    ));
 
     for (int i = 0; i < ssrcs.length; ++i) {
       int ssrc = ssrcs[i];
 
-      offerMediaObject.ssrcs!.add(Ssrc(id: ssrc, attribute: 'cname', value: cname));
+      offerMediaObject.ssrcs!.add(Ssrc(
+        id: ssrc,
+        attribute: 'cname',
+        value: cname,
+      ));
 
-      offerMediaObject.ssrcs!.add(
-        Ssrc(id: ssrc, attribute: 'msid', value: '$streamId ${track.id}'),
-      );
+      offerMediaObject.ssrcs!.add(Ssrc(
+        id: ssrc,
+        attribute: 'msid',
+        value: '$streamId ${track.id}',
+      ));
     }
 
     for (int i = 0; i < rtxSsrcs.length; ++i) {
       int ssrc = ssrcs[i];
       int rtxSsrc = rtxSsrcs[i];
 
-      offerMediaObject.ssrcs!.add(Ssrc(id: rtxSsrc, attribute: 'cname', value: cname));
+      offerMediaObject.ssrcs!.add(Ssrc(
+        id: rtxSsrc,
+        attribute: 'cname',
+        value: cname,
+      ));
 
-      offerMediaObject.ssrcs!.add(
-        Ssrc(id: rtxSsrc, attribute: 'msid', value: '$streamId ${track.id}'),
-      );
+      offerMediaObject.ssrcs!.add(Ssrc(
+        id: rtxSsrc,
+        attribute: 'msid',
+        value: '$streamId ${track.id}',
+      ));
 
-      offerMediaObject.ssrcGroups!.add(SsrcGroup(semantics: 'FID', ssrcs: '$ssrc $rtxSsrc'));
+      offerMediaObject.ssrcGroups!.add(SsrcGroup(
+        semantics: 'FID',
+        ssrcs: '$ssrc $rtxSsrc',
+      ));
     }
   }
 }

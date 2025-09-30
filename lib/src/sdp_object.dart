@@ -40,12 +40,16 @@ class Origin {
 class Invalid {
   final String value;
 
-  Invalid({required this.value});
+  Invalid({
+    required this.value,
+  });
 
   Invalid.fromMap(Map data) : value = data['value'];
 
   Map<String, String> toMap() {
-    return {'value': value};
+    return {
+      'value': value,
+    };
   }
 }
 
@@ -53,14 +57,20 @@ class Timing {
   final int start;
   final int stop;
 
-  Timing({required this.start, required this.stop});
+  Timing({
+    required this.start,
+    required this.stop,
+  });
 
   Timing.fromMap(Map data)
       : start = data['start'],
         stop = data['stop'];
 
   Map<String, int> toMap() {
-    return {'start': start, 'stop': stop};
+    return {
+      'start': start,
+      'stop': stop,
+    };
   }
 }
 
@@ -68,14 +78,20 @@ class Group {
   final String type;
   String mids;
 
-  Group({required this.type, required this.mids});
+  Group({
+    required this.type,
+    required this.mids,
+  });
 
   Group.fromMap(Map data)
       : type = data['type'],
         mids = data['mids'].toString();
 
   Map<String, String> toMap() {
-    return {'type': type, 'mids': mids};
+    return {
+      'type': type,
+      'mids': mids,
+    };
   }
 }
 
@@ -83,14 +99,20 @@ class MsidSemantic {
   final String semantic;
   final String token;
 
-  MsidSemantic({required this.semantic, required this.token});
+  MsidSemantic({
+    required this.semantic,
+    required this.token,
+  });
 
   MsidSemantic.fromMap(Map data)
       : semantic = data['semantic'],
         token = data['token'];
 
   Map<String, String> toMap() {
-    return {'semantic': semantic, 'token': token};
+    return {
+      'semantic': semantic,
+      'token': token,
+    };
   }
 }
 
@@ -132,8 +154,7 @@ class SdpObject {
         origin = Origin.fromMap(data['origin']),
         name = data['name'],
         invalid = List<Invalid>.from(
-          (data['invalid'] ?? []).map((inval) => Invalid.fromMap(inval)).toList(),
-        ),
+            (data['invalid'] ?? []).map((inval) => Invalid.fromMap(inval)).toList()),
         timing = data['timing'] != null ? Timing.fromMap(data['timing']) : null,
         connection = data['connection'] != null ? Connection.fromMap(data['connection']) : null,
         iceUfrag = data['iceUfrag'],
@@ -142,8 +163,7 @@ class SdpObject {
         msidSemantic =
             data['msidSemantic'] != null ? MsidSemantic.fromMap(data['msidSemantic']) : null,
         media = List<MediaObject>.from(
-          (data['media'] ?? []).map((m) => MediaObject.fromMap(m)).toList(),
-        ),
+            (data['media'] ?? []).map((m) => MediaObject.fromMap(m)).toList()),
         groups = List<Group>.from((data['groups'] ?? []).map((g) => Group.fromMap(g)).toList()),
         icelite = data['icelite'],
         description = data['description'];

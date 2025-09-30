@@ -136,7 +136,9 @@ class DataConsumer extends EnhancedEventEmitter {
     dataChannel.onMessage = (RTCDataChannelMessage data) {
       if (closed) return;
 
-      safeEmit('message', {'data': data});
+      safeEmit('message', {
+        'data': data,
+      });
     };
   }
 

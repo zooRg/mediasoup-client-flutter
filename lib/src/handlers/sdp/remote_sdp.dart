@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
-import 'package:sdp_transform/sdp_transform.dart';
+import 'package:mediasoup_client_flutter/src/common/logger.dart';
+import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
 import 'package:mediasoup_client_flutter/src/producer.dart';
 import 'package:mediasoup_client_flutter/src/rtp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sctp_parameters.dart';
 import 'package:mediasoup_client_flutter/src/sdp_object.dart';
 import 'package:mediasoup_client_flutter/src/transport.dart';
-import 'package:mediasoup_client_flutter/src/common/logger.dart';
-import 'package:mediasoup_client_flutter/src/handlers/sdp/media_section.dart';
+import 'package:sdp_transform/sdp_transform.dart';
 
 Logger logger = Logger('RemoteSdp');
 
@@ -15,14 +15,20 @@ class MediaSectionIdx {
   final int idx;
   final String? reuseMid;
 
-  MediaSectionIdx({required this.idx, this.reuseMid});
+  MediaSectionIdx({
+    required this.idx,
+    this.reuseMid,
+  });
 
   MediaSectionIdx.fromMap(Map data)
       : idx = data['idx'],
         reuseMid = data['reuseMid'];
 
   Map<String, dynamic> toMap() {
-    return {'idx': idx, 'reuseMid': reuseMid};
+    return {
+      'idx': idx,
+      'reuseMid': reuseMid,
+    };
   }
 }
 
@@ -40,9 +46,9 @@ class RemoteSdp {
   // Whether this is Plan-B SDP.
   late bool _planB;
   // MediaSection instances with same order as in the SDP.
-  List<MediaSection> _mediaSections = <MediaSection>[];
+  final List<MediaSection> _mediaSections = <MediaSection>[];
   // MediaSection indices indexed by MID.
-  Map<String, int> _midToIndex = <String, int>{};
+  final Map<String, int> _midToIndex = <String, int>{};
   // First MID.
   String? _firstMid;
   // SDP object.
@@ -73,7 +79,10 @@ class RemoteSdp {
         username: 'mediasoup-client',
       ),
       name: '-',
-      timing: Timing(start: 0, stop: 0),
+      timing: Timing(
+        start: 0,
+        stop: 0,
+      ),
       media: <MediaObject>[],
     );
 
@@ -84,7 +93,10 @@ class RemoteSdp {
 
     // if DTLS parameters are given, assume WebRTC and BUNDLE.
     // if (dtlsParameters != null) {
-    _sdpObject.msidSemantic = MsidSemantic(semantic: 'WMS', token: '*');
+    _sdpObject.msidSemantic = MsidSemantic(
+      semantic: 'WMS',
+      token: '*',
+    );
 
     // NOTE: We take the latest fingerprint.
     int numFingerprints = _dtlsParameters.fingerprints.length;
@@ -94,7 +106,12 @@ class RemoteSdp {
       hash: dtlsParameters.fingerprints[numFingerprints - 1].value,
     );
 
-    _sdpObject.groups = [Group(type: 'BUNDLE', mids: '')];
+    _sdpObject.groups = [
+      Group(
+        type: 'BUNDLE',
+        mids: '',
+      ),
+    ];
     // }
 
     // If there are plain RPT parameters, override SDP origin.
@@ -112,7 +129,9 @@ class RemoteSdp {
   }
 
   void updateIceParameters(IceParameters iceParameters) {
-    logger.debug('updateIceParameters() [iceParameters:$iceParameters]');
+    logger.debug(
+      'updateIceParameters() [iceParameters:$iceParameters]',
+    );
 
     _iceParameters = iceParameters;
     _sdpObject.icelite = iceParameters.iceLite ? 'ice-lite' : null;
@@ -171,7 +190,10 @@ class RemoteSdp {
     _regenerateBundleMids();
   }
 
-  void planBStopReceiving(String mid, RtpParameters offerRtpParameters) {
+  void planBStopReceiving(
+    String mid,
+    RtpParameters offerRtpParameters,
+  ) {
     int? idx = _midToIndex[mid];
 
     if (idx == null) {
@@ -248,7 +270,9 @@ class RemoteSdp {
 
       // Let's try to recycle a closed media section (if any).
       // NOTE: Yes, we can recycle a closed m=audio section with a new m=video.
-      MediaSection? oldMediaSection = _mediaSections.firstWhereOrNull((MediaSection m) => m.closed);
+      MediaSection? oldMediaSection = _mediaSections.firstWhereOrNull(
+        (MediaSection m) => m.closed,
+      );
 
       if (oldMediaSection != null) {
         _replaceMediaSection(mediaSection, oldMediaSection.mid);
@@ -300,7 +324,10 @@ class RemoteSdp {
       MediaSection mediaSection = _mediaSections[idx];
 
       if (mediaSection.closed) {
-        return MediaSectionIdx(idx: idx, reuseMid: mediaSection.mid!);
+        return MediaSectionIdx(
+          idx: idx,
+          reuseMid: mediaSection.mid!,
+        );
       }
     }
 
@@ -320,9 +347,7 @@ class RemoteSdp {
   }
 
   void _addMediaSection(MediaSection newMediaSection) {
-    if (_firstMid == null) {
-      _firstMid = newMediaSection.mid!;
-    }
+    _firstMid ??= newMediaSection.mid!;
 
     // Add to the vector.
     _mediaSections.add(newMediaSection);
