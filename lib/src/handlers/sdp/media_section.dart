@@ -183,14 +183,14 @@ class Sctpmap {
 }
 
 class Rid {
-  final int id;
+  final String id;
   final String direction;
   final String? params;
 
   Rid({required this.id, required this.direction, this.params});
 
   Rid.fromMap(Map data)
-      : id = data['id'],
+      : id = data['id'].toString(),
         direction = data['direction'],
         params = data['params'];
 
